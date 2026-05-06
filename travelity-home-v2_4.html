@@ -1288,205 +1288,6 @@
     line-height: 1.5;
   }
 
-  /* ============================================================
-     PROS/CONS comparison — replaces "Each one earns its place"
-     Three rows: pain (slow dots) → Travelity logo → solution (fast dots)
-     ============================================================ */
-  .compare-block {
-    margin-top: 80px;
-    padding-top: 64px;
-    border-top: 1px solid hsl(var(--line));
-  }
-  .compare-header {
-    text-align: center;
-    margin-bottom: 56px;
-  }
-  .compare-header .eyebrow { justify-content: center; }
-  .compare-header h3 {
-    font-family: var(--font-serif);
-    font-size: clamp(28px, 3vw, 40px);
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    margin: 0 auto 12px;
-    max-width: 22ch;
-  }
-  .compare-header h3 em {
-    font-style: italic;
-    color: hsl(var(--travelity-coral));
-    font-weight: 500;
-  }
-  .compare-header p {
-    font-size: 16px;
-    color: hsl(var(--ink-muted));
-    max-width: 56ch;
-    margin: 0 auto;
-    line-height: 1.55;
-  }
-
-  /* Compare grid: 3 columns (pain | hub | solution) */
-  .compare-rig {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-    max-width: 1080px;
-    margin: 0 auto;
-  }
-  @media (min-width: 900px) {
-    .compare-rig { grid-template-columns: 1fr auto 1fr; gap: 0; align-items: center; }
-  }
-  .compare-col-pain {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  /* Solution column (right) */
-  .compare-col-fix {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  /* Center hub — only visible on desktop in the rig */
-  .compare-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 32px;
-    position: relative;
-    min-height: 320px;
-  }
-  @media (max-width: 899px) { .compare-center { display: none; } }
-
-  .compare-hub {
-    background: hsl(var(--paper));
-    border: 1.5px solid hsl(var(--travelity-blue) / 0.2);
-    border-radius: 14px;
-    padding: 18px 22px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow:
-      0 0 0 6px hsl(var(--travelity-cream)),
-      0 16px 32px -8px hsl(var(--travelity-blue) / 0.25);
-    z-index: 4;
-    position: relative;
-  }
-  .compare-hub svg.travelity-mark {
-    width: 28px; height: 28px;
-    flex-shrink: 0;
-  }
-  .compare-hub-text strong {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: hsl(var(--travelity-blue));
-  }
-  .compare-hub-text small {
-    font-size: 11px;
-    color: hsl(var(--ink-muted));
-  }
-
-  /* Cards (pain & fix) */
-  .compare-card {
-    background: hsl(var(--paper));
-    border: 1px solid hsl(var(--line));
-    border-radius: 12px;
-    padding: 18px 20px;
-    position: relative;
-    z-index: 3;
-  }
-  .compare-card-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.10em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .compare-card-pain .compare-card-tag {
-    color: hsl(0 60% 50%);
-  }
-  .compare-card-pain .compare-card-tag::before {
-    content: "";
-    width: 6px; height: 6px;
-    border-radius: 999px;
-    background: hsl(0 60% 50%);
-  }
-  .compare-card-fix .compare-card-tag {
-    color: hsl(var(--success));
-  }
-  .compare-card-fix .compare-card-tag::before {
-    content: "";
-    width: 6px; height: 6px;
-    border-radius: 999px;
-    background: hsl(var(--success));
-  }
-  .compare-card h4 {
-    font-family: var(--font-display);
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.35;
-    letter-spacing: -0.015em;
-    color: hsl(var(--ink));
-    margin: 0 0 4px;
-  }
-  .compare-card p {
-    font-size: 13px;
-    color: hsl(var(--ink-muted));
-    line-height: 1.5;
-    margin: 0;
-  }
-  .compare-card-pain {
-    border-color: hsl(0 50% 88%);
-    background: hsl(0 60% 98%);
-  }
-  .compare-card-fix {
-    border-color: hsl(var(--success) / 0.25);
-    background: hsl(var(--success) / 0.04);
-  }
-
-  /* Animated dots layer — covers the WHOLE compare rig (lines span across columns) */
-  .compare-dots-layer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1; /* below cards (3) but above the rig background */
-  }
-  .compare-dots-layer svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    overflow: visible;
-  }
-
-  /* Dashed connector lines (visible) */
-  .compare-line {
-    stroke-width: 1.5;
-    stroke-dasharray: 4,4;
-    fill: none;
-  }
-  .compare-line.pain { stroke: hsl(0 60% 60% / 0.45); }
-  .compare-line.fix  { stroke: hsl(var(--success) / 0.45); }
-
-  /* Animated dots that travel along the lines */
-  .compare-anim-dot.slow { fill: hsl(0 60% 55%); filter: drop-shadow(0 0 4px hsl(0 60% 55% / 0.6)); }
-  .compare-anim-dot.fast { fill: hsl(var(--success)); filter: drop-shadow(0 0 4px hsl(var(--success) / 0.6)); }
-
-  @media (max-width: 899px) {
-    .compare-dots-layer { display: none; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .compare-anim-dot { display: none !important; }
-  }
 </style>
 
 <!-- ============================================================
@@ -1634,126 +1435,6 @@
       </div>
     </div>
 
-    <!-- Pros/cons comparison: manual pain → Travelity → quick & easy -->
-    <div class="compare-block">
-      <div class="compare-header">
-        <div class="eyebrow with-rule">Manual vs Travelity</div>
-        <h3>What used to take hours, <em>now takes seconds.</em></h3>
-        <p>Three operations that bleed time when you do them by hand. With Travelity, they happen automatically.</p>
-      </div>
-
-      <div class="compare-rig">
-        <!-- Connector lines + animated dots overlay (spans the entire rig) -->
-        <div class="compare-dots-layer" aria-hidden="true">
-          <svg viewBox="0 0 1000 600" preserveAspectRatio="none">
-            <defs>
-              <!-- Three pain paths (pain card right edge → hub center) -->
-              <path id="pain-path-1" d="M 50 100 Q 280 100 500 300"/>
-              <path id="pain-path-2" d="M 50 300 L 500 300"/>
-              <path id="pain-path-3" d="M 50 500 Q 280 500 500 300"/>
-              <!-- Three fix paths (hub center → fix card left edge) -->
-              <path id="fix-path-1" d="M 500 300 Q 720 100 950 100"/>
-              <path id="fix-path-2" d="M 500 300 L 950 300"/>
-              <path id="fix-path-3" d="M 500 300 Q 720 500 950 500"/>
-            </defs>
-
-            <!-- Visible dashed lines -->
-            <use href="#pain-path-1" class="compare-line pain"/>
-            <use href="#pain-path-2" class="compare-line pain"/>
-            <use href="#pain-path-3" class="compare-line pain"/>
-            <use href="#fix-path-1" class="compare-line fix"/>
-            <use href="#fix-path-2" class="compare-line fix"/>
-            <use href="#fix-path-3" class="compare-line fix"/>
-
-            <!-- Slow red dots traveling pain → hub -->
-            <circle r="5" class="compare-anim-dot slow">
-              <animateMotion dur="4.5s" repeatCount="indefinite" begin="0s">
-                <mpath href="#pain-path-1"/>
-              </animateMotion>
-            </circle>
-            <circle r="5" class="compare-anim-dot slow">
-              <animateMotion dur="4.5s" repeatCount="indefinite" begin="1.5s">
-                <mpath href="#pain-path-2"/>
-              </animateMotion>
-            </circle>
-            <circle r="5" class="compare-anim-dot slow">
-              <animateMotion dur="4.5s" repeatCount="indefinite" begin="3s">
-                <mpath href="#pain-path-3"/>
-              </animateMotion>
-            </circle>
-
-            <!-- Fast green dots traveling hub → fix -->
-            <circle r="5" class="compare-anim-dot fast">
-              <animateMotion dur="1.4s" repeatCount="indefinite" begin="2s">
-                <mpath href="#fix-path-1"/>
-              </animateMotion>
-            </circle>
-            <circle r="5" class="compare-anim-dot fast">
-              <animateMotion dur="1.4s" repeatCount="indefinite" begin="3.5s">
-                <mpath href="#fix-path-2"/>
-              </animateMotion>
-            </circle>
-            <circle r="5" class="compare-anim-dot fast">
-              <animateMotion dur="1.4s" repeatCount="indefinite" begin="5s">
-                <mpath href="#fix-path-3"/>
-              </animateMotion>
-            </circle>
-          </svg>
-        </div>
-
-        <!-- Pain column -->
-        <div class="compare-col-pain">
-          <div class="compare-card compare-card-pain">
-            <span class="compare-card-tag">Manually · 30 min</span>
-            <h4>Update inventory across channels</h4>
-            <p>Log into each OTA. Adjust availability. Hope you didn't miss one.</p>
-          </div>
-          <div class="compare-card compare-card-pain">
-            <span class="compare-card-tag">Manually · constant risk</span>
-            <h4>Catch double-bookings</h4>
-            <p>Cross-check spreadsheets. Refund the unlucky guest. Apologize publicly.</p>
-          </div>
-          <div class="compare-card compare-card-pain">
-            <span class="compare-card-tag">Manually · 2 hours</span>
-            <h4>Build the monthly report</h4>
-            <p>Export from every channel. Reconcile by hand. Hope the numbers match.</p>
-          </div>
-        </div>
-
-        <!-- Travelity center hub -->
-        <div class="compare-center">
-          <div class="compare-hub">
-            <svg class="travelity-mark" viewBox="0 0 32 32" fill="none">
-              <defs><linearGradient id="cmp-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="hsl(218 42% 48%)"/><stop offset="100%" stop-color="hsl(194 56% 57%)"/></linearGradient></defs>
-              <path d="M4 6 L16 26 L28 6 L22 6 L16 16 L10 6 Z" fill="url(#cmp-grad)"/>
-            </svg>
-            <div class="compare-hub-text">
-              <strong>Travelity</strong>
-              <small>Handles it</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- Solution column -->
-        <div class="compare-col-fix">
-          <div class="compare-card compare-card-fix">
-            <span class="compare-card-tag">Auto · &lt; 1 sec</span>
-            <h4>Inventory synced everywhere</h4>
-            <p>Update once. Every channel updated in real time. Done.</p>
-          </div>
-          <div class="compare-card compare-card-fix">
-            <span class="compare-card-tag">Auto · 0.2 sec</span>
-            <h4>Locked the second a guest books</h4>
-            <p>The seat is gone for everyone the instant it's taken. Always.</p>
-          </div>
-          <div class="compare-card compare-card-fix">
-            <span class="compare-card-tag">Auto · 1 click</span>
-            <h4>Reports ready when you are</h4>
-            <p>One source of truth. Export to CSV or pipe to your BI tool.</p>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -2089,158 +1770,64 @@
 
 <style>
   /* ============================================================
-     SECTION 5 — WE HELP YOU GO LIVE
+     SECTION 5 — WE HELP YOU GO LIVE (simple 4-column onboarding)
      ============================================================ */
   .golive {
-    background: hsl(var(--paper));
+    background: hsl(var(--travelity-cream));
     position: relative;
+    overflow: hidden;
   }
-  .golive-grid {
+  .golive::before {
+    /* Subtle teal bloom in upper area */
+    content: "";
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse at center, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .golive .container { position: relative; z-index: 1; }
+
+  .golive-features {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 56px;
-    align-items: start;
+    gap: 40px 32px;
+    margin-top: 24px;
   }
-  @media (min-width: 1024px) {
-    .golive-grid { grid-template-columns: 0.85fr 1.15fr; gap: 80px; }
-  }
+  @media (min-width: 640px)  { .golive-features { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .golive-features { grid-template-columns: repeat(4, 1fr); gap: 48px 32px; } }
 
-  .golive-text {
-    position: sticky;
-    top: 100px;
-  }
-  .golive-text h2 { margin-bottom: 18px; }
-  .golive-text .section-lead { margin-bottom: 32px; }
-
-  /* Specialist callout */
-  .specialist {
-    background: linear-gradient(135deg, hsl(var(--travelity-cream)) 0%, hsl(var(--travelity-sand) / 0.6) 100%);
-    border: 1px solid hsl(var(--line-warm));
-    border-radius: 14px;
-    padding: 20px;
-    margin-top: 32px;
+  .golive-feature {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .specialist-avatar {
+  .golive-feature-icon {
     width: 52px; height: 52px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, hsl(var(--travelity-coral)) 0%, hsl(var(--travelity-gold)) 100%);
-    color: hsl(0 0% 100%);
+    border-radius: 12px;
+    background: hsl(var(--travelity-teal) / 0.12);
+    color: hsl(var(--travelity-teal));
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 700;
-    flex-shrink: 0;
+    margin-bottom: 22px;
   }
-  .specialist-text strong {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 14px;
-    font-weight: 600;
-    color: hsl(var(--ink));
-    margin-bottom: 2px;
-  }
-  .specialist-text p {
-    margin: 0;
-    font-size: 13px;
-    color: hsl(var(--ink-muted));
-    line-height: 1.5;
-  }
-
-  /* Timeline of go-live phases */
-  .golive-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    position: relative;
-  }
-  .golive-phase {
-    background: hsl(var(--paper));
-    border: 1px solid hsl(var(--line));
-    border-radius: 14px;
-    padding: 24px 28px;
-    position: relative;
-    transition: transform 200ms;
-  }
-  .golive-phase:hover { transform: translateX(4px); }
-  .golive-phase::before {
-    /* Left-side colored accent bar */
-    content: "";
-    position: absolute;
-    top: 24px; bottom: 24px;
-    left: 0;
-    width: 3px;
-    border-radius: 0 2px 2px 0;
-  }
-  .golive-phase:nth-child(1)::before { background: hsl(var(--travelity-coral)); }
-  .golive-phase:nth-child(2)::before { background: hsl(var(--travelity-blue)); }
-  .golive-phase:nth-child(3)::before { background: hsl(var(--travelity-teal)); }
-
-  .golive-phase-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-  .golive-phase-num {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.10em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 4px;
-  }
-  .golive-phase:nth-child(1) .golive-phase-num { background: hsl(var(--travelity-coral) / 0.12); color: hsl(var(--travelity-coral)); }
-  .golive-phase:nth-child(2) .golive-phase-num { background: hsl(var(--travelity-blue) / 0.10); color: hsl(var(--travelity-blue)); }
-  .golive-phase:nth-child(3) .golive-phase-num { background: hsl(var(--travelity-teal) / 0.14); color: hsl(var(--travelity-teal)); }
-  .golive-phase-time {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: hsl(var(--ink-muted));
-    letter-spacing: 0.06em;
-  }
-  .golive-phase h3 {
+  .golive-feature-icon svg { width: 24px; height: 24px; }
+  .golive-feature h4 {
     font-family: var(--font-display);
     font-size: 19px;
-    font-weight: 600;
-    line-height: 1.3;
+    font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 8px;
-  }
-  .golive-phase p {
-    font-size: 14.5px;
-    color: hsl(var(--ink-muted));
-    line-height: 1.6;
-    margin: 0 0 14px;
-  }
-  .golive-phase ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .golive-phase li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13.5px;
     color: hsl(var(--ink));
-    line-height: 1.5;
+    margin: 0 0 10px;
+    line-height: 1.25;
   }
-  .golive-phase li::before {
-    content: "";
-    flex-shrink: 0;
-    margin-top: 8px;
-    width: 4px; height: 4px;
-    border-radius: 999px;
-    background: hsl(var(--ink-muted));
+  .golive-feature p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: hsl(var(--ink-muted));
+    margin: 0;
   }
 </style>
 
@@ -2709,69 +2296,63 @@
 </style>
 
 <!-- ============================================================
-     SECTION 5 — WE HELP YOU GO LIVE
+     SECTION 5 — WE HELP YOU GO LIVE (4-column onboarding)
      ============================================================ -->
 <section class="page-section golive">
   <div class="container">
-    <div class="golive-grid">
-      <div class="golive-text">
-        <div class="eyebrow with-rule teal">White-glove onboarding</div>
-        <h2 class="section-title">We help you <em>go live</em>.</h2>
-        <p class="section-lead">
-          Migrating from spreadsheets or another platform isn't a developer task — it's an operations decision. We handle the setup, you keep running your business.
-        </p>
-        <div class="specialist">
-          <div class="specialist-avatar">M</div>
-          <div class="specialist-text">
-            <strong>A dedicated onboarding specialist</strong>
-            <p>One person who knows your operation, walks you through every step, and stays on call after launch.</p>
-          </div>
+    <div class="section-header center">
+      <div class="eyebrow with-rule teal">Onboarding</div>
+      <h2 class="section-title center">We help you <em>go live.</em></h2>
+      <p class="section-lead center">From spreadsheets or another platform — we handle the migration so your business doesn't pause.</p>
+    </div>
+
+    <div class="golive-features">
+      <!-- 1. Setup assistance -->
+      <div class="golive-feature">
+        <div class="golive-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+          </svg>
         </div>
+        <h4>Setup assistance</h4>
+        <p>We import your products, schedules, and pricing — you run it from day one.</p>
       </div>
 
-      <div class="golive-timeline">
-        <div class="golive-phase">
-          <div class="golive-phase-header">
-            <span class="golive-phase-num">Phase 01</span>
-            <span class="golive-phase-time">Days 1–3</span>
-          </div>
-          <h3>Discovery &amp; data migration</h3>
-          <p>Walk us through your current operation — products, channels, pricing rules, team. We migrate your existing bookings and customer history into Travelity.</p>
-          <ul>
-            <li>Operations audit call (60 min)</li>
-            <li>Existing data imported (CSV, Excel, or direct from your old platform)</li>
-            <li>Pricing rules and policies modeled with you</li>
-          </ul>
+      <!-- 2. Personalized training -->
+      <div class="golive-feature">
+        <div class="golive-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+          </svg>
         </div>
+        <h4>Personalized training</h4>
+        <p>Live walkthroughs with your team. Roles and workflows mapped to your operation.</p>
+      </div>
 
-        <div class="golive-phase">
-          <div class="golive-phase-header">
-            <span class="golive-phase-num">Phase 02</span>
-            <span class="golive-phase-time">Days 4–10</span>
-          </div>
-          <h3>Setup &amp; integration</h3>
-          <p>We wire up your channels, brand your widget, train your team, and connect your payment processor. By the end of this phase, your operation runs in Travelity in parallel with your old system.</p>
-          <ul>
-            <li>OTA channels connected and tested</li>
-            <li>Widget embedded on your website (or staging)</li>
-            <li>Team trained — sales, ops, accountants</li>
-            <li>Payment gateway connected and verified</li>
-          </ul>
+      <!-- 3. Dedicated support -->
+      <div class="golive-feature">
+        <div class="golive-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+            <path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/>
+          </svg>
         </div>
+        <h4>Dedicated support</h4>
+        <p>Real humans, regional time zones. Same channel for sales and support.</p>
+      </div>
 
-        <div class="golive-phase">
-          <div class="golive-phase-header">
-            <span class="golive-phase-num">Phase 03</span>
-            <span class="golive-phase-time">Days 11–14</span>
-          </div>
-          <h3>Go live &amp; first weeks</h3>
-          <p>Switch your operation onto Travelity completely. Your specialist stays on call for the first two weeks — for live support, course corrections, and anything you didn't know to ask about.</p>
-          <ul>
-            <li>Cutover from old system on a date you choose</li>
-            <li>Daily check-ins for the first week</li>
-            <li>Handoff to standard support after week two</li>
-          </ul>
+      <!-- 4. Ongoing updates -->
+      <div class="golive-feature">
+        <div class="golive-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M12 4v3M12 17v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+          </svg>
         </div>
+        <h4>Ongoing updates</h4>
+        <p>New features ship monthly. Existing customers get them first, no migration drama.</p>
       </div>
     </div>
   </div>
