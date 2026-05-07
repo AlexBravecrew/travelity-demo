@@ -6,7 +6,7 @@
  *    directly. Never from any other icon package directly.
  * 2. Every export from this file ends in `Icon`. `Lock` becomes `LockIcon`,
  *    `ArrowRight` becomes `ArrowRightIcon`. Always.
- * 3. Add icons to this file lazily — only as components actually need them.
+ * 3. Add icons here lazily — only as components actually need them.
  *    Do not pre-export the entire lucide library.
  *
  * Why: components stay decoupled from the icon library. Swapping @lucide/astro
@@ -14,6 +14,4 @@
  * find-and-replace.
  */
 
-// Empty until Phase 1. The first icon import will look like:
-// export { ArrowRight as ArrowRightIcon } from '@lucide/astro';
-export {};
+export { ArrowRight as ArrowRightIcon } from '@lucide/astro';

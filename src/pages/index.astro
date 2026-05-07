@@ -1,40 +1,211 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
-import { cn } from '@/lib/utils/cn';
+import { Button } from '@/components/ui/button';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { Tag } from '@/components/ui/tag';
+import { LinkInline } from '@/components/ui/link-inline';
 import { Paths } from '@/lib/utils/paths';
 ---
 
 <MarketingLayout
-    title="Travelity — Run your travel business without the spreadsheets"
-    description="The booking platform travel businesses run on. Bookings, channels, payments, and operations — one platform for the people who run travel."
+    title="Travelity — Primitives Showcase"
+    description="Visual testbed for Phase 1 primitives."
 >
-    <div class={cn('container mx-auto px-6 py-24')}>
-        <p
-            style="font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: hsl(var(--travelity-teal));"
-        >
-            Phase 0 — Bootstrap
-        </p>
-        <h1
-            style="font-family: var(--font-serif); font-weight: 600; font-size: clamp(40px, 5vw, 64px); letter-spacing: -0.035em; line-height: 1.02; color: hsl(var(--ink)); margin: 16px 0 24px;"
-        >
-            Travelity
-            <em
-                style="font-style: italic; font-weight: 500; color: hsl(var(--travelity-teal));"
-                >scaffolded.</em
+    <div class="container mx-auto px-6 py-16 max-w-[960px]">
+        <header class="mb-16">
+            <Eyebrow withRule>Phase 1 — Primitives</Eyebrow>
+            <h1
+                class="font-serif font-semibold text-ink mt-4 leading-[1.02] tracking-[-0.035em]"
+                style="font-size: clamp(40px, 5vw, 56px);"
             >
-        </h1>
-        <p
-            style="font-size: 18px; color: hsl(var(--ink-muted)); max-width: 540px;"
-        >
-            If you can read this, the toolchain is working. Tokens, fonts, and
-            the path alias all resolve. Phase 1 (primitives) ships next.
-        </p>
-        <p
-            style="font-family: var(--font-mono); font-size: 12px; color: hsl(var(--ink-soft)); margin-top: 32px;"
-        >
-            HOME = <code>{Paths.HOME}</code> · BOOK_DEMO = <code
-                >{Paths.BOOK_DEMO}</code
+                Building blocks
+            </h1>
+            <p class="text-[18px] text-ink-muted mt-4 max-w-[540px]">
+                Every variant of every primitive, on one page. The rest of the
+                site composes from these.
+            </p>
+        </header>
+
+        <!-- BUTTON ===================================================== -->
+        <section class="mb-16 pb-16 border-b border-line">
+            <Eyebrow>Button</Eyebrow>
+            <h2
+                class="font-display font-semibold text-ink text-[28px] tracking-[-0.025em] mt-3 mb-8"
             >
-        </p>
+                Three variants × three sizes
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        Primary
+                    </p>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <Button size="sm">Small primary</Button>
+                        <Button size="md">Medium primary</Button>
+                        <Button size="lg">Large primary</Button>
+                        <Button size="md" withArrow>With arrow</Button>
+                    </div>
+                </div>
+
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        Outline
+                    </p>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <Button variant="outline" size="sm"
+                            >Small outline</Button
+                        >
+                        <Button variant="outline" size="md"
+                            >Medium outline</Button
+                        >
+                        <Button variant="outline" size="lg"
+                            >Large outline</Button
+                        >
+                        <Button variant="outline" size="md" withArrow
+                            >With arrow</Button
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        Ghost
+                    </p>
+                    <div class="flex flex-wrap items-end gap-3">
+                        <Button variant="ghost" size="sm">Small ghost</Button>
+                        <Button variant="ghost" size="md">Medium ghost</Button>
+                        <Button variant="ghost" size="lg">Large ghost</Button>
+                    </div>
+                </div>
+
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        As link (href prop)
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <Button href={Paths.BOOK_DEMO} withArrow
+                            >Book a demo</Button
+                        >
+                        <Button href={Paths.PRICING} variant="outline"
+                            >See pricing</Button
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        Disabled
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <Button disabled>Disabled primary</Button>
+                        <Button variant="outline" disabled
+                            >Disabled outline</Button
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EYEBROW ==================================================== -->
+        <section class="mb-16 pb-16 border-b border-line">
+            <Eyebrow>Eyebrow</Eyebrow>
+            <h2
+                class="font-display font-semibold text-ink text-[28px] tracking-[-0.025em] mt-3 mb-8"
+            >
+                Two configurations
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        Default
+                    </p>
+                    <Eyebrow>Section label</Eyebrow>
+                </div>
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        With rule
+                    </p>
+                    <Eyebrow withRule>Section label with rule</Eyebrow>
+                </div>
+                <div>
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.10em] text-ink-soft mb-3"
+                    >
+                        Centered (used inside center-aligned section headers)
+                    </p>
+                    <div class="text-center">
+                        <Eyebrow centered withRule>Centered with rule</Eyebrow>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAG ======================================================== -->
+        <section class="mb-16 pb-16 border-b border-line">
+            <Eyebrow>Tag</Eyebrow>
+            <h2
+                class="font-display font-semibold text-ink text-[28px] tracking-[-0.025em] mt-3 mb-8"
+            >
+                Four semantic variants
+            </h2>
+
+            <div class="flex flex-wrap gap-3 items-center">
+                <Tag>v2.4.1</Tag>
+                <Tag variant="success">Synced</Tag>
+                <Tag variant="warning">Action required</Tag>
+                <Tag variant="destructive">1 double-booking prevented</Tag>
+            </div>
+
+            <p class="text-[14px] text-ink-muted mt-6 max-w-[540px]">
+                The destructive variant uses semantic red. It's used for both
+                error states <em>and</em> "bad thing prevented" callouts (the hero's
+                double-booking pill). Same color, different context.
+            </p>
+        </section>
+
+        <!-- LINK INLINE ================================================ -->
+        <section class="mb-16">
+            <Eyebrow>LinkInline</Eyebrow>
+            <h2
+                class="font-display font-semibold text-ink text-[28px] tracking-[-0.025em] mt-3 mb-8"
+            >
+                Inline navigation
+            </h2>
+
+            <div
+                class="space-y-4 text-[16px] text-ink leading-[1.6] max-w-[540px]"
+            >
+                <p>
+                    Read more about our approach in <LinkInline
+                        href={Paths.OUR_STORY}>our story</LinkInline
+                    >, or jump straight to <LinkInline
+                        href={Paths.PRICING}
+                        withArrow>pricing</LinkInline
+                    >.
+                </p>
+                <p>
+                    External links open in a new tab —
+                    <LinkInline href="https://travelity.app" external
+                        >travelity.app</LinkInline
+                    >.
+                </p>
+            </div>
+        </section>
     </div>
 </MarketingLayout>

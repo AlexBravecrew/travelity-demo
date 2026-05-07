@@ -1,0 +1,107 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { ArrowRightIcon } from '@/icons';
+
+type ButtonVariant = 'primary' | 'outline' | 'ghost';
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+export interface Props {
+    /** Visual variant. Defaults to `primary`. */
+    variant?: ButtonVariant;
+    /** Size. Defaults to `md`. */
+    size?: ButtonSize;
+    /** If set, renders as an `<a>` instead of a `<button>`. */
+    href?: string;
+    /** Native button type when rendering as `<button>`. Defaults to `button`. */
+    type?: 'button' | 'submit' | 'reset';
+    /** Show a trailing arrow icon that translates on hover. */
+    withArrow?: boolean;
+    /** Disabled state. Only applies when rendering as `<button>`. */
+    disabled?: boolean;
+    /** Forwarded to underlying element. */
+    class?: string;
+    /** Native ARIA label, useful for icon-only buttons (not used in Phase 1). */
+    'aria-label'?: string;
+}
+
+const {
+    variant = 'primary',
+    size = 'md',
+    href,
+    type = 'button',
+    withArrow = false,
+    disabled = false,
+    class: className,
+    ...rest
+} = Astro.props;
+
+const isLink = href !== undefined;
+
+const base =
+    'inline-flex items-center justify-center gap-2 rounded-[8px] font-body font-semibold ' +
+    'tracking-[-0.005em] whitespace-nowrap border-[1.5px] border-transparent ' +
+    'transition-all duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] ' +
+    'cursor-pointer no-underline ' +
+    'focus-visible:outline-2 focus-visible:outline-travelity-blue focus-visible:outline-offset-2 ' +
+    'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none';
+
+const sizeClasses: Record<ButtonSize, string> = {
+    sm: 'h-9 px-[14px] text-[13px]',
+    md: 'h-10 px-[18px] text-[14px]',
+    lg: 'h-14 px-7 text-[15px]',
+};
+
+const variantClasses: Record<ButtonVariant, string> = {
+    primary:
+        'bg-travelity-blue text-white ' +
+        'hover:bg-[hsl(var(--travelity-blue)/0.92)] hover:-translate-y-px ' +
+        'hover:shadow-[0_8px_24px_-6px_hsl(var(--travelity-blue)/0.32)]',
+    outline:
+        'bg-transparent text-ink border-line ' +
+        'hover:border-ink hover:bg-surface-alt',
+    ghost:
+        'bg-transparent text-ink-muted ' +
+        'hover:text-ink hover:bg-surface-alt',
+};
+
+const classes = cn(base, sizeClasses[size], variantClasses[variant], className);
+
+const Tag = isLink ? 'a' : 'button';
+---
+
+<Tag class={classes} {...isLink ? { href } : { type, disabled }} {...rest}>
+    <slot />
+    {
+        withArrow && (
+            <ArrowRightIcon
+                class="w-[14px] h-[14px] transition-transform duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-[3px]"
+                aria-hidden="true"
+            />
+        )
+    }
+</Tag>
+
+<style>
+    /* Arrow translate on hover — applied via parent hover, since the
+       group-hover utility above requires the parent to have `group` class.
+       Using a CSS rule here is simpler and scoped to this component. */
+    a:hover :global(svg),
+    button:hover :global(svg) {
+        transform: translateX(3px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        a,
+        button {
+            transition: none !important;
+        }
+        a:hover,
+        button:hover {
+            transform: none !important;
+        }
+        a:hover :global(svg),
+        button:hover :global(svg) {
+            transform: none !important;
+        }
+    }
+</style>

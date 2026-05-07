@@ -1,0 +1,35 @@
+---
+import { cn } from '@/lib/utils/cn';
+
+export interface Props {
+    /** Show a 24px horizontal rule before the text. */
+    withRule?: boolean;
+    /** Center-align the eyebrow (justify-content). Useful inside centered section headers. */
+    centered?: boolean;
+    /** Forwarded to underlying element. */
+    class?: string;
+}
+
+const { withRule = false, centered = false, class: className } = Astro.props;
+
+const base =
+    'inline-flex items-center gap-2 ' +
+    'font-body text-[12px] font-semibold uppercase tracking-[0.10em] ' +
+    'text-travelity-teal';
+
+const justify = centered ? 'justify-center' : '';
+
+const classes = cn(base, justify, className);
+---
+
+<span class={classes} data-with-rule={withRule ? 'true' : undefined}>
+    {
+        withRule && (
+            <span
+                class="inline-block w-6 h-px bg-travelity-teal"
+                aria-hidden="true"
+            />
+        )
+    }
+    <slot />
+</span>

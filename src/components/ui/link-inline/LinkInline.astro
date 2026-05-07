@@ -1,0 +1,66 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { ArrowRightIcon } from '@/icons';
+
+export interface Props {
+    /** Required — this is always a navigation link. */
+    href: string;
+    /** Show a trailing arrow that translates on hover. */
+    withArrow?: boolean;
+    /** Open in new tab — adds target="_blank" + rel="noopener noreferrer". */
+    external?: boolean;
+    /** Forwarded to underlying element. */
+    class?: string;
+}
+
+const {
+    href,
+    withArrow = false,
+    external = false,
+    class: className,
+    ...rest
+} = Astro.props;
+
+const base =
+    'inline-flex items-center gap-1.5 ' +
+    'font-body text-[14px] font-semibold ' +
+    'text-travelity-blue ' +
+    'no-underline border-b border-[hsl(var(--travelity-blue)/0.30)] ' +
+    'pb-px ' +
+    'transition-all duration-150 ' +
+    'hover:border-travelity-blue ' +
+    'cursor-pointer';
+
+const classes = cn(base, className);
+
+const externalAttrs = external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {};
+---
+
+<a class={classes} href={href} {...externalAttrs} {...rest}>
+    <slot />
+    {
+        withArrow && (
+            <ArrowRightIcon
+                class="w-[13px] h-[13px] transition-transform duration-200"
+                aria-hidden="true"
+            />
+        )
+    }
+</a>
+
+<style>
+    a:hover :global(svg) {
+        transform: translateX(2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        a {
+            transition: none !important;
+        }
+        a:hover :global(svg) {
+            transform: none !important;
+        }
+    }
+</style>
