@@ -1,0 +1,40 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { cn } from '@/lib/utils/cn';
+import { Paths } from '@/lib/utils/paths';
+---
+
+<MarketingLayout
+    title="Travelity — Run your travel business without the spreadsheets"
+    description="The booking platform travel businesses run on. Bookings, channels, payments, and operations — one platform for the people who run travel."
+>
+    <div class={cn('container mx-auto px-6 py-24')}>
+        <p
+            style="font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: hsl(var(--travelity-teal));"
+        >
+            Phase 0 — Bootstrap
+        </p>
+        <h1
+            style="font-family: var(--font-serif); font-weight: 600; font-size: clamp(40px, 5vw, 64px); letter-spacing: -0.035em; line-height: 1.02; color: hsl(var(--ink)); margin: 16px 0 24px;"
+        >
+            Travelity
+            <em
+                style="font-style: italic; font-weight: 500; color: hsl(var(--travelity-teal));"
+                >scaffolded.</em
+            >
+        </h1>
+        <p
+            style="font-size: 18px; color: hsl(var(--ink-muted)); max-width: 540px;"
+        >
+            If you can read this, the toolchain is working. Tokens, fonts, and
+            the path alias all resolve. Phase 1 (primitives) ships next.
+        </p>
+        <p
+            style="font-family: var(--font-mono); font-size: 12px; color: hsl(var(--ink-soft)); margin-top: 32px;"
+        >
+            HOME = <code>{Paths.HOME}</code> · BOOK_DEMO = <code
+                >{Paths.BOOK_DEMO}</code
+            >
+        </p>
+    </div>
+</MarketingLayout>
