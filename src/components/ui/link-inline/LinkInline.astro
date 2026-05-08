@@ -1,8 +1,9 @@
 ---
 import { cn } from '@/lib/utils/cn';
 import { ArrowRightIcon } from '@/icons';
+import type { HTMLAttributes } from 'astro/types';
 
-export interface Props {
+export interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
     /** Required — this is always a navigation link. */
     href: string;
     /** Show a trailing arrow that translates on hover. */

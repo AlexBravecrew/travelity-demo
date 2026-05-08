@@ -1,0 +1,72 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import type { HTMLAttributes } from 'astro/types';
+
+type Alignment = 'left' | 'center';
+
+export interface Props extends HTMLAttributes<'div'> {
+    /** Eyebrow text. Pass empty string or omit to skip the eyebrow entirely. */
+    eyebrow?: string;
+    /** Show a 24px horizontal rule before the eyebrow text. Only relevant if `eyebrow` is set. */
+    eyebrowWithRule?: boolean;
+    /** Alignment. `center` for marketing sections (default). `left` for product/audience pages. */
+    align?: Alignment;
+    /** Forwarded to underlying element. */
+    class?: string;
+}
+
+const {
+    eyebrow,
+    eyebrowWithRule = false,
+    align = 'center',
+    class: className,
+    ...rest
+} = Astro.props;
+
+const wrapperBase = 'mb-[56px]';
+const alignClasses = align === 'center' ? 'text-center' : 'text-left';
+
+const classes = cn(wrapperBase, alignClasses, className);
+---
+
+<div class={classes} {...rest}>
+    {
+        eyebrow && (
+            <Eyebrow
+                withRule={eyebrowWithRule}
+                centered={align === 'center'}
+                class="mb-6"
+            >
+                {eyebrow}
+            </Eyebrow>
+        )
+    }
+
+    <h2
+        class:list={[
+            'section-headline',
+            'font-serif font-semibold text-ink',
+            'leading-[1.05] tracking-[-0.03em]',
+            'max-w-[18ch]',
+            'mb-[18px]',
+            align === 'center' ? 'mx-auto' : '',
+        ]}
+        style="font-size: clamp(32px, 3.8vw, 48px);"
+    >
+        <slot name="headline" />
+    </h2>
+
+    <slot name="dek" />
+
+    <slot name="actions" />
+</div>
+
+<style>
+    /* Italic-em styling — Author italic in teal — scoped to the h2 inside this component. */
+    .section-headline :global(em) {
+        font-style: italic;
+        font-weight: 500;
+        color: hsl(var(--travelity-teal));
+    }
+</style>

@@ -1,16 +1,17 @@
 ---
 import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
 
 type TagVariant = 'default' | 'success' | 'warning' | 'destructive';
 
-export interface Props {
+export interface Props extends HTMLAttributes<'span'> {
     /** Semantic variant. Defaults to `default` (neutral metadata). */
     variant?: TagVariant;
     /** Forwarded to underlying element. */
     class?: string;
 }
 
-const { variant = 'default', class: className } = Astro.props;
+const { variant = 'default', class: className, ...rest } = Astro.props;
 
 const base =
     'inline-flex items-center ' +
@@ -31,6 +32,6 @@ const variantClasses: Record<TagVariant, string> = {
 const classes = cn(base, variantClasses[variant], className);
 ---
 
-<span class={classes}>
+<span class={classes} {...rest}>
     <slot />
 </span>

@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { Tag } from '@/components/ui/tag';
 import { LinkInline } from '@/components/ui/link-inline';
+import { Card } from '@/components/ui/card';
+import { SectionHeader } from '@/components/ui/section-header';
 import { Paths } from '@/lib/utils/paths';
 ---
 
@@ -205,6 +207,126 @@ import { Paths } from '@/lib/utils/paths';
                         >travelity.app</LinkInline
                     >.
                 </p>
+            </div>
+        </section>
+
+        <!-- CARD ======================================================= -->
+        <section class="mb-16 pb-16 border-b border-line">
+            <Eyebrow>Card</Eyebrow>
+            <h2
+                class="font-display font-semibold text-ink text-[28px] tracking-[-0.025em] mt-3 mb-8"
+            >
+                Two variants, with optional hover and accent
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card class="p-7">
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted mb-2"
+                    >
+                        Default
+                    </p>
+                    <h3
+                        class="font-display font-semibold text-[18px] text-ink mb-2"
+                    >
+                        Static card
+                    </h3>
+                    <p class="text-[14.5px] text-ink-muted leading-[1.6]">
+                        No hover. Used for layout containers and metadata
+                        blocks.
+                    </p>
+                </Card>
+
+                <Card interactive class="p-7">
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted mb-2"
+                    >
+                        Default + interactive
+                    </p>
+                    <h3
+                        class="font-display font-semibold text-[18px] text-ink mb-2"
+                    >
+                        Hover me
+                    </h3>
+                    <p class="text-[14.5px] text-ink-muted leading-[1.6]">
+                        Lifts -4px on hover with a tinted ink shadow. Used for
+                        feature cards.
+                    </p>
+                </Card>
+
+                <Card variant="featured" interactive topAccent class="p-7">
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.12em] text-travelity-teal mb-2"
+                    >
+                        Featured
+                    </p>
+                    <h3
+                        class="font-display font-semibold text-[18px] text-ink mb-2"
+                    >
+                        Highlighted in set
+                    </h3>
+                    <p class="text-[14.5px] text-ink-muted leading-[1.6]">
+                        Teal border, teal-tinted shadow, gradient top accent.
+                        Used for recommended pricing tier.
+                    </p>
+                </Card>
+            </div>
+        </section>
+
+        <!-- SECTION HEADER ============================================== -->
+        <section class="mb-16">
+            <Eyebrow>SectionHeader</Eyebrow>
+            <h2
+                class="font-display font-semibold text-ink text-[28px] tracking-[-0.025em] mt-3 mb-8"
+            >
+                Two alignments, with the editorial italic-em
+            </h2>
+
+            <div class="space-y-12">
+                <div class="border border-line rounded-[16px] p-10">
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft mb-6"
+                    >
+                        Center (default — home page sections)
+                    </p>
+                    <SectionHeader
+                        eyebrow="Built for daily operations"
+                        eyebrowWithRule
+                    >
+                        <Fragment slot="headline">
+                            Everything you need, <em>nothing you don't.</em>
+                        </Fragment>
+                        <p
+                            slot="dek"
+                            class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
+                        >
+                            Six core capabilities, modeled the way real travel
+                            businesses actually work — not the way booking
+                            software thinks they should.
+                        </p>
+                    </SectionHeader>
+                </div>
+
+                <div class="border border-line rounded-[16px] p-10">
+                    <p
+                        class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft mb-6"
+                    >
+                        Left (Solutions / Audience pages)
+                    </p>
+                    <SectionHeader eyebrow="For tour operators" align="left">
+                        <Fragment slot="headline">
+                            Multi-day tours, <em>without the spreadsheet.</em>
+                        </Fragment>
+                        <p
+                            slot="dek"
+                            class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch]"
+                        >
+                            Build itineraries, manage participants, and run the
+                            operation from one place — for one-day excursions to
+                            multi-week packages.
+                        </p>
+                    </SectionHeader>
+                </div>
             </div>
         </section>
     </div>

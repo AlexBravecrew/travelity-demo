@@ -1,11 +1,12 @@
 ---
 import { cn } from '@/lib/utils/cn';
 import { ArrowRightIcon } from '@/icons';
+import type { HTMLAttributes } from 'astro/types';
 
 type ButtonVariant = 'primary' | 'outline' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface Props {
+export interface Props extends Omit<HTMLAttributes<'button'>, 'type'> {
     /** Visual variant. Defaults to `primary`. */
     variant?: ButtonVariant;
     /** Size. Defaults to `md`. */
@@ -18,10 +19,10 @@ export interface Props {
     withArrow?: boolean;
     /** Disabled state. Only applies when rendering as `<button>`. */
     disabled?: boolean;
+    /** When rendering as link, opens in new tab + adds rel="noopener noreferrer". */
+    external?: boolean;
     /** Forwarded to underlying element. */
     class?: string;
-    /** Native ARIA label, useful for icon-only buttons (not used in Phase 1). */
-    'aria-label'?: string;
 }
 
 const {
@@ -31,11 +32,17 @@ const {
     type = 'button',
     withArrow = false,
     disabled = false,
+    external = false,
     class: className,
     ...rest
 } = Astro.props;
 
 const isLink = href !== undefined;
+
+const externalAttrs =
+    isLink && external
+        ? { target: '_blank' as const, rel: 'noopener noreferrer' }
+        : {};
 
 const base =
     'inline-flex items-center justify-center gap-2 rounded-[8px] font-body font-semibold ' +
@@ -69,12 +76,16 @@ const classes = cn(base, sizeClasses[size], variantClasses[variant], className);
 const Tag = isLink ? 'a' : 'button';
 ---
 
-<Tag class={classes} {...isLink ? { href } : { type, disabled }} {...rest}>
+<Tag
+    class={classes}
+    {...isLink ? { href, ...externalAttrs } : { type, disabled }}
+    {...rest}
+>
     <slot />
     {
         withArrow && (
             <ArrowRightIcon
-                class="w-[14px] h-[14px] transition-transform duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-[3px]"
+                class="w-[14px] h-[14px] transition-transform duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]"
                 aria-hidden="true"
             />
         )
@@ -82,9 +93,8 @@ const Tag = isLink ? 'a' : 'button';
 </Tag>
 
 <style>
-    /* Arrow translate on hover — applied via parent hover, since the
-       group-hover utility above requires the parent to have `group` class.
-       Using a CSS rule here is simpler and scoped to this component. */
+    /* Arrow translate on hover — scoped CSS so we don't depend on a
+       parent `group` class. */
     a:hover :global(svg),
     button:hover :global(svg) {
         transform: translateX(3px);

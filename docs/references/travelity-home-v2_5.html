@@ -8,34 +8,42 @@
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=satoshi@400,500,700&f[]=author@400,500,600,700&display=swap" rel="stylesheet">
 <style>
   /* ============================================================
-     TOKENS — provisional palette (light only for now)
+     TOKENS — v1 cool palette (blue + teal, no warm accents)
      ============================================================ */
   :root {
     /* Brand */
-    --travelity-blue: 218 42% 48%;
-    --travelity-teal: 194 56% 57%;
-    /* Warm accents */
-    --travelity-coral: 14 84% 64%;
-    --travelity-gold: 38 78% 60%;
-    /* Surfaces */
-    --travelity-cream: 36 38% 96%;
-    --travelity-sand: 32 32% 92%;
-    --paper: 0 0% 100%;
+    --travelity-blue: 218 42% 48%;        /* lifted brand blue */
+    --travelity-teal: 194 56% 57%;        /* supporting brand */
+
+    /* Editorial accent — was coral in v2, now teal for v1 cool palette */
+    --travelity-coral: 194 56% 57%;       /* alias kept for compatibility, points to teal */
+    --travelity-gold:  220 14% 60%;       /* alias kept for compatibility, neutral fallback */
+
+    /* Surfaces — was warm cream/sand in v2, now white/light-gray in v1 */
+    --travelity-cream: 0 0% 100%;         /* alias kept for compatibility, points to white */
+    --travelity-sand:  220 14% 97%;       /* alias kept for compatibility, points to light gray */
+    --surface:         0 0% 100%;
+    --surface-alt:     220 14% 97%;
+    --paper:           0 0% 100%;
+
     /* Neutrals */
-    --ink: 222 47% 11%;
-    --ink-muted: 215 16% 47%;
-    --ink-soft: 215 14% 60%;
-    --line: 214 20% 91%;
-    --line-warm: 32 28% 84%;
+    --ink:        222 47% 11%;
+    --ink-muted:  215 16% 47%;
+    --ink-soft:   215 14% 60%;
+    --line:       214 20% 91%;
+    --line-warm:  214 20% 91%;            /* alias kept for compatibility */
+
     /* Semantic */
-    --success: 160 60% 45%;
-    --warning: 38 92% 50%;
+    --success:     160 60% 45%;
+    --warning:     38 92% 50%;
     --destructive: 0 72% 51%;
+
     /* Type */
-    --font-serif: "Author", "General Sans", Georgia, serif;
+    --font-serif:   "Author", "General Sans", Georgia, serif;
     --font-display: "General Sans", -apple-system, sans-serif;
-    --font-body: "Satoshi", -apple-system, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-body:    "Satoshi", -apple-system, sans-serif;
+    --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+
     /* Layout */
     --content: 1280px;
   }
@@ -531,10 +539,11 @@
     border-radius: 999px;
     flex-shrink: 0;
   }
-  .hero-audience:nth-child(1) .hero-audience-dot { background: hsl(var(--travelity-coral)); }
-  .hero-audience:nth-child(2) .hero-audience-dot { background: hsl(var(--travelity-teal)); }
-  .hero-audience:nth-child(3) .hero-audience-dot { background: hsl(var(--travelity-gold)); }
-  .hero-audience:nth-child(4) .hero-audience-dot { background: hsl(var(--travelity-blue)); }
+  /* Four audience dots — distinct colors using brand palette only */
+  .hero-audience:nth-child(1) .hero-audience-dot { background: hsl(var(--travelity-blue)); }      /* tour operators */
+  .hero-audience:nth-child(2) .hero-audience-dot { background: hsl(var(--travelity-teal)); }      /* transfer providers */
+  .hero-audience:nth-child(3) .hero-audience-dot { background: hsl(218 50% 38%); }                /* accommodation hosts — deeper blue */
+  .hero-audience:nth-child(4) .hero-audience-dot { background: hsl(194 40% 40%); }                /* independent guides — deeper teal */
 
   /* Hero photo — full visual on the right, no card frame */
   .hero-visual {
@@ -544,10 +553,10 @@
     aspect-ratio: 4 / 5;
     max-height: 600px;
     background: linear-gradient(180deg,
-      hsl(28 70% 80%) 0%,
-      hsl(20 75% 70%) 30%,
-      hsl(15 60% 50%) 65%,
-      hsl(218 42% 38%) 100%);
+      hsl(194 35% 88%) 0%,
+      hsl(200 45% 70%) 30%,
+      hsl(218 42% 48%) 65%,
+      hsl(218 42% 30%) 100%);
     box-shadow: 0 32px 64px -20px hsl(var(--travelity-blue) / 0.25);
   }
   @media (min-width: 1024px) {
@@ -574,7 +583,7 @@
     position: absolute;
     top: 60px; right: 90px;
     width: 130px; height: 130px;
-    background: radial-gradient(circle, hsl(38 95% 80%) 0%, hsl(28 80% 65% / 0.4) 60%, transparent 80%);
+    background: radial-gradient(circle, hsl(194 70% 85%) 0%, hsl(200 60% 70% / 0.35) 60%, transparent 80%);
     border-radius: 999px;
     filter: blur(1px);
   }
@@ -582,8 +591,8 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse at 30% 70%, hsl(38 80% 80% / 0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 40%, hsl(20 70% 65% / 0.2) 0%, transparent 50%);
+      radial-gradient(ellipse at 30% 70%, hsl(194 60% 85% / 0.28) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 40%, hsl(218 50% 70% / 0.2) 0%, transparent 50%);
     pointer-events: none;
   }
   .hero-photo-scene { position: absolute; bottom: 0; left: 0; right: 0; height: 65%; }
@@ -712,8 +721,8 @@
     font-family: var(--font-body);
     font-size: 10.5px;
     font-weight: 600;
-    color: hsl(var(--travelity-coral));
-    background: hsl(var(--travelity-coral) / 0.10);
+    color: hsl(var(--destructive));
+    background: hsl(var(--destructive) / 0.08);
     padding: 3px 8px;
     border-radius: 4px;
   }
@@ -814,32 +823,32 @@
       <svg viewBox="0 0 120 80" fill="none">
         <!-- Wing (back wing, bottom) -->
         <path d="M 38 48 L 18 62 L 50 50 Z"
-              fill="hsl(14 84% 58%)"
-              stroke="hsl(14 84% 48%)"
+              fill="hsl(218 50% 55%)"
+              stroke="hsl(218 42% 38%)"
               stroke-width="0.8"
               stroke-linejoin="round"/>
         <!-- Wing (top wing, lighter) -->
         <path d="M 42 38 L 22 18 L 56 36 Z"
-              fill="hsl(14 84% 70%)"
-              stroke="hsl(14 84% 48%)"
+              fill="hsl(218 55% 70%)"
+              stroke="hsl(218 42% 38%)"
               stroke-width="0.8"
               stroke-linejoin="round"/>
         <!-- Fuselage (main body) -->
         <path d="M 18 42 L 92 38 Q 102 38 108 42 Q 102 46 92 46 L 18 46 Q 14 44 18 42 Z"
-              fill="hsl(36 38% 96%)"
-              stroke="hsl(14 84% 48%)"
+              fill="hsl(0 0% 100%)"
+              stroke="hsl(218 42% 38%)"
               stroke-width="1"
               stroke-linejoin="round"/>
         <!-- Nose tip (slightly darker) -->
         <path d="M 92 38 Q 102 38 108 42 Q 102 46 92 46 Z"
               fill="hsl(218 30% 88%)"
-              stroke="hsl(14 84% 48%)"
+              stroke="hsl(218 42% 38%)"
               stroke-width="0.8"
               stroke-linejoin="round"/>
         <!-- Tail fin (vertical, at back-left) -->
         <path d="M 18 42 L 12 28 L 22 28 L 26 42 Z"
-              fill="hsl(14 84% 58%)"
-              stroke="hsl(14 84% 48%)"
+              fill="hsl(218 50% 55%)"
+              stroke="hsl(218 42% 38%)"
               stroke-width="0.8"
               stroke-linejoin="round"/>
         <!-- Window strip (small dots along the fuselage) -->
@@ -868,11 +877,11 @@
           <line x1="51" y1="28" x2="51" y2="36" stroke="hsl(194 56% 47%)" stroke-width="0.8"/>
           <!-- Wheels -->
           <circle cx="28" cy="50" r="6" fill="hsl(218 42% 28%)"/>
-          <circle cx="28" cy="50" r="2.5" fill="hsl(36 38% 96%)"/>
+          <circle cx="28" cy="50" r="2.5" fill="hsl(0 0% 100%)"/>
           <circle cx="74" cy="50" r="6" fill="hsl(218 42% 28%)"/>
-          <circle cx="74" cy="50" r="2.5" fill="hsl(36 38% 96%)"/>
+          <circle cx="74" cy="50" r="2.5" fill="hsl(0 0% 100%)"/>
           <!-- Headlight -->
-          <circle cx="86" cy="42" r="2" fill="hsl(38 95% 75%)"/>
+          <circle cx="86" cy="42" r="2" fill="hsl(194 70% 80%)"/>
         </g>
       </svg>
     </div>
@@ -881,7 +890,7 @@
     <div class="hero-illustration ill-route">
       <svg viewBox="0 0 280 120" fill="none">
         <path d="M 20 100 Q 80 30 140 60 T 260 30"
-              stroke="hsl(14 84% 64%)"
+              stroke="hsl(194 56% 57%)"
               stroke-width="1.5"
               stroke-dasharray="4,4"
               stroke-linecap="round"
@@ -893,19 +902,19 @@
     <div class="hero-illustration ill-pin-1">
       <svg viewBox="0 0 24 32" fill="none">
         <path d="M 12 2 C 6 2 2 6 2 12 C 2 19 12 30 12 30 C 12 30 22 19 22 12 C 22 6 18 2 12 2 Z"
-              fill="hsl(14 84% 64%)"
-              stroke="hsl(14 84% 54%)"
+              fill="hsl(194 56% 57%)"
+              stroke="hsl(218 50% 48%)"
               stroke-width="0.8"/>
-        <circle cx="12" cy="12" r="4" fill="hsl(36 38% 96%)"/>
+        <circle cx="12" cy="12" r="4" fill="hsl(0 0% 100%)"/>
       </svg>
     </div>
     <div class="hero-illustration ill-pin-2">
       <svg viewBox="0 0 24 32" fill="none">
         <path d="M 12 2 C 6 2 2 6 2 12 C 2 19 12 30 12 30 C 12 30 22 19 22 12 C 22 6 18 2 12 2 Z"
-              fill="hsl(38 78% 60%)"
-              stroke="hsl(38 78% 50%)"
+              fill="hsl(194 56% 57%)"
+              stroke="hsl(194 56% 47%)"
               stroke-width="0.8"/>
-        <circle cx="12" cy="12" r="4" fill="hsl(36 38% 96%)"/>
+        <circle cx="12" cy="12" r="4" fill="hsl(0 0% 100%)"/>
       </svg>
     </div>
 
@@ -1113,7 +1122,8 @@
   /* Source-specific accents */
   .source-backoffice .channel-source-icon { background: hsl(var(--travelity-blue) / 0.10); color: hsl(var(--travelity-blue)); }
   .source-widget    .channel-source-icon { background: hsl(var(--travelity-teal) / 0.14); color: hsl(var(--travelity-teal)); }
-  .source-otas      .channel-source-icon { background: hsl(var(--travelity-coral) / 0.12); color: hsl(var(--travelity-coral)); }
+  /* OTAs use a deeper blue/indigo to stay in the brand family but distinct from back-office */
+  .source-otas      .channel-source-icon { background: hsl(218 50% 38% / 0.10); color: hsl(218 50% 38%); }
 
   /* Body content (3-row lists, single-line, etc.) */
   .channel-source-body {
@@ -1370,8 +1380,8 @@
                 <stop offset="100%" stop-color="hsl(194 56% 57% / 0.2)"/>
               </linearGradient>
               <linearGradient id="ln-coral" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="hsl(14 84% 64% / 0.7)"/>
-                <stop offset="100%" stop-color="hsl(14 84% 64% / 0.2)"/>
+                <stop offset="0%" stop-color="hsl(218 50% 38% / 0.7)"/>
+                <stop offset="100%" stop-color="hsl(194 56% 57% / 0.2)"/>
               </linearGradient>
             </defs>
             <!-- Three lines: each card's bottom-center curves down to the hub's top-center -->
@@ -1500,19 +1510,19 @@
     transition: opacity 300ms;
   }
   .feature-card:nth-child(6n+1)::before {
-    background: radial-gradient(circle at top right, hsl(var(--travelity-coral) / 0.08) 0%, transparent 60%);
+    background: radial-gradient(circle at top right, hsl(var(--travelity-blue) / 0.08) 0%, transparent 60%);
   }
   .feature-card:nth-child(6n+2)::before {
     background: radial-gradient(circle at top right, hsl(var(--travelity-teal) / 0.10) 0%, transparent 60%);
   }
   .feature-card:nth-child(6n+3)::before {
-    background: radial-gradient(circle at top right, hsl(var(--travelity-gold) / 0.10) 0%, transparent 60%);
+    background: radial-gradient(circle at top right, hsl(218 50% 38% / 0.08) 0%, transparent 60%);
   }
   .feature-card:nth-child(6n+4)::before {
-    background: radial-gradient(circle at top right, hsl(var(--travelity-blue) / 0.06) 0%, transparent 60%);
+    background: radial-gradient(circle at top right, hsl(194 40% 40% / 0.10) 0%, transparent 60%);
   }
   .feature-card:nth-child(6n+5)::before {
-    background: radial-gradient(circle at top right, hsl(var(--travelity-coral) / 0.08) 0%, transparent 60%);
+    background: radial-gradient(circle at top right, hsl(var(--travelity-blue) / 0.08) 0%, transparent 60%);
   }
   .feature-card:nth-child(6n+6)::before {
     background: radial-gradient(circle at top right, hsl(var(--travelity-teal) / 0.10) 0%, transparent 60%);
@@ -1529,11 +1539,12 @@
     position: relative;
     z-index: 1;
   }
-  .feature-card:nth-child(6n+1) .feature-icon { background: hsl(var(--travelity-coral) / 0.12); color: hsl(var(--travelity-coral)); }
+  /* Feature card icon rotation — brand-only palette, four distinct shades */
+  .feature-card:nth-child(6n+1) .feature-icon { background: hsl(var(--travelity-blue) / 0.10); color: hsl(var(--travelity-blue)); }
   .feature-card:nth-child(6n+2) .feature-icon { background: hsl(var(--travelity-teal) / 0.14); color: hsl(var(--travelity-teal)); }
-  .feature-card:nth-child(6n+3) .feature-icon { background: hsl(var(--travelity-gold) / 0.16); color: hsl(28 80% 42%); }
-  .feature-card:nth-child(6n+4) .feature-icon { background: hsl(var(--travelity-blue) / 0.10); color: hsl(var(--travelity-blue)); }
-  .feature-card:nth-child(6n+5) .feature-icon { background: hsl(var(--travelity-coral) / 0.12); color: hsl(var(--travelity-coral)); }
+  .feature-card:nth-child(6n+3) .feature-icon { background: hsl(218 50% 38% / 0.10); color: hsl(218 50% 38%); }
+  .feature-card:nth-child(6n+4) .feature-icon { background: hsl(194 40% 40% / 0.12); color: hsl(194 40% 40%); }
+  .feature-card:nth-child(6n+5) .feature-icon { background: hsl(var(--travelity-blue) / 0.10); color: hsl(var(--travelity-blue)); }
   .feature-card:nth-child(6n+6) .feature-icon { background: hsl(var(--travelity-teal) / 0.14); color: hsl(var(--travelity-teal)); }
   .feature-icon svg { width: 22px; height: 22px; }
 
@@ -1654,9 +1665,9 @@
     inset: -10% 0;  /* extra space top/bottom for parallax travel */
     background: linear-gradient(135deg,
       hsl(220 50% 25%) 0%,
-      hsl(28 60% 40%) 40%,
-      hsl(20 70% 55%) 70%,
-      hsl(38 80% 70%) 100%);
+      hsl(218 42% 40%) 40%,
+      hsl(200 50% 55%) 70%,
+      hsl(218 42% 30%) 100%);
     will-change: transform;
   }
   .parallax-photo-note {
@@ -1685,7 +1696,7 @@
     position: absolute;
     top: 30%; right: 15%;
     width: 240px; height: 240px;
-    background: radial-gradient(circle, hsl(38 95% 80% / 0.4) 0%, transparent 70%);
+    background: radial-gradient(circle, hsl(194 70% 85% / 0.35) 0%, transparent 70%);
     border-radius: 999px;
     filter: blur(8px);
   }
@@ -1716,7 +1727,7 @@
     font-style: italic;
     font-size: 80px;
     line-height: 1;
-    color: hsl(38 95% 80% / 0.9);
+    color: hsl(194 60% 85% / 0.85);
     margin-bottom: -20px;
     display: block;
   }
@@ -2002,15 +2013,15 @@
     }
   }
   .pricing-plan.featured::before {
-    /* Coral top-bar accent */
+    /* Brand gradient top-bar accent (teal -> blue) */
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 4px;
     border-radius: 16px 16px 0 0;
     background: linear-gradient(90deg,
-      hsl(var(--travelity-coral)) 0%,
-      hsl(var(--travelity-gold)) 100%);
+      hsl(var(--travelity-teal)) 0%,
+      hsl(var(--travelity-blue)) 100%);
   }
   .pricing-plan-badge {
     position: absolute;

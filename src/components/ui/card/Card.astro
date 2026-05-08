@@ -1,0 +1,75 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+type CardVariant = 'default' | 'featured';
+
+export interface Props extends HTMLAttributes<'div'> {
+    /** Visual variant. `default` for most cards. `featured` for the highlighted-in-set card (e.g. recommended pricing tier). */
+    variant?: CardVariant;
+    /** Apply hover lift and shadow. Defaults to `false` for static cards. */
+    interactive?: boolean;
+    /** Show a 4px gradient accent bar at the top edge (teal → blue). Useful with `featured`. */
+    topAccent?: boolean;
+    /** Forwarded to underlying element. */
+    class?: string;
+}
+
+const {
+    variant = 'default',
+    interactive = false,
+    topAccent = false,
+    class: className,
+    ...rest
+} = Astro.props;
+
+const base =
+    'relative bg-paper rounded-[16px] ' +
+    'transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)]';
+
+const variantClasses: Record<CardVariant, string> = {
+    default: 'border border-line',
+    featured:
+        'border-[1.5px] border-[hsl(var(--travelity-teal)/0.4)] ' +
+        'shadow-[0_16px_40px_-12px_hsl(var(--travelity-teal)/0.18)]',
+};
+
+const interactiveClasses = interactive
+    ? variant === 'featured'
+        ? 'hover:-translate-y-1 hover:shadow-[0_20px_48px_-12px_hsl(var(--travelity-teal)/0.24)] cursor-default'
+        : 'hover:-translate-y-1 hover:shadow-[0_16px_40px_-12px_hsl(var(--ink)/0.12)] cursor-default'
+    : '';
+
+const overflowHidden = topAccent ? 'overflow-hidden' : '';
+
+const classes = cn(
+    base,
+    variantClasses[variant],
+    interactiveClasses,
+    overflowHidden,
+    className,
+);
+---
+
+<div class={classes} {...rest}>
+    {
+        topAccent && (
+            <span
+                class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-travelity-teal to-travelity-blue"
+                aria-hidden="true"
+            />
+        )
+    }
+    <slot />
+</div>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        div {
+            transition: none !important;
+        }
+        div:hover {
+            transform: none !important;
+        }
+    }
+</style>

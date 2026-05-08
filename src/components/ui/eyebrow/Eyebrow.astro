@@ -1,32 +1,52 @@
 ---
 import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
 
-export interface Props {
+type EyebrowTone = 'teal' | 'ink';
+
+export interface Props extends HTMLAttributes<'span'> {
     /** Show a 24px horizontal rule before the text. */
     withRule?: boolean;
-    /** Center-align the eyebrow (justify-content). Useful inside centered section headers. */
+    /** Center-align inside flex parent. Useful inside centered section headers. */
     centered?: boolean;
+    /** Color tone. `teal` = section eyebrows (default). `ink` = muted metadata labels. */
+    tone?: EyebrowTone;
     /** Forwarded to underlying element. */
     class?: string;
 }
 
-const { withRule = false, centered = false, class: className } = Astro.props;
+const {
+    withRule = false,
+    centered = false,
+    tone = 'teal',
+    class: className,
+    ...rest
+} = Astro.props;
 
 const base =
-    'inline-flex items-center gap-2 ' +
-    'font-body text-[12px] font-semibold uppercase tracking-[0.10em] ' +
-    'text-travelity-teal';
+    'inline-flex items-center gap-[10px] ' +
+    'font-mono text-[11px] font-semibold uppercase tracking-[0.12em]';
+
+const toneClasses: Record<EyebrowTone, string> = {
+    teal: 'text-travelity-teal',
+    ink: 'text-ink-muted',
+};
+
+const ruleColorClasses: Record<EyebrowTone, string> = {
+    teal: 'bg-travelity-teal',
+    ink: 'bg-ink-muted',
+};
 
 const justify = centered ? 'justify-center' : '';
 
-const classes = cn(base, justify, className);
+const classes = cn(base, toneClasses[tone], justify, className);
 ---
 
-<span class={classes} data-with-rule={withRule ? 'true' : undefined}>
+<span class={classes} data-with-rule={withRule ? 'true' : undefined} {...rest}>
     {
         withRule && (
             <span
-                class="inline-block w-6 h-px bg-travelity-teal"
+                class={cn('inline-block w-6 h-px', ruleColorClasses[tone])}
                 aria-hidden="true"
             />
         )
