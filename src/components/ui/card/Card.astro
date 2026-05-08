@@ -40,13 +40,10 @@ const interactiveClasses = interactive
         : 'hover:-translate-y-1 hover:shadow-[0_16px_40px_-12px_hsl(var(--ink)/0.12)] cursor-default'
     : '';
 
-const overflowHidden = topAccent ? 'overflow-hidden' : '';
-
 const classes = cn(
     base,
     variantClasses[variant],
     interactiveClasses,
-    overflowHidden,
     className,
 );
 ---
@@ -55,7 +52,7 @@ const classes = cn(
     {
         topAccent && (
             <span
-                class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-travelity-teal to-travelity-blue"
+                class="absolute top-0 left-0 right-0 h-1 rounded-t-[16px] bg-gradient-to-r from-travelity-teal to-travelity-blue"
                 aria-hidden="true"
             />
         )
