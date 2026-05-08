@@ -1,0 +1,109 @@
+---
+import { cn } from '@/lib/utils/cn';
+import ChannelSourceCard from './ChannelSourceCard.astro';
+import ChannelConnectorLines from './ChannelConnectorLines.astro';
+import ChannelHub from './ChannelHub.astro';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+const wrapperClasses = cn(
+    'channel-diagram',
+    'relative overflow-hidden',
+    'bg-gradient-to-br from-paper to-[hsl(var(--surface-alt)/0.6)]',
+    'border border-line rounded-[18px]',
+    'p-7 pt-7 pb-8',
+    className,
+);
+---
+
+<div class={wrapperClasses} {...rest}>
+    <!-- Decorative atmospheric blooms — two diffuse radials in opposite corners.
+         Use teal + teal-deep so the blooms read as visually distinct. -->
+    <div
+        class="absolute -top-20 -right-20 w-60 h-60 rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.12) 0%, transparent 70%);"
+        aria-hidden="true"
+    >
+    </div>
+    <div
+        class="absolute -bottom-24 -left-24 w-72 h-72 rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, hsl(var(--travelity-teal-deep) / 0.10) 0%, transparent 70%);"
+        aria-hidden="true"
+    >
+    </div>
+
+    <!-- Three source cards in a row (stacks vertically on small screens) -->
+    <div
+        class="grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-[2] mb-20 sm:mb-20"
+    >
+        <!-- Back-office: 3-row dotted list -->
+        <ChannelSourceCard
+            kind="backoffice"
+            title="Back-office"
+            subtitle="Direct sales"
+        >
+            <ul class="flex flex-col gap-2 m-0 p-0 list-none">
+                <li
+                    class="flex items-center gap-2 font-body text-[12px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                >
+                    Manual orders
+                </li>
+                <li
+                    class="flex items-center gap-2 font-body text-[12px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                >
+                    Partner B2B
+                </li>
+                <li
+                    class="flex items-center gap-2 font-body text-[12px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                >
+                    Walk-ins
+                </li>
+            </ul>
+        </ChannelSourceCard>
+
+        <!-- Widget: single-line description with teal emphasis -->
+        <ChannelSourceCard kind="widget" title="Widget" subtitle="On your site">
+            <p class="text-[12.5px] text-ink font-medium leading-[1.5] m-0">
+                Embeds <span class="text-travelity-teal font-semibold"
+                    >directly on your website</span
+                >
+                — your branding, your guest, no commission.
+            </p>
+        </ChannelSourceCard>
+
+        <!-- OTAs: 3 placeholder boxes (to be replaced with real logos when sourced) -->
+        <ChannelSourceCard kind="otas" title="OTAs" subtitle="Marketplaces">
+            <ul
+                class="flex flex-col gap-1.5 m-0 p-0 list-none"
+                aria-label="OTA partners — real logos to be added in production"
+            >
+                <li
+                    class="flex items-center justify-center h-[30px] bg-surface-alt border border-dashed border-line rounded-md font-display text-[11px] font-bold text-ink-muted tracking-[0.04em]"
+                >
+                    [GYG logo]
+                </li>
+                <li
+                    class="flex items-center justify-center h-[30px] bg-surface-alt border border-dashed border-line rounded-md font-display text-[11px] font-bold text-ink-muted tracking-[0.04em]"
+                >
+                    [Viator logo]
+                </li>
+                <li
+                    class="flex items-center justify-center h-[30px] bg-surface-alt border border-dashed border-line rounded-md font-display text-[11px] font-bold text-ink-muted tracking-[0.04em]"
+                >
+                    [Klook logo]
+                </li>
+            </ul>
+        </ChannelSourceCard>
+    </div>
+
+    <!-- Connector lines overlay (hidden on small viewports) -->
+    <ChannelConnectorLines />
+
+    <!-- Travelity hub at the bottom-center -->
+    <ChannelHub />
+</div>

@@ -1,0 +1,243 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { SectionHeader } from '@/components/ui/section-header';
+import { LinkInline } from '@/components/ui/link-inline';
+import {
+    ClockIcon,
+    CalendarIcon,
+    ClipboardListIcon,
+    FileCheckIcon,
+    UsersIcon,
+    CreditCardIcon,
+} from '@/icons';
+import { Paths } from '@/lib/utils/paths';
+import FeatureCard from './FeatureCard.astro';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'section'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+const sectionClasses = cn(
+    'features-section',
+    'relative overflow-hidden bg-paper',
+    'py-16 md:py-24',
+    className,
+);
+---
+
+<section class={sectionClasses} {...rest}>
+    <!-- Atmospheric blooms — large diffuse gradients in upper-right and lower-left -->
+    <div
+        class="absolute top-[200px] -right-[200px] w-[600px] h-[600px] pointer-events-none"
+        style="background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%);"
+        aria-hidden="true"
+    >
+    </div>
+    <div
+        class="absolute bottom-[100px] -left-[200px] w-[500px] h-[500px] pointer-events-none"
+        style="background: radial-gradient(circle, hsl(var(--travelity-blue) / 0.08) 0%, transparent 60%);"
+        aria-hidden="true"
+    >
+    </div>
+
+    <div class="container mx-auto px-6 relative z-[1]">
+        <SectionHeader
+            eyebrow="Built for daily operations"
+            eyebrowWithRule
+            align="center"
+        >
+            <Fragment slot="headline">
+                Everything you need, <em>nothing you don't.</em>
+            </Fragment>
+            <p
+                slot="dek"
+                class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
+            >
+                Six core capabilities, modeled the way real travel businesses
+                actually work — not the way booking software thinks they should.
+            </p>
+        </SectionHeader>
+
+        <div
+            class="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[18px] mt-12 relative z-[1]"
+        >
+            <FeatureCard
+                title="Real-time availability"
+                description="Inventory locked the instant a booking starts. Across every channel, at the same time. No more double-bookings, ever."
+            >
+                <ClockIcon
+                    slot="icon"
+                    class="w-[22px] h-[22px]"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </FeatureCard>
+
+            <FeatureCard
+                title="Booking management"
+                description="Every order — direct, widget, or OTA — in one queue. Edit, refund, reassign, generate documents. Full history, full audit trail."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-[22px] h-[22px]"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </FeatureCard>
+
+            <FeatureCard
+                title="Daily operations"
+                description="Today's departures, who's driving, who's guiding, who's booked. The view your operations manager opens at 8am."
+            >
+                <ClipboardListIcon
+                    slot="icon"
+                    class="w-[22px] h-[22px]"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </FeatureCard>
+
+            <FeatureCard
+                title="Custom proposals"
+                description="Build a quote, send a signed link, get paid. Custom group inquiries, B2B partner orders, and multi-day packages — all closed online."
+            >
+                <FileCheckIcon
+                    slot="icon"
+                    class="w-[22px] h-[22px]"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </FeatureCard>
+
+            <FeatureCard
+                title="Customer database"
+                description="Every booking creates a customer record. Repeat guests, contact history, total spend. Stop reconstructing relationships from WhatsApp threads."
+            >
+                <UsersIcon
+                    slot="icon"
+                    class="w-[22px] h-[22px]"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </FeatureCard>
+
+            <FeatureCard
+                title="Payments & refunds"
+                description="Stripe-powered checkout, multi-currency support, refunds with audit trail. Bank-level encryption everywhere money moves."
+            >
+                <CreditCardIcon
+                    slot="icon"
+                    class="w-[22px] h-[22px]"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </FeatureCard>
+        </div>
+
+        <div class="features-cta mt-14 text-center relative z-[1]">
+            <LinkInline href={Paths.SOLUTIONS_BOOKING_ENGINE} withArrow>
+                See all capabilities in detail
+            </LinkInline>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ============================================================
+       Per-position color rotation on FeatureCards.
+       Selectors target the FeatureCard wrapper (`.feature-card`)
+       inside the grid. Pattern repeats every 6 cards.
+       ============================================================ */
+
+    /* Corner gradient bloom — different tint per position */
+    .features-grid :global(.feature-card) {
+        position: relative;
+    }
+
+    .features-grid :global(.feature-card::before) {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        pointer-events: none;
+        transition: opacity 300ms;
+        z-index: 0;
+    }
+
+    .features-grid :global(.feature-card:nth-child(6n + 1)::before) {
+        background: radial-gradient(
+            circle at top right,
+            hsl(var(--travelity-blue) / 0.08) 0%,
+            transparent 60%
+        );
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 2)::before) {
+        background: radial-gradient(
+            circle at top right,
+            hsl(var(--travelity-teal) / 0.1) 0%,
+            transparent 60%
+        );
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 3)::before) {
+        background: radial-gradient(
+            circle at top right,
+            hsl(var(--travelity-blue-deep) / 0.08) 0%,
+            transparent 60%
+        );
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 4)::before) {
+        background: radial-gradient(
+            circle at top right,
+            hsl(var(--travelity-teal-deep) / 0.1) 0%,
+            transparent 60%
+        );
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 5)::before) {
+        background: radial-gradient(
+            circle at top right,
+            hsl(var(--travelity-blue) / 0.08) 0%,
+            transparent 60%
+        );
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 6)::before) {
+        background: radial-gradient(
+            circle at top right,
+            hsl(var(--travelity-teal) / 0.1) 0%,
+            transparent 60%
+        );
+    }
+    .features-grid :global(.feature-card:hover::before) {
+        opacity: 1.4;
+    }
+
+    /* Icon container — different tint per position */
+    .features-grid :global(.feature-card:nth-child(6n + 1) .feature-icon) {
+        background: hsl(var(--travelity-blue) / 0.1);
+        color: hsl(var(--travelity-blue));
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 2) .feature-icon) {
+        background: hsl(var(--travelity-teal) / 0.14);
+        color: hsl(var(--travelity-teal));
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 3) .feature-icon) {
+        background: hsl(var(--travelity-blue-deep) / 0.1);
+        color: hsl(var(--travelity-blue-deep));
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 4) .feature-icon) {
+        background: hsl(var(--travelity-teal-deep) / 0.12);
+        color: hsl(var(--travelity-teal-deep));
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 5) .feature-icon) {
+        background: hsl(var(--travelity-blue) / 0.1);
+        color: hsl(var(--travelity-blue));
+    }
+    .features-grid :global(.feature-card:nth-child(6n + 6) .feature-icon) {
+        background: hsl(var(--travelity-teal) / 0.14);
+        color: hsl(var(--travelity-teal));
+    }
+</style>

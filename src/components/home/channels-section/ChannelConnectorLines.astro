@@ -1,0 +1,83 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+const classes = cn(
+    'channel-connector-lines',
+    'absolute top-[168px] left-6 right-6 h-[100px]',
+    'pointer-events-none z-[1]',
+    'hidden sm:block' /* hide on small phones, the diagram becomes vertical */,
+    className,
+);
+---
+
+<div class={classes} aria-hidden="true" {...rest}>
+    <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        class="w-full h-full block overflow-visible"
+    >
+        <defs>
+            <linearGradient
+                id="connector-line-blue"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+            >
+                <stop offset="0%" stop-color="hsl(218 42% 48% / 0.7)"></stop>
+                <stop offset="100%" stop-color="hsl(218 42% 48% / 0.2)"></stop>
+            </linearGradient>
+            <linearGradient
+                id="connector-line-teal"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+            >
+                <stop offset="0%" stop-color="hsl(194 56% 57% / 0.7)"></stop>
+                <stop offset="100%" stop-color="hsl(194 56% 57% / 0.2)"></stop>
+            </linearGradient>
+            <linearGradient
+                id="connector-line-deep"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+            >
+                <stop offset="0%" stop-color="hsl(218 50% 38% / 0.7)"></stop>
+                <stop offset="100%" stop-color="hsl(194 56% 57% / 0.2)"></stop>
+            </linearGradient>
+        </defs>
+
+        <!-- Left card → hub: curves from x=16 (left card's bottom-center) to x=50 (hub top-center) -->
+        <path
+            d="M 16 0 Q 16 60 50 100"
+            stroke="url(#connector-line-blue)"
+            stroke-width="0.6"
+            stroke-dasharray="1.5,1.5"
+            fill="none"></path>
+
+        <!-- Middle card → hub: straight vertical line -->
+        <path
+            d="M 50 0 L 50 100"
+            stroke="url(#connector-line-teal)"
+            stroke-width="0.6"
+            stroke-dasharray="1.5,1.5"
+            fill="none"></path>
+
+        <!-- Right card → hub: curves from x=84 (right card's bottom-center) to x=50 -->
+        <path
+            d="M 84 0 Q 84 60 50 100"
+            stroke="url(#connector-line-deep)"
+            stroke-width="0.6"
+            stroke-dasharray="1.5,1.5"
+            fill="none"></path>
+    </svg>
+</div>

@@ -3,6 +3,8 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
 import { Hero } from '@/components/home/hero';
+import { ChannelsSection } from '@/components/home/channels-section';
+import { FeaturesSection } from '@/components/home/features-section';
 ---
 
 <MarketingLayout
@@ -13,15 +15,17 @@ import { Hero } from '@/components/home/hero';
 
     <main>
         <Hero />
+        <ChannelsSection />
+        <FeaturesSection />
 
-        <!-- Phase 3b–3d will add Channels, Features, Parallax, Pricing, GoLive, ClosingCTA here -->
+        <!-- Phase 3c–3d will add Parallax, Pricing, GoLive, ClosingCTA here -->
         <div
             class="container mx-auto px-6 py-32 text-center border-t border-line"
         >
             <p
                 class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft"
             >
-                Sections 2–7 — Phase 3b onward
+                Sections 4–7 — Phase 3c onward
             </p>
         </div>
     </main>

@@ -1,0 +1,85 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { SectionHeader } from '@/components/ui/section-header';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+interface ChannelsBullet {
+    title: string;
+    description: string;
+}
+
+const bullets: ChannelsBullet[] = [
+    {
+        title: 'Live channel management',
+        description:
+            'Real-time inventory and pricing sync across every channel you sell on.',
+    },
+    {
+        title: 'Native OTA integrations',
+        description:
+            'Two-way connections with GetYourGuide, Viator, and Klook — no third-party connector required.',
+    },
+    {
+        title: 'Embeddable widget',
+        description:
+            'Take direct bookings on your own site with three lines of code. Your branding, your guest, no commission.',
+    },
+    {
+        title: 'One source of truth',
+        description:
+            'Bookings from every channel land in the same orders queue, with full attribution and audit trail.',
+    },
+];
+
+const classes = cn('channels-value max-w-[540px]', className);
+---
+
+<div class={classes} {...rest}>
+    <SectionHeader
+        eyebrow="All-in-one channel management"
+        eyebrowWithRule
+        align="left"
+    >
+        <Fragment slot="headline">
+            Channels &amp; integrations, <em>built in.</em>
+        </Fragment>
+        <p
+            slot="dek"
+            class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch]"
+        >
+            Travelity is the booking engine, the channel manager, and the live
+            OTA integrations — all in one platform. Sell direct, embed a widget,
+            or list on the marketplaces. One inventory, one source of truth.
+        </p>
+    </SectionHeader>
+
+    <ul
+        class="channels-value-bullets mt-8 m-0 p-0 list-none flex flex-col gap-[14px]"
+    >
+        {
+            bullets.map((bullet) => (
+                <li class="grid grid-cols-[22px_1fr] gap-3 items-start text-[15px] leading-[1.5] text-ink">
+                    <span
+                        class="block w-1.5 h-1.5 rounded-full bg-travelity-teal mt-[7px] mx-auto"
+                        style="box-shadow: 0 0 0 3px hsl(var(--travelity-teal) / 0.16);"
+                        aria-hidden="true"
+                    />
+                    <div>
+                        <strong class="font-display font-semibold text-ink">
+                            {bullet.title}
+                        </strong>
+                        <span class="block text-ink-muted text-[14px] mt-0.5 leading-[1.5]">
+                            {bullet.description}
+                        </span>
+                    </div>
+                </li>
+            ))
+        }
+    </ul>
+</div>

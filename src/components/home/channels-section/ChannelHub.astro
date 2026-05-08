@@ -1,0 +1,70 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { TravelityMark } from '@/components/decorative/travelity-mark';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+const classes = cn(
+    'channel-hub-center',
+    'relative z-[3] mx-auto w-fit max-w-[280px]',
+    'flex items-center gap-[14px]',
+    'bg-paper border-[1.5px] border-[hsl(var(--travelity-blue)/0.22)] rounded-[14px]',
+    'px-6 py-[18px]',
+    className,
+);
+---
+
+<div class={classes} {...rest}>
+    <TravelityMark
+        gradientId="channel-hub-gradient"
+        class="w-8 h-8 flex-shrink-0"
+    />
+    <div>
+        <strong
+            class="block font-display text-[16px] font-bold tracking-[-0.02em] text-travelity-blue"
+        >
+            Travelity
+        </strong>
+        <small class="block text-[11.5px] text-ink-muted"> One platform </small>
+    </div>
+</div>
+
+<style>
+    /* Pulsing shadow ring — infinite 3s loop, faithful v2.5 transcription.
+       Outer "paper-ring" shadow stays constant; the second tinted-blue ring
+       grows from 0 to 14px and fades out, repeating every 3 seconds. */
+
+    .channel-hub-center {
+        box-shadow:
+            0 0 0 6px hsl(var(--paper)),
+            0 16px 32px -8px hsl(var(--travelity-blue) / 0.25);
+        animation: channel-hub-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes channel-hub-pulse {
+        0%,
+        100% {
+            box-shadow:
+                0 0 0 6px hsl(var(--paper)),
+                0 16px 32px -8px hsl(var(--travelity-blue) / 0.25),
+                0 0 0 0 hsl(var(--travelity-blue) / 0.18);
+        }
+        50% {
+            box-shadow:
+                0 0 0 6px hsl(var(--paper)),
+                0 16px 32px -8px hsl(var(--travelity-blue) / 0.25),
+                0 0 0 14px hsl(var(--travelity-blue) / 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .channel-hub-center {
+            animation: none !important;
+        }
+    }
+</style>
