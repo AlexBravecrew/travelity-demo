@@ -34,7 +34,7 @@ export const Paths = {
     OUR_STORY: '/our-story',
     FAQ: '/faq',
     GUIDES: '/guides',
-    HELP: '/help',
+    HELP_CENTER: '/help-center',
     /** External — Travelity status page is hosted off-platform. Marked external in consumers. */
     STATUS: 'https://status.travelity.app',
 

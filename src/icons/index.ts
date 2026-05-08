@@ -63,3 +63,9 @@ export { Briefcase as BriefcaseIcon } from '@lucide/astro';
 export { TrendingUp as TrendingUpIcon } from '@lucide/astro';
 export { MessageSquare as MessageSquareIcon } from '@lucide/astro';
 export { Clock3 as Clock3Icon } from '@lucide/astro';
+
+// Phase 10 — Resources / Help Center
+// HelpCircle was deprecated in lucide; CircleQuestionMark is the canonical successor.
+export { CircleQuestionMark as HelpCircleIcon } from '@lucide/astro';
+export { BookOpen as BookOpenIcon } from '@lucide/astro';
+export { Search as SearchIcon } from '@lucide/astro';

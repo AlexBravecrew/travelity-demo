@@ -1,0 +1,90 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
+    href: string;
+    /** Category eyebrow (e.g. "Getting started", "Channels"). */
+    category: string;
+    /** Card title. */
+    title: string;
+    /** Short description. */
+    description: string;
+    /** Optional reading time (e.g. "5 min read"). */
+    readingTime?: string;
+    class?: string;
+}
+
+const {
+    href,
+    category,
+    title,
+    description,
+    readingTime,
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<a
+    href={href}
+    class={cn(
+        'guide-card group',
+        'flex flex-col p-6 rounded-xl',
+        'bg-paper border border-line text-ink no-underline',
+        'transition-all duration-200',
+        'hover:-translate-y-0.5 hover:border-travelity-teal hover:shadow-[0_8px_24px_-8px_hsl(var(--ink)/0.1)]',
+        className,
+    )}
+    {...rest}
+>
+    <div
+        class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-travelity-teal mb-3"
+    >
+        {category}
+    </div>
+
+    <h3
+        class="font-display text-[17px] font-semibold text-ink leading-[1.3] tracking-[-0.015em] mb-2"
+    >
+        {title}
+    </h3>
+
+    <p
+        class="font-body text-[14px] text-ink-muted leading-[1.55] m-0 flex-1 mb-4"
+    >
+        {description}
+    </p>
+
+    <div
+        class="flex items-center justify-between gap-3 mt-auto pt-3 border-t border-line"
+    >
+        {
+            readingTime && (
+                <span class="font-mono text-[11px] text-ink-soft tracking-[0.04em]">
+                    {readingTime}
+                </span>
+            )
+        }
+        <span
+            class="font-display text-[13px] font-semibold text-travelity-blue inline-flex items-center gap-1 ml-auto"
+        >
+            Read
+            <span
+                class="transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true">→</span
+            >
+        </span>
+    </div>
+</a>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        .guide-card {
+            transition: none !important;
+        }
+        .guide-card:hover {
+            transform: none !important;
+        }
+    }
+</style>

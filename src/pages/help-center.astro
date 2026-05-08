@@ -1,0 +1,137 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { HelpTile } from '@/components/shared/help-tile';
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+import { Paths } from '@/lib/utils/paths';
+import {
+    HelpCircleIcon,
+    BookOpenIcon,
+    MessageSquareIcon,
+    SearchIcon,
+} from '@/icons';
+
+export const prerender = true;
+---
+
+<MarketingLayout
+    title="Help Center · Travelity"
+    description="Everything you need — FAQs, guides, and direct support. Find what you're looking for or talk to a human."
+>
+    <Nav />
+
+    <main class="bg-paper">
+        <!-- Hero with search -->
+        <section
+            class="border-b border-line py-16 md:py-24 text-center"
+            style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.10) 0%, transparent 60%), hsl(var(--paper));"
+        >
+            <div class="container mx-auto px-6 max-w-[760px]">
+                <Eyebrow withRule centered>Help center</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mt-5 mb-5"
+                    style="font-size: clamp(36px, 4.6vw, 52px);"
+                >
+                    What can we help with?
+                </h1>
+
+                <p
+                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto mb-8"
+                >
+                    Search our knowledge base, browse guides, or reach out to
+                    our team directly.
+                </p>
+
+                <!-- Search bar (visual only — search functionality TBD) -->
+                <form
+                    role="search"
+                    class="max-w-[560px] mx-auto relative"
+                    data-help-search
+                >
+                    <SearchIcon
+                        class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted pointer-events-none"
+                        stroke-width="2"
+                        aria-hidden="true"
+                    />
+                    <input
+                        type="search"
+                        name="q"
+                        placeholder="Search articles, guides, and FAQ…"
+                        aria-label="Search the help center"
+                        class="w-full pl-11 pr-4 py-3.5 rounded-lg bg-paper border border-line text-ink text-[15px] placeholder:text-ink-muted shadow-[0_1px_2px_hsl(0_0%_0%/0.04)] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--travelity-teal)/0.4)] focus:border-travelity-teal transition-colors"
+                    />
+                </form>
+                <p
+                    class="font-mono text-[10.5px] text-ink-soft tracking-[0.04em] uppercase mt-3"
+                >
+                    Search coming soon · in the meantime, browse below
+                </p>
+            </div>
+        </section>
+
+        <!-- 3 Help tiles -->
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-[1100px] mx-auto"
+                >
+                    <HelpTile
+                        href={Paths.FAQ}
+                        title="FAQ"
+                        description="Quick answers to common questions about pricing, plans, channels, security, and getting started."
+                    >
+                        <HelpCircleIcon
+                            slot="icon"
+                            class="w-6 h-6"
+                            stroke-width="1.75"
+                            aria-hidden="true"
+                        />
+                    </HelpTile>
+
+                    <HelpTile
+                        href={Paths.GUIDES}
+                        title="Guides"
+                        description="Step-by-step walkthroughs for setup, migration, channel integration, and daily operations."
+                    >
+                        <BookOpenIcon
+                            slot="icon"
+                            class="w-6 h-6"
+                            stroke-width="1.75"
+                            aria-hidden="true"
+                        />
+                    </HelpTile>
+
+                    <HelpTile
+                        href={Paths.CONTACT}
+                        title="Contact us"
+                        description="Talk to a human. Email, demo bookings, or partnership inquiries — we reply within a business day."
+                    >
+                        <MessageSquareIcon
+                            slot="icon"
+                            class="w-6 h-6"
+                            stroke-width="1.75"
+                            aria-hidden="true"
+                        />
+                    </HelpTile>
+                </div>
+            </div>
+        </section>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>
+
+<script>
+    // Prevent the search form from navigating since search isn't wired up yet.
+    // The form keeps `role="search"` and the input keeps its label/placeholder
+    // so the UI demonstrates the eventual search; only the submit is a no-op.
+    const form = document.querySelector<HTMLFormElement>(
+        'form[data-help-search]',
+    );
+    form?.addEventListener('submit', (e) => e.preventDefault());
+</script>

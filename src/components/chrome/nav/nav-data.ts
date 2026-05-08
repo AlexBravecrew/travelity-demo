@@ -70,7 +70,7 @@ export const navLinks: NavLinkData[] = [
             {
                 label: 'Help Center',
                 description: 'Product documentation.',
-                href: Paths.HELP,
+                href: Paths.HELP_CENTER,
             },
             {
                 label: 'Our Story',

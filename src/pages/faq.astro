@@ -1,0 +1,256 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { SectionHeader } from '@/components/ui/section-header';
+import { FaqAccordion, FaqItem } from '@/components/shared/faq-accordion';
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+import { Paths } from '@/lib/utils/paths';
+
+export const prerender = true;
+---
+
+<MarketingLayout
+    title="FAQ · Travelity"
+    description="Common questions about Travelity — getting started, pricing, bookings, channels, security, and more."
+>
+    <Nav />
+
+    <main class="bg-paper">
+        <!-- Hero strip -->
+        <section
+            class="border-b border-line py-16 md:py-24 text-center"
+            style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
+        >
+            <div class="container mx-auto px-6 max-w-[820px]">
+                <Eyebrow withRule centered>Frequently asked</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mt-5 mb-5"
+                    style="font-size: clamp(36px, 4.6vw, 52px);"
+                >
+                    Questions, answered.
+                </h1>
+
+                <p
+                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                >
+                    If you don't see your question here, <a
+                        href={Paths.CONTACT}
+                        class="text-travelity-teal underline underline-offset-2 hover:no-underline"
+                        >drop us a line</a
+                    > — we reply within a business day.
+                </p>
+            </div>
+        </section>
+
+        <!-- Getting started -->
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="Getting started"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">First questions.</Fragment>
+                </SectionHeader>
+
+                <FaqAccordion class="mt-2">
+                    <FaqItem question="How do I sign up?">
+                        Click <a href={Paths.BOOK_DEMO}>Book a demo</a> on any page.
+                        We'll set up a 30-minute walkthrough, answer your questions,
+                        and configure trial access if Travelity looks like a fit.
+                        There's no credit card required for the trial.
+                    </FaqItem>
+
+                    <FaqItem question="How long does setup take?">
+                        For most operators, getting from zero to taking real
+                        bookings is 2–5 days. Setup time depends on how many
+                        products you sell, how many channels you connect, and
+                        whether you're migrating data from another system. We
+                        help with the migration.
+                    </FaqItem>
+
+                    <FaqItem
+                        question="Can I import data from my current spreadsheet or system?"
+                    >
+                        Yes. We can import products, prices, schedules, and
+                        historical bookings from CSV/Excel exports, or directly
+                        from common booking platforms. Larger or more complex
+                        migrations are handled by our team during onboarding.
+                    </FaqItem>
+
+                    <FaqItem question="Do I need technical skills?">
+                        No. The back-office is designed for operations people,
+                        not engineers. The widget embed is three lines of code,
+                        but we'll set it up with you if you'd rather not touch
+                        HTML. API access exists for the Ultimate plan if your
+                        team wants to build custom integrations.
+                    </FaqItem>
+
+                    <FaqItem question="What kind of training do you provide?">
+                        Live walkthroughs with your team — we map your existing
+                        workflows to Travelity rather than asking you to learn
+                        ours. Recorded session for new hires. Email and chat
+                        support throughout.
+                    </FaqItem>
+                </FaqAccordion>
+            </div>
+        </section>
+
+        <!-- Pricing & plans -->
+        <section class="bg-surface-alt py-12 md:py-16">
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="Pricing & plans"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">Money questions.</Fragment>
+                </SectionHeader>
+
+                <FaqAccordion class="mt-2">
+                    <FaqItem question="Which plan should I start on?">
+                        Most operators start on the 30-day Plus trial. If you
+                        have very low volume (under 50 bookings a month) and
+                        only one product type, the Free plan may be enough.
+                        Larger operations or those needing API access, advanced
+                        reporting, or unlimited team members start on Ultimate.
+                        See <a href={Paths.PRICING}>full pricing</a> for the comparison.
+                    </FaqItem>
+
+                    <FaqItem question="Can I switch plans later?">
+                        Yes, any time. Upgrades take effect immediately;
+                        downgrades take effect at the end of your billing
+                        period. Your data and access stay the same.
+                    </FaqItem>
+
+                    <FaqItem
+                        question="What's the difference between monthly and annual billing?"
+                    >
+                        Annual billing comes with a discount (~12% off the
+                        monthly rate) and is paid up-front. Monthly billing is
+                        more flexible and renews automatically each month. You
+                        can switch between the two at any renewal.
+                    </FaqItem>
+
+                    <FaqItem question="Do you charge commission on bookings?">
+                        No. Travelity itself takes no commission on bookings —
+                        ever. OTA platforms (GetYourGuide, Viator, Klook) charge
+                        their own commissions; those are separate from your
+                        Travelity subscription.
+                    </FaqItem>
+
+                    <FaqItem question="Can I get a refund?">
+                        Monthly plans are non-refundable but you can cancel any
+                        time. Annual plans are refundable on a pro-rata basis
+                        within the first 30 days.
+                    </FaqItem>
+                </FaqAccordion>
+            </div>
+        </section>
+
+        <!-- Bookings & channels -->
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="Bookings & channels"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">How it works.</Fragment>
+                </SectionHeader>
+
+                <FaqAccordion class="mt-2">
+                    <FaqItem
+                        question="Which OTAs does Travelity integrate with?"
+                    >
+                        GetYourGuide, Viator, and Klook are supported with
+                        two-way native integrations — bookings flow in,
+                        inventory updates flow out, in real time. Additional OTA
+                        integrations are added based on customer demand.
+                    </FaqItem>
+
+                    <FaqItem
+                        question="Can I sell multiple product types (tours, transfers, accommodation) on one account?"
+                    >
+                        Yes. The Plus and Ultimate plans support all three
+                        product types — tours, transfers, and accommodation —
+                        with the right model for each (group capacity for tours,
+                        route-based for transfers, room-night inventory for
+                        stays).
+                    </FaqItem>
+
+                    <FaqItem question="What happens if I get a double-booking?">
+                        You won't. Travelity locks inventory the moment a
+                        booking is initiated, before payment is even processed.
+                        The lock is shared across every channel — back-office,
+                        widget, OTAs — so the same seat can't be booked twice.
+                        This is the core promise of the platform.
+                    </FaqItem>
+
+                    <FaqItem
+                        question="Can I customize the booking widget to match my site?"
+                    >
+                        Yes. The widget takes your colors, fonts, and tone. It's
+                        style-isolated (shadow DOM) so it doesn't inherit
+                        unintended CSS from the host site. The Plus plan
+                        includes basic theming; the Ultimate plan exposes more
+                        granular control.
+                    </FaqItem>
+                </FaqAccordion>
+            </div>
+        </section>
+
+        <!-- Security & data -->
+        <section class="bg-surface-alt py-12 md:py-16">
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="Security & data"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">Trust and protection.</Fragment>
+                </SectionHeader>
+
+                <FaqAccordion class="mt-2">
+                    <FaqItem question="Where is my data stored?">
+                        On servers in the European Union (Frankfurt, Germany).
+                        Data is encrypted at rest (AES-256) and in transit (TLS
+                        1.2+). Each customer's data is logically separated from
+                        every other customer's data.
+                    </FaqItem>
+
+                    <FaqItem question="Are you GDPR-compliant?">
+                        Yes — we're aligned with GDPR principles, hosted in the
+                        EU, and offer a Data Processing Agreement (DPA) for
+                        customers who need it. <a href={Paths.LEGAL_DPA}
+                            >See the DPA</a
+                        >.
+                    </FaqItem>
+
+                    <FaqItem question="What happens to my data if I cancel?">
+                        You can export everything as CSV at any time, including
+                        after cancellation. We retain your data for 90 days
+                        post-cancellation in case you change your mind, then
+                        permanently delete it (except where law requires longer
+                        retention, like financial records).
+                    </FaqItem>
+
+                    <FaqItem
+                        question="Do you have SOC 2 / ISO 27001 certifications?"
+                    >
+                        We're aligned with both frameworks; formal third-party
+                        audits are underway. We'll publish certifications as
+                        they're issued.
+                    </FaqItem>
+                </FaqAccordion>
+            </div>
+        </section>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

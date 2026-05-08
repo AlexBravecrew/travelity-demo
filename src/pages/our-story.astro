@@ -1,0 +1,178 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+export const prerender = true;
+---
+
+<MarketingLayout
+    title="Our Story · Travelity"
+    description="Why we built Travelity, who we're for, and what we're trying to make happen for inbound tourism."
+>
+    <Nav />
+
+    <main class="bg-paper">
+        <!-- Hero strip -->
+        <section
+            class="border-b border-line py-16 md:py-24"
+            style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
+        >
+            <div class="container mx-auto px-6 max-w-[820px] text-center">
+                <Eyebrow withRule centered>Our story</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mt-5 mb-5"
+                    style="font-size: clamp(36px, 5vw, 56px);"
+                >
+                    Built by people who've
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal"
+                            >run a tour business.</span
+                        >
+                    </em>
+                </h1>
+
+                <p
+                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                >
+                    Travelity is a booking and operations platform for the
+                    people the existing tools forgot — independent operators
+                    running real businesses in places the big software companies
+                    don't visit.
+                </p>
+            </div>
+        </section>
+
+        <!-- Lighter TODO banner — narrative is editable copy, not legal -->
+        <div
+            class="bg-[hsl(38_92%_50%/0.06)] border-b border-[hsl(38_92%_50%/0.2)]"
+        >
+            <div class="container mx-auto px-6 max-w-[820px] py-3">
+                <div class="flex items-start gap-3">
+                    <span
+                        class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-[hsl(38_92%_40%)] flex-shrink-0 mt-0.5"
+                    >
+                        Draft
+                    </span>
+                    <p
+                        class="font-body text-[12.5px] text-ink-muted leading-[1.5] m-0"
+                    >
+                        AI-drafted narrative pending replacement with the real
+                        founder story. Themes and structure can stay; specifics
+                        about people, places, and timing should be revised by
+                        Travelity's team before launch.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Body: long-form prose -->
+        <article
+            class="legal-prose container mx-auto px-6 max-w-[720px] py-16 md:py-20"
+        >
+            <h2>Why this exists</h2>
+            <p>
+                Travelity started in a Yerevan apartment in late 2024 with a
+                simple complaint and a stack of spreadsheets. A friend ran a
+                small tour operation — Garni-Geghard one day, the wineries
+                another, custom multi-day trips when groups asked. Bookings came
+                in via WhatsApp, GetYourGuide, his website, and the office
+                phone. Capacity got tracked in a spreadsheet that nobody trusted
+                by Friday.
+            </p>
+            <p>
+                We looked at the booking platforms aimed at tour operators. They
+                were either built for European day-tour aggregators with no
+                useful concept of multi-day, or built for North American
+                activity providers with assumptions that didn't survive contact
+                with how Caucasus operators actually work — multi-currency,
+                mixed product types, OTA marketplaces nobody had heard of in
+                California.
+            </p>
+            <p>
+                So we started building. Not because the world needs another
+                booking platform — it doesn't — but because the people we know
+                who run these businesses deserve software that takes their work
+                seriously.
+            </p>
+
+            <h2>Who we're for</h2>
+            <p>
+                Travelity is built for the operators who keep travel running in
+                places the big platforms can't be bothered with: tour operators
+                in Yerevan, transfer providers in Tbilisi, accommodation hosts
+                in Dilijan, independent guides who lead groups through
+                landscapes that don't fit a category checkbox.
+            </p>
+            <p>
+                You probably outgrew spreadsheets. You probably outgrew the SaaS
+                that came after spreadsheets. You probably know more about your
+                operation than any software vendor will ever ask. We're building
+                Travelity for that level of expertise — software that adapts to
+                your shape, not the other way around.
+            </p>
+
+            <h2>What we believe</h2>
+            <p>A few principles guide what we build:</p>
+            <ul>
+                <li>
+                    <strong>Your inventory is the product.</strong> Channels are just
+                    where it shows up. The platform's first job is to never sell something
+                    that doesn't exist.
+                </li>
+                <li>
+                    <strong>Your data belongs to you.</strong> You can export everything
+                    as CSV at any time. We will never make leaving harder than joining.
+                </li>
+                <li>
+                    <strong>Operations beat sales.</strong> The slickest booking funnel
+                    is worthless if Tuesday morning is chaos. We build for what 8am
+                    looks like, not what the demo deck looks like.
+                </li>
+                <li>
+                    <strong>Boring works.</strong> Software that runs the same on
+                    Tuesday as it did on Monday is a feature, not a bug. We optimize
+                    for predictability.
+                </li>
+            </ul>
+
+            <h2>Where we are</h2>
+            <p>
+                We're a small team — engineers, a designer, and a couple of
+                people who've worked the operator side themselves. We're
+                headquartered as BraveCrew Inc. and our infrastructure is hosted
+                in the European Union (Frankfurt). Our customers are mostly in
+                Armenia, Georgia, and the surrounding region for now, but the
+                platform doesn't care where you operate; it cares whether the
+                shape of your business fits the shape of the software.
+            </p>
+            <p>
+                We're not VC-backed. We're funded by customer revenue and modest
+                founder investment. We're growing steadily, hiring slowly, and
+                building deliberately.
+            </p>
+
+            <h2>What's next</h2>
+            <p>
+                We have a roadmap, but it's short. The next year is about
+                finishing the integrations operators have asked for (more OTAs,
+                more payment methods, more languages), expanding the back-office
+                to handle larger teams, and making the product easier to set up
+                so onboarding is days, not weeks.
+            </p>
+            <p>
+                If you run a travel business and you've read this far, we'd like
+                to meet you. <a href="/book-demo">Book a demo</a> or <a
+                    href="/contact">drop us a line</a
+                > — we read everything, and we reply.
+            </p>
+        </article>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>
