@@ -69,3 +69,6 @@ export { Clock3 as Clock3Icon } from '@lucide/astro';
 export { CircleQuestionMark as HelpCircleIcon } from '@lucide/astro';
 export { BookOpen as BookOpenIcon } from '@lucide/astro';
 export { Search as SearchIcon } from '@lucide/astro';
+
+// Phase 11 — Contact page
+export { Mail as MailIcon } from '@lucide/astro';

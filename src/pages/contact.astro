@@ -1,0 +1,222 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { SectionHeader } from '@/components/ui/section-header';
+import { Paths } from '@/lib/utils/paths';
+
+import ContactForm from '@/components/forms/contact/ContactForm';
+
+import { MailIcon, HelpCircleIcon, CalendarIcon } from '@/icons';
+
+export const prerender = true;
+
+interface ContactRoute {
+    title: string;
+    description: string;
+    href: string;
+    linkLabel: string;
+    Icon: typeof MailIcon;
+}
+
+const routes: ContactRoute[] = [
+    {
+        title: 'Already a customer?',
+        description:
+            'Reach support directly from inside the app for the fastest response. Most issues are resolved within hours, not days.',
+        href: Paths.HELP_CENTER,
+        linkLabel: 'Open Help Center',
+        Icon: HelpCircleIcon,
+    },
+    {
+        title: 'Want a demo?',
+        description:
+            'Skip the form and book a 30-minute walkthrough. Bring your spreadsheet, your questions, or just your skepticism.',
+        href: Paths.BOOK_DEMO,
+        linkLabel: 'Book a demo',
+        Icon: CalendarIcon,
+    },
+    {
+        title: 'Press or partnerships?',
+        description:
+            'Use the form below — pick "Partnership" or "Other" as the topic. We respond within one business day.',
+        href: '#contact-form',
+        linkLabel: 'Jump to form',
+        Icon: MailIcon,
+    },
+];
+---
+
+<MarketingLayout
+    title="Contact · Travelity"
+    description="Get in touch with Travelity. Sales, support, partnerships, or just questions — we read everything and reply within a business day."
+>
+    <Nav />
+
+    <main class="bg-paper">
+        <!-- Hero strip -->
+        <section
+            class="border-b border-line py-16 md:py-20 text-center"
+            style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
+        >
+            <div class="container mx-auto px-6 max-w-[820px]">
+                <Eyebrow withRule centered>Contact</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mt-5 mb-5"
+                    style="font-size: clamp(34px, 4.4vw, 48px);"
+                >
+                    Get in touch.
+                </h1>
+
+                <p
+                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                >
+                    We read everything and reply within one business day. The
+                    fastest path depends on why you're writing.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3 routing cards: existing customer / demo / press-partnerships -->
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto px-6">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-[1100px] mx-auto"
+                >
+                    {
+                        routes.map((route) => (
+                            <a
+                                href={route.href}
+                                class="contact-route group flex flex-col p-7 rounded-xl bg-paper border border-line text-ink no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-travelity-teal hover:shadow-[0_8px_24px_-8px_hsl(var(--ink)/0.1)]"
+                            >
+                                <div class="w-10 h-10 rounded-lg bg-[hsl(var(--travelity-teal)/0.10)] text-travelity-teal flex items-center justify-center mb-4">
+                                    <route.Icon
+                                        class="w-5 h-5"
+                                        stroke-width="1.75"
+                                        aria-hidden="true"
+                                    />
+                                </div>
+                                <h3 class="font-display text-[16px] font-semibold text-ink leading-[1.3] tracking-[-0.015em] mb-2">
+                                    {route.title}
+                                </h3>
+                                <p class="font-body text-[14px] text-ink-muted leading-[1.55] m-0 mb-4 flex-1">
+                                    {route.description}
+                                </p>
+                                <span class="font-display text-[13px] font-semibold text-travelity-blue inline-flex items-center gap-1 mt-auto">
+                                    {route.linkLabel}
+                                    <span
+                                        class="transition-transform group-hover:translate-x-0.5"
+                                        aria-hidden="true"
+                                    >
+                                        →
+                                    </span>
+                                </span>
+                            </a>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- The form (React island) -->
+        <section
+            id="contact-form"
+            class="bg-surface-alt py-16 md:py-24 scroll-mt-20"
+        >
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="Or send a message"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">
+                        We'll get back to you.
+                    </Fragment>
+                    <p
+                        slot="dek"
+                        class="text-[16px] text-ink-muted leading-[1.55] max-w-[48ch] mx-auto"
+                    >
+                        Four fields. Pick the topic that fits — we route
+                        messages to the right team.
+                    </p>
+                </SectionHeader>
+
+                <div class="max-w-[680px] mx-auto mt-2">
+                    <ContactForm client:load />
+                </div>
+            </div>
+        </section>
+
+        <!-- Direct emails / address strip -->
+        <section class="bg-paper border-t border-line py-12 md:py-16">
+            <div class="container mx-auto px-6 max-w-[920px]">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left"
+                >
+                    <div>
+                        <div
+                            class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-ink-muted mb-2"
+                        >
+                            Sales
+                        </div>
+                        <a
+                            href="mailto:sales@travelity.app"
+                            class="font-display text-[15px] font-semibold text-ink no-underline hover:text-travelity-teal transition-colors"
+                        >
+                            sales@travelity.app
+                        </a>
+                    </div>
+                    <div>
+                        <div
+                            class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-ink-muted mb-2"
+                        >
+                            Support
+                        </div>
+                        <a
+                            href="mailto:support@travelity.app"
+                            class="font-display text-[15px] font-semibold text-ink no-underline hover:text-travelity-teal transition-colors"
+                        >
+                            support@travelity.app
+                        </a>
+                    </div>
+                    <div>
+                        <div
+                            class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-ink-muted mb-2"
+                        >
+                            Press / Partnerships
+                        </div>
+                        <a
+                            href="mailto:hello@travelity.app"
+                            class="font-display text-[15px] font-semibold text-ink no-underline hover:text-travelity-teal transition-colors"
+                        >
+                            hello@travelity.app
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-10 pt-8 border-t border-line text-center">
+                    <p
+                        class="font-body text-[14px] text-ink-muted leading-[1.55] m-0"
+                    >
+                        BraveCrew Inc. · [Address TBD before launch]
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <Footer />
+</MarketingLayout>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        .contact-route {
+            transition: none !important;
+        }
+        .contact-route:hover {
+            transform: none !important;
+        }
+    }
+</style>

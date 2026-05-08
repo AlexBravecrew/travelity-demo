@@ -1,5 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { bookDemoSchema } from '@/components/forms/book-demo/book-demo-schema';
+import { contactSchema } from '@/components/forms/contact/contact-schema';
 
 export const server = {
     bookDemo: defineAction({
@@ -24,6 +25,25 @@ export const server = {
             //     code: 'INTERNAL_SERVER_ERROR',
             //     message: 'Something went wrong on our end.',
             // });
+
+            return {
+                ok: true as const,
+                receivedAt: new Date().toISOString(),
+            };
+        },
+    }),
+
+    contact: defineAction({
+        accept: 'json',
+        input: contactSchema,
+        handler: async (input) => {
+            // Same TODO pattern as bookDemo: real implementation will route by
+            // subject (Sales → sales@, Support → support@, Partnership →
+            // partnerships@, Other → hello@) via Resend/SendGrid/Postmark or
+            // push to a CRM/ticketing system.
+            console.log('[contact action] received:', input);
+
+            await new Promise((resolve) => setTimeout(resolve, 600));
 
             return {
                 ok: true as const,
