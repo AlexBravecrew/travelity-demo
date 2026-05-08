@@ -38,6 +38,7 @@ export { Sparkles as SparklesIcon } from '@lucide/astro'; // 4. Ongoing updates
 // (none of the Phase 4 components themselves import icons; consumers do)
 export { Globe as GlobeIcon } from '@lucide/astro'; // OTAs / international
 export { Code as CodeIcon } from '@lucide/astro'; // embed/widget
+export { Plus as PlusIcon } from '@lucide/astro'; // FAQ expand/collapse (rotates 45° → minus)
 
 // Phase 5 — Solutions pages (capability bullets + cross-sell card icons)
 export { Boxes as BoxesIcon } from '@lucide/astro'; // products & catalog

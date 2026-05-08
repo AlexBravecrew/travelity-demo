@@ -1,0 +1,62 @@
+---
+import { PlusIcon } from '@/icons';
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'details'> {
+    question: string;
+    class?: string;
+}
+
+const { question, class: className, ...rest } = Astro.props;
+---
+
+<details
+    class={cn('faq-item group border-b border-line last:border-b-0', className)}
+    {...rest}
+>
+    <summary
+        class="cursor-pointer list-none flex items-center justify-between gap-4 py-5 px-6 hover:bg-surface-alt transition-colors duration-150"
+    >
+        <span
+            class="font-display text-[16px] font-semibold text-ink leading-[1.4]"
+        >
+            {question}
+        </span>
+        <span
+            class="faq-icon w-7 h-7 rounded-full bg-[hsl(var(--travelity-teal)/0.10)] text-travelity-teal flex items-center justify-center flex-shrink-0 transition-transform duration-200"
+        >
+            <PlusIcon class="w-4 h-4" stroke-width="2" aria-hidden="true" />
+        </span>
+    </summary>
+    <div
+        class="px-6 pb-5 -mt-1 font-body text-[15px] text-ink-muted leading-[1.6] max-w-[68ch]"
+    >
+        <slot />
+    </div>
+</details>
+
+<style>
+    /* Hide default disclosure marker (Safari/Firefox compatibility). */
+    .faq-item summary::-webkit-details-marker {
+        display: none;
+    }
+    .faq-item summary {
+        list-style: none;
+    }
+    .faq-item summary::marker {
+        display: none;
+    }
+
+    /* Rotate the plus icon to a minus when open. */
+    .faq-item[open] .faq-icon {
+        transform: rotate(45deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .faq-item .faq-icon,
+        .faq-item summary {
+            transition: none !important;
+        }
+    }
+</style>

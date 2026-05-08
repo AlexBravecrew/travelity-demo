@@ -1,0 +1,237 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { CheckIcon, MinusIcon } from '@/icons';
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * One cell value in the comparison table.
+ * - `true`  → green check (included)
+ * - `false` → muted dash (excluded)
+ * - string  → literal value displayed (e.g. "Up to 50/mo", "Unlimited")
+ */
+export type ComparisonValue = boolean | string;
+
+export interface ComparisonRow {
+    /** Feature label (left column). */
+    label: string;
+    /** Optional sub-text under the label. */
+    sub?: string;
+    /** Values per plan, in order: [free, plus, ultimate]. */
+    values: [ComparisonValue, ComparisonValue, ComparisonValue];
+}
+
+export interface ComparisonGroup {
+    /** Group heading (e.g. "Bookings & channels"). */
+    heading: string;
+    rows: ComparisonRow[];
+}
+
+export interface Props extends HTMLAttributes<'div'> {
+    groups: ComparisonGroup[];
+    /** Plan column headers, in order. */
+    planHeaders?: [string, string, string];
+    /** Index of the plan to highlight (matches PricingPlan's `featured` plan). */
+    featuredIndex?: 0 | 1 | 2;
+    class?: string;
+}
+
+const {
+    groups,
+    planHeaders = ['Free', 'Plus', 'Ultimate'],
+    featuredIndex = 1,
+    class: className,
+    ...rest
+} = Astro.props;
+
+const isFeatured = (planIndex: number) => planIndex === featuredIndex;
+---
+
+<div class={cn('comparison-table', className)} {...rest}>
+    <!-- Desktop table (md+) -->
+    <div
+        class="hidden md:block overflow-hidden rounded-xl border border-line bg-paper"
+    >
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="border-b border-line">
+                    <th
+                        class="text-left font-display text-[14px] font-semibold uppercase tracking-[0.04em] text-ink-muted px-6 py-5 w-[36%]"
+                    >
+                        Feature
+                    </th>
+                    {
+                        planHeaders.map((header, i) => (
+                            <th
+                                class={cn(
+                                    'text-center font-display text-[14px] font-semibold uppercase tracking-[0.04em] px-4 py-5',
+                                    isFeatured(i)
+                                        ? 'text-travelity-teal bg-[hsl(var(--travelity-teal)/0.04)]'
+                                        : 'text-ink-muted',
+                                )}
+                            >
+                                {header}
+                            </th>
+                        ))
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {
+                    groups.map((group) => (
+                        <Fragment>
+                            <tr class="bg-surface-alt">
+                                <td
+                                    colspan="4"
+                                    class="font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-ink-muted px-6 py-3"
+                                >
+                                    {group.heading}
+                                </td>
+                            </tr>
+                            {group.rows.map((row) => (
+                                <tr class="border-t border-line">
+                                    <td class="px-6 py-4">
+                                        <div class="font-display text-[14px] font-semibold text-ink leading-[1.3]">
+                                            {row.label}
+                                        </div>
+                                        {row.sub && (
+                                            <div class="font-body text-[12.5px] text-ink-muted leading-[1.4] mt-0.5">
+                                                {row.sub}
+                                            </div>
+                                        )}
+                                    </td>
+                                    {row.values.map((value, i) => (
+                                        <td
+                                            class={cn(
+                                                'px-4 py-4 text-center align-middle',
+                                                isFeatured(i) &&
+                                                    'bg-[hsl(var(--travelity-teal)/0.04)]',
+                                            )}
+                                        >
+                                            {typeof value === 'boolean' ? (
+                                                value ? (
+                                                    <span class="inline-flex w-6 h-6 rounded-full bg-[hsl(var(--success)/0.12)] text-[hsl(var(--success))] items-center justify-center">
+                                                        <CheckIcon
+                                                            class="w-3.5 h-3.5"
+                                                            stroke-width="2.5"
+                                                            aria-hidden="true"
+                                                        />
+                                                        <span class="sr-only">
+                                                            Included
+                                                        </span>
+                                                    </span>
+                                                ) : (
+                                                    <span class="inline-flex w-6 h-6 rounded-full text-ink-soft items-center justify-center">
+                                                        <MinusIcon
+                                                            class="w-3.5 h-3.5"
+                                                            stroke-width="2.5"
+                                                            aria-hidden="true"
+                                                        />
+                                                        <span class="sr-only">
+                                                            Not included
+                                                        </span>
+                                                    </span>
+                                                )
+                                            ) : (
+                                                <span
+                                                    class={cn(
+                                                        'font-display text-[13.5px] font-semibold',
+                                                        isFeatured(i)
+                                                            ? 'text-travelity-teal'
+                                                            : 'text-ink',
+                                                    )}
+                                                >
+                                                    {value}
+                                                </span>
+                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </Fragment>
+                    ))
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile stacked layout (<md) — one card per plan with all features -->
+    <div class="md:hidden flex flex-col gap-4">
+        {
+            planHeaders.map((header, planIndex) => (
+                <div
+                    class={cn(
+                        'rounded-xl border bg-paper overflow-hidden',
+                        isFeatured(planIndex)
+                            ? 'border-travelity-teal'
+                            : 'border-line',
+                    )}
+                >
+                    <div
+                        class={cn(
+                            'px-5 py-3 font-display text-[14px] font-semibold uppercase tracking-[0.04em]',
+                            isFeatured(planIndex)
+                                ? 'bg-[hsl(var(--travelity-teal)/0.06)] text-travelity-teal'
+                                : 'bg-surface-alt text-ink-muted',
+                        )}
+                    >
+                        {header}
+                    </div>
+                    {groups.map((group) => (
+                        <Fragment>
+                            <div class="px-5 py-2.5 bg-surface-alt font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-ink-muted border-t border-line">
+                                {group.heading}
+                            </div>
+                            {group.rows.map((row) => (
+                                <div class="flex items-center justify-between gap-4 px-5 py-3 border-t border-line">
+                                    <div class="flex-1">
+                                        <div class="font-display text-[14px] font-semibold text-ink leading-[1.3]">
+                                            {row.label}
+                                        </div>
+                                        {row.sub && (
+                                            <div class="font-body text-[12.5px] text-ink-muted leading-[1.4] mt-0.5">
+                                                {row.sub}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        {typeof row.values[planIndex] ===
+                                        'boolean' ? (
+                                            row.values[planIndex] ? (
+                                                <span class="inline-flex w-6 h-6 rounded-full bg-[hsl(var(--success)/0.12)] text-[hsl(var(--success))] items-center justify-center">
+                                                    <CheckIcon
+                                                        class="w-3.5 h-3.5"
+                                                        stroke-width="2.5"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            ) : (
+                                                <span class="inline-flex w-6 h-6 text-ink-soft items-center justify-center">
+                                                    <MinusIcon
+                                                        class="w-3.5 h-3.5"
+                                                        stroke-width="2.5"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            )
+                                        ) : (
+                                            <span
+                                                class={cn(
+                                                    'font-display text-[13.5px] font-semibold',
+                                                    isFeatured(planIndex)
+                                                        ? 'text-travelity-teal'
+                                                        : 'text-ink',
+                                                )}
+                                            >
+                                                {row.values[planIndex]}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </Fragment>
+                    ))}
+                </div>
+            ))
+        }
+    </div>
+</div>

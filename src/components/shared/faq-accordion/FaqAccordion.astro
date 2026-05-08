@@ -1,0 +1,20 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+    class={cn(
+        'faq-accordion bg-paper border border-line rounded-xl overflow-hidden max-w-[820px] mx-auto',
+        className,
+    )}
+    {...rest}
+>
+    <slot />
+</div>
