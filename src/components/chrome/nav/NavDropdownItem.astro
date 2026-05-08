@@ -1,0 +1,34 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
+    href: string;
+    label: string;
+    description: string;
+    class?: string;
+}
+
+const { href, label, description, class: className, ...rest } = Astro.props;
+
+const classes = cn(
+    'block w-full',
+    'px-3 py-[10px] rounded-lg',
+    'text-ink no-underline',
+    'transition-colors duration-[120ms]',
+    'hover:bg-surface-alt',
+    'focus-visible:bg-surface-alt focus-visible:outline-none',
+    className,
+);
+---
+
+<a href={href} class={classes} {...rest}>
+    <span class="block font-body text-[14px] font-medium leading-[1.3]"
+        >{label}</span
+    >
+    <span
+        class="block mt-0.5 font-body text-[12.5px] font-normal leading-[1.4] text-ink-muted"
+    >
+        {description}
+    </span>
+</a>

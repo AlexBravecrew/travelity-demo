@@ -1,0 +1,124 @@
+---
+import NavLogo from '../nav/NavLogo.astro';
+import FooterColumn from './FooterColumn.astro';
+import { Paths } from '@/lib/utils/paths';
+---
+
+<footer class="bg-ink text-[hsl(0_0%_90%)] pt-16 pb-8 relative">
+    <div class="container mx-auto px-6">
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-8 lg:gap-10 mb-12"
+        >
+            <!-- Brand column -->
+            <div>
+                <div class="footer-brand-logo mb-4">
+                    <NavLogo />
+                </div>
+                <p
+                    class="font-serif italic text-[16px] text-[hsl(0_0%_75%)] leading-[1.5] max-w-[30ch]"
+                >
+                    The booking platform travel businesses run on.
+                </p>
+            </div>
+
+            <FooterColumn
+                title="Solutions"
+                links={[
+                    {
+                        label: 'Booking Engine',
+                        href: Paths.SOLUTIONS_BOOKING_ENGINE,
+                    },
+                    { label: 'Booking Widget', href: Paths.SOLUTIONS_WIDGET },
+                    {
+                        label: 'OTA Integrations',
+                        href: Paths.SOLUTIONS_INTEGRATIONS,
+                    },
+                    { label: 'Proposals', href: Paths.SOLUTIONS_PROPOSALS },
+                    {
+                        label: 'Reporting & BI',
+                        href: Paths.SOLUTIONS_REPORTING,
+                    },
+                    { label: 'Security', href: Paths.SOLUTIONS_SECURITY },
+                ]}
+            />
+
+            <FooterColumn
+                title="Audiences"
+                links={[
+                    {
+                        label: 'Tour Operators',
+                        href: Paths.AUDIENCE_TOUR_OPERATORS,
+                    },
+                    {
+                        label: 'Transfer Providers',
+                        href: Paths.AUDIENCE_TRANSFER_PROVIDERS,
+                    },
+                    {
+                        label: 'Accommodation Hosts',
+                        href: Paths.AUDIENCE_ACCOMMODATION_HOSTS,
+                    },
+                    {
+                        label: 'Independent Guides',
+                        href: Paths.AUDIENCE_INDEPENDENT_GUIDES,
+                    },
+                ]}
+            />
+
+            <FooterColumn
+                title="Resources"
+                links={[
+                    { label: 'Guides', href: Paths.GUIDES },
+                    { label: 'FAQ', href: Paths.FAQ },
+                    { label: 'Help Center', href: Paths.HELP },
+                    { label: 'Our Story', href: Paths.OUR_STORY },
+                ]}
+            />
+
+            <FooterColumn
+                title="Company"
+                links={[
+                    { label: 'Pricing', href: Paths.PRICING },
+                    { label: 'Book a Demo', href: Paths.BOOK_DEMO },
+                    { label: 'Contact', href: Paths.CONTACT },
+                    { label: 'Status', href: Paths.STATUS, external: true },
+                ]}
+            />
+        </div>
+
+        <div
+            class="border-t border-white/10 pt-6 flex flex-wrap justify-between gap-3 font-mono text-[11.5px] text-[hsl(0_0%_60%)]"
+        >
+            <span>© 2026 BraveCrew Inc.</span>
+            <div class="flex flex-wrap gap-[18px]">
+                <a
+                    href={Paths.PRIVACY}
+                    class="text-[hsl(0_0%_60%)] no-underline hover:text-white transition-colors"
+                    >Privacy</a
+                >
+                <a
+                    href={Paths.TERMS}
+                    class="text-[hsl(0_0%_60%)] no-underline hover:text-white transition-colors"
+                    >Terms</a
+                >
+                <a
+                    href={Paths.DPA}
+                    class="text-[hsl(0_0%_60%)] no-underline hover:text-white transition-colors"
+                    >DPA</a
+                >
+                <a
+                    href={Paths.COOKIES}
+                    class="text-[hsl(0_0%_60%)] no-underline hover:text-white transition-colors"
+                    >Cookies</a
+                >
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    /* The NavLogo's wordmark uses text-travelity-blue by default.
+       In the footer's dark context, override to white. */
+    .footer-brand-logo :global(span) {
+        color: hsl(0 0% 100%);
+    }
+</style>

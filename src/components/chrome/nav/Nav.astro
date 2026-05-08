@@ -1,0 +1,47 @@
+---
+import { Button } from '@/components/ui/button';
+import { Paths } from '@/lib/utils/paths';
+import NavLogo from './NavLogo.astro';
+import NavLink from './NavLink.astro';
+import MobileMenu from './MobileMenu.astro';
+import { navLinks } from './nav-data';
+---
+
+<nav
+    class="nav-root sticky top-0 z-50 h-[68px] backdrop-blur-[14px] backdrop-saturate-[180%] bg-[hsl(var(--paper)/0.85)] border-b border-transparent transition-[border-color,background] duration-200"
+    data-nav-root
+>
+    <div class="container mx-auto px-6 h-full">
+        <div class="flex items-center justify-between gap-6 h-full">
+            <NavLogo />
+
+            <!-- Desktop links — hidden <1024px -->
+            <div class="hidden lg:flex gap-1">
+                {navLinks.map((link, i) => <NavLink link={link} index={i} />)}
+            </div>
+
+            <!-- Right side: CTA on desktop, hamburger on mobile -->
+            <div class="flex items-center gap-2">
+                <Button
+                    href={Paths.BOOK_DEMO}
+                    size="sm"
+                    class="hidden lg:inline-flex"
+                >
+                    Book a demo
+                </Button>
+                <MobileMenu />
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    import './nav.client.ts';
+</script>
+
+<style>
+    .nav-root.scrolled {
+        border-bottom-color: hsl(var(--line));
+        background: hsl(var(--paper) / 0.95);
+    }
+</style>

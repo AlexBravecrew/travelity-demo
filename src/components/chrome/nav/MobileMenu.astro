@@ -1,0 +1,155 @@
+---
+import { MenuIcon, XIcon, ChevronDownIcon } from '@/icons';
+import { navLinks } from './nav-data';
+---
+
+<!-- Hamburger trigger — only visible <1024px -->
+<button
+    type="button"
+    class="lg:hidden inline-flex flex-col items-center justify-center w-10 h-10 rounded-md border border-line bg-transparent cursor-pointer"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu-root"
+    data-mobile-menu-trigger
+>
+    <MenuIcon
+        class="w-5 h-5 text-ink mobile-menu-icon-open"
+        aria-hidden="true"
+    />
+    <XIcon
+        class="w-5 h-5 text-ink mobile-menu-icon-close hidden"
+        aria-hidden="true"
+    />
+</button>
+
+<!-- Slide-down panel — positioned fixed, anchored under the 68px nav bar -->
+<div
+    id="mobile-menu-root"
+    class="mobile-menu-root lg:hidden"
+    data-mobile-menu-root
+    aria-hidden="true"
+>
+    <div class="mobile-menu-panel">
+        <nav class="px-6 py-4">
+            <ul class="space-y-1 list-none p-0 m-0">
+                {
+                    navLinks.map((link, i) => {
+                        const isAccordion = !!link.items?.length;
+                        return isAccordion ? (
+                            <li
+                                data-mobile-section
+                                class="border-b border-line last:border-0"
+                            >
+                                <button
+                                    type="button"
+                                    class="w-full flex items-center justify-between py-4 font-body text-[16px] font-medium text-ink"
+                                    aria-expanded="false"
+                                    aria-controls={`mobile-section-${i}`}
+                                    data-mobile-section-trigger
+                                >
+                                    {link.label}
+                                    <ChevronDownIcon
+                                        class="w-4 h-4 mobile-section-chevron transition-transform duration-200"
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                                <div
+                                    id={`mobile-section-${i}`}
+                                    class="mobile-section-body"
+                                >
+                                    <ul class="list-none p-0 m-0 pb-4 space-y-1">
+                                        {link.items!.map((item) => (
+                                            <li>
+                                                <a
+                                                    href={item.href}
+                                                    class="block px-3 py-2 rounded-md font-body text-[14px] text-ink hover:bg-surface-alt"
+                                                >
+                                                    <span class="block font-medium">
+                                                        {item.label}
+                                                    </span>
+                                                    <span class="block text-[12.5px] text-ink-muted mt-0.5">
+                                                        {item.description}
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </li>
+                        ) : (
+                            <li class="border-b border-line last:border-0">
+                                <a
+                                    href={link.href}
+                                    class="block py-4 font-body text-[16px] font-medium text-ink"
+                                >
+                                    {link.label}
+                                </a>
+                            </li>
+                        );
+                    })
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<style>
+    /* Trigger icon swap based on open state */
+    [data-mobile-menu-trigger][aria-expanded='true'] .mobile-menu-icon-open {
+        display: none;
+    }
+    [data-mobile-menu-trigger][aria-expanded='true'] .mobile-menu-icon-close {
+        display: block;
+    }
+
+    /* Slide-down panel
+       - Anchored to top under the 68px nav bar
+       - Closed: clipped to height 0, opacity 0
+       - Open: full height, opacity 1
+    */
+    .mobile-menu-root {
+        position: fixed;
+        top: 68px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 90;
+        background: hsl(var(--paper));
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-4px);
+        transition:
+            opacity 200ms ease-out,
+            transform 200ms ease-out,
+            visibility 200ms;
+        overflow-y: auto;
+    }
+
+    .mobile-menu-root.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* Accordion section body — closed by default */
+    .mobile-section-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 240ms ease-out;
+    }
+    [data-mobile-section].open .mobile-section-body {
+        max-height: 600px; /* generous; collapses by content height */
+    }
+    [data-mobile-section].open .mobile-section-chevron {
+        transform: rotate(180deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mobile-menu-root,
+        .mobile-section-body,
+        .mobile-section-chevron {
+            transition: none !important;
+            transform: none !important;
+        }
+    }
+</style>

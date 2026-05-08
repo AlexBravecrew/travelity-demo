@@ -1,0 +1,71 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { ChevronDownIcon } from '@/icons';
+import NavDropdown from './NavDropdown.astro';
+import type { NavLinkData } from './nav-data';
+
+export interface Props {
+    link: NavLinkData;
+    /** Index of this link, used to generate stable IDs for ARIA. */
+    index: number;
+    class?: string;
+}
+
+const { link, index, class: className } = Astro.props;
+const isDropdown = !!link.items?.length;
+const dropdownId = `nav-dropdown-${index}`;
+
+const linkClasses = cn(
+    'nav-link',
+    'inline-flex items-center gap-1',
+    'px-[14px] py-2 rounded-md',
+    'font-body text-[14px] font-medium',
+    'text-ink-muted no-underline cursor-pointer',
+    'transition-all duration-150',
+    'hover:text-ink hover:bg-[hsl(var(--ink)/0.04)]',
+    'focus-visible:text-ink focus-visible:bg-[hsl(var(--ink)/0.04)]',
+    className,
+);
+
+const chevronClasses = cn(
+    'w-[11px] h-[11px]',
+    'transition-transform duration-200',
+);
+---
+
+{
+    isDropdown ? (
+        <div class="nav-item relative">
+            <button
+                type="button"
+                class={linkClasses}
+                aria-haspopup="menu"
+                aria-expanded="false"
+                aria-controls={dropdownId}
+                data-nav-trigger
+            >
+                {link.label}
+                <ChevronDownIcon class={chevronClasses} aria-hidden="true" />
+            </button>
+            <NavDropdown items={link.items!} id={dropdownId} />
+        </div>
+    ) : (
+        <a href={link.href} class={linkClasses}>
+            {link.label}
+        </a>
+    )
+}
+
+<style>
+    /* When parent .nav-item is .open, rotate the chevron. The chevron is the
+       only <svg> inside the button, so the descendant selector is safe. */
+    :global(.nav-item.open) .nav-link svg {
+        transform: rotate(180deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .nav-link svg {
+            transition: none !important;
+        }
+    }
+</style>

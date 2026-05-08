@@ -1,5 +1,7 @@
 ---
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
 import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { Tag } from '@/components/ui/tag';
@@ -13,6 +15,7 @@ import { Paths } from '@/lib/utils/paths';
     title="Travelity — Primitives Showcase"
     description="Visual testbed for Phase 1 primitives."
 >
+    <Nav />
     <div class="container mx-auto px-6 py-16 max-w-[960px]">
         <header class="mb-16">
             <Eyebrow withRule>Phase 1 — Primitives</Eyebrow>
@@ -330,4 +333,5 @@ import { Paths } from '@/lib/utils/paths';
             </div>
         </section>
     </div>
+    <Footer />
 </MarketingLayout>

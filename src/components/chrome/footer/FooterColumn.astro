@@ -1,0 +1,39 @@
+---
+import { externalAttrs } from '@/lib/utils/external-attrs';
+
+export interface FooterLink {
+    label: string;
+    href: string;
+    external?: boolean;
+}
+
+export interface Props {
+    title: string;
+    links: FooterLink[];
+}
+
+const { title, links } = Astro.props;
+---
+
+<div>
+    <h5
+        class="font-mono text-[11px] font-semibold uppercase tracking-[0.10em] text-[hsl(0_0%_60%)] mb-4"
+    >
+        {title}
+    </h5>
+    <ul class="list-none p-0 m-0 space-y-[10px]">
+        {
+            links.map((link) => (
+                <li>
+                    <a
+                        href={link.href}
+                        class="font-body text-[14px] text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
+                        {...externalAttrs(link.external ?? false)}
+                    >
+                        {link.label}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</div>
