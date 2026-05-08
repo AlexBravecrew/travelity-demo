@@ -9,8 +9,11 @@ import { SolutionMap, SolutionRow } from '@/components/shared/solution-map';
 import { FeaturePillars, PillarRow } from '@/components/shared/feature-pillars';
 import { Workflow, WorkflowStep } from '@/components/shared/workflow';
 import { PlanRec } from '@/components/shared/plan-rec';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
 
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import { Paths } from '@/lib/utils/paths';
 
 import {
     RouteIcon,
@@ -21,6 +24,8 @@ import {
     MessageSquareIcon,
     FileCheckIcon,
     BarChartIcon,
+    CalendarIcon,
+    CodeIcon,
 } from '@/icons';
 ---
 
@@ -206,6 +211,45 @@ import {
             planName="Ultimate"
             description="For transfer companies with multiple vehicles, routes, and drivers — when manual coordination stops scaling."
         />
+
+        <CrossSell heading="Where to next.">
+            <CrossSellCard
+                href={Paths.SOLUTIONS_BOOKING_ENGINE}
+                title="Booking Engine"
+                description="Products, scheduling, pricing, and daily ops in one back-office."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_WIDGET}
+                title="Booking Widget"
+                description="Take direct bookings on your own site — no commission, your branding."
+            >
+                <CodeIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_PROPOSALS}
+                title="Proposals"
+                description="Custom quotes for B2B partners and group inquiries — paid via signed link."
+            >
+                <FileCheckIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
 
         <ClosingCTASection />
     </main>

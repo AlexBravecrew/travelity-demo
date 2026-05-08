@@ -37,6 +37,7 @@ export { Sparkles as SparklesIcon } from '@lucide/astro'; // 4. Ongoing updates
 // Phase 4 — used by cross-page-component preview/consumers
 // (none of the Phase 4 components themselves import icons; consumers do)
 export { Globe as GlobeIcon } from '@lucide/astro'; // OTAs / international
+export { Code as CodeIcon } from '@lucide/astro'; // embed/widget
 
 // Phase 5 — Solutions pages (capability bullets + cross-sell card icons)
 export { Boxes as BoxesIcon } from '@lucide/astro'; // products & catalog
@@ -54,7 +55,6 @@ export { Languages as LanguagesIcon } from '@lucide/astro'; // multi-currency / 
 // Phase 6 — Audience pages (FeaturePillars + Workflow rows)
 export { CalendarDays as CalendarDaysIcon } from '@lucide/astro';
 export { MapPin as MapPinIcon } from '@lucide/astro';
-export { Workflow as WorkflowIcon } from '@lucide/astro';
 export { LayoutGrid as LayoutGridIcon } from '@lucide/astro';
 export { Route as RouteIcon } from '@lucide/astro';
 export { Bed as BedIcon } from '@lucide/astro';

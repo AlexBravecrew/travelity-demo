@@ -6,10 +6,31 @@ import { Paths } from '@/lib/utils/paths';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends HTMLAttributes<'section'> {
+    /** Eyebrow label above the headline. */
+    eyebrow?: string;
+    /** Description paragraph below the headline. */
+    description?: string;
+    /** Primary CTA button label. */
+    primaryCtaLabel?: string;
+    /** Primary CTA href. */
+    primaryCtaHref?: string;
+    /** Secondary CTA button label. */
+    secondaryCtaLabel?: string;
+    /** Secondary CTA href. */
+    secondaryCtaHref?: string;
     class?: string;
 }
 
-const { class: className, ...rest } = Astro.props;
+const {
+    eyebrow = 'Get started',
+    description = "30 minutes. Zero prep. Bring your booking spreadsheet — we'll show you how it works the day you walk away from it.",
+    primaryCtaLabel = 'Book a Demo',
+    primaryCtaHref = Paths.BOOK_DEMO,
+    secondaryCtaLabel = 'Start Free Trial',
+    secondaryCtaHref = Paths.BOOK_DEMO,
+    class: className,
+    ...rest
+} = Astro.props;
 ---
 
 <section
@@ -27,36 +48,37 @@ const { class: className, ...rest } = Astro.props;
         aria-hidden="true"></span>
 
     <div class="relative z-[1] max-w-[640px] mx-auto px-6">
-        <Eyebrow withRule centered>Get started</Eyebrow>
+        <Eyebrow withRule centered>{eyebrow}</Eyebrow>
 
         <h2
             class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] max-w-[16ch] mx-auto mt-5 mb-5"
             style="font-size: clamp(36px, 4.6vw, 56px);"
         >
-            See Travelity
-            <em class="not-italic">
-                <span class="italic font-medium text-travelity-teal"
-                    >working in your operation.</span
-                >
-            </em>
+            <slot name="headline">
+                See Travelity
+                <em class="not-italic">
+                    <span class="italic font-medium text-travelity-teal"
+                        >working in your operation.</span
+                    >
+                </em>
+            </slot>
         </h2>
 
         <p
             class="text-[18px] text-ink-muted leading-[1.55] max-w-[50ch] mx-auto mb-9"
         >
-            30 minutes. Zero prep. Bring your booking spreadsheet — we'll show
-            you how it works the day you walk away from it.
+            {description}
         </p>
 
         <div class="flex flex-wrap gap-3 justify-center mb-7">
-            <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
-                Book a Demo
+            <Button href={primaryCtaHref} size="lg" withArrow>
+                {primaryCtaLabel}
             </Button>
             {
-                /* TODO: split when signup page exists; for now points to BOOK_DEMO */
+                /* Secondary CTA — TODO: split href when signup/secondary destination exists. */
             }
-            <Button href={Paths.BOOK_DEMO} size="lg" variant="outline">
-                Start Free Trial
+            <Button href={secondaryCtaHref} size="lg" variant="outline">
+                {secondaryCtaLabel}
             </Button>
         </div>
 
