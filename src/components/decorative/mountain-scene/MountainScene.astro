@@ -1,0 +1,56 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class={cn('w-full h-full', className)} aria-hidden="true" {...rest}>
+    <svg
+        viewBox="0 0 800 360"
+        preserveAspectRatio="xMidYMax slice"
+        class="w-full h-full block"
+    >
+        <!-- Far mountain ridge — light, atmospheric -->
+        <path
+            d="M0 220 L100 100 L200 160 L320 80 L460 140 L580 100 L700 160 L800 130 L800 360 L0 360 Z"
+            fill="hsl(220 30% 38%)"
+            opacity="0.5"></path>
+
+        <!-- Middle mountain ridge — medium silhouette -->
+        <path
+            d="M0 260 L60 200 L120 240 L180 180 L240 220 L300 200 L360 240 L420 200 L480 230 L540 200 L600 240 L660 200 L720 240 L800 220 L800 360 L0 360 Z"
+            fill="hsl(220 35% 28%)"
+            opacity="0.75"></path>
+
+        <!-- Small village cluster on the middle ridge -->
+        <g opacity="0.5" fill="hsl(220 40% 22%)">
+            <rect x="180" y="220" width="6" height="40"></rect>
+            <rect x="200" y="218" width="6" height="42"></rect>
+            <rect x="220" y="222" width="6" height="38"></rect>
+            <rect x="240" y="220" width="6" height="40"></rect>
+            <rect x="174" y="216" width="74" height="6"></rect>
+            <rect x="174" y="258" width="74" height="4"></rect>
+        </g>
+
+        <!-- Foreground ridge — deepest, sharpest -->
+        <path
+            d="M0 320 L80 250 L160 300 L240 260 L320 310 L400 270 L480 305 L560 270 L640 310 L720 270 L800 300 L800 360 L0 360 Z"
+            fill="hsl(220 45% 16%)"></path>
+
+        <!-- Lone pine tree silhouette on the right -->
+        <g transform="translate(680, 275)" fill="hsl(220 50% 12%)">
+            <rect x="-1" y="0" width="2" height="50"></rect>
+            <path d="M0 5 Q -25 -10 -45 -5 Q -25 0 0 8 Z"></path>
+            <path d="M0 5 Q 25 -10 45 -5 Q 25 0 0 8 Z"></path>
+            <path d="M0 10 Q -30 5 -50 15 Q -25 12 0 14 Z"></path>
+            <path d="M0 10 Q 30 5 50 15 Q 25 12 0 14 Z"></path>
+            <path d="M0 0 Q -10 -22 -22 -25 Q -10 -15 0 0 Z"></path>
+            <path d="M0 0 Q 10 -22 22 -25 Q 10 -15 0 0 Z"></path>
+        </g>
+    </svg>
+</div>

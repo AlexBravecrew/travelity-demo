@@ -1,0 +1,104 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Button } from '@/components/ui/button';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { CheckIcon } from '@/icons';
+import { Paths } from '@/lib/utils/paths';
+import AudienceChips from './AudienceChips.astro';
+import HeroVisual from './HeroVisual.astro';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'section'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<section
+    class={cn(
+        'hero',
+        'relative overflow-hidden bg-paper',
+        'pt-8 pb-4 lg:pt-8 lg:pb-4',
+        className,
+    )}
+    {...rest}
+>
+    <div class="container mx-auto px-6">
+        <div
+            class="hero-content relative z-[2] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[72px] items-center min-h-[540px] lg:min-h-[600px] py-8"
+        >
+            <!-- Text column -->
+            <div class="hero-text max-w-[560px]">
+                <Eyebrow withRule
+                    >Booking platform for travel businesses</Eyebrow
+                >
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] max-w-[13ch] mt-6 mb-6"
+                    style="font-size: clamp(40px, 5vw, 64px);"
+                >
+                    Run your travel business
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal">
+                            without the spreadsheets.</span
+                        >
+                    </em>
+                </h1>
+
+                <p
+                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[46ch] mb-9"
+                >
+                    Bookings, channels, payments, and operations — one platform
+                    for the people who run travel.
+                </p>
+
+                <AudienceChips class="mb-7" />
+
+                <div class="flex flex-wrap gap-3 mb-7">
+                    <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
+                        Book a Demo
+                    </Button>
+                    {
+                        /* TODO: split when signup page exists; for now points to BOOK_DEMO */
+                    }
+                    <Button href={Paths.BOOK_DEMO} size="lg" variant="outline">
+                        Start Free Trial
+                    </Button>
+                </div>
+
+                <div
+                    class="flex flex-wrap items-center gap-6 text-[13px] text-ink-muted"
+                >
+                    <span class="inline-flex items-center gap-1.5">
+                        <CheckIcon
+                            class="w-[14px] h-[14px] text-travelity-teal"
+                            stroke-width="2.5"
+                            aria-hidden="true"
+                        />
+                        No credit card
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <CheckIcon
+                            class="w-[14px] h-[14px] text-travelity-teal"
+                            stroke-width="2.5"
+                            aria-hidden="true"
+                        />
+                        30-day trial
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <CheckIcon
+                            class="w-[14px] h-[14px] text-travelity-teal"
+                            stroke-width="2.5"
+                            aria-hidden="true"
+                        />
+                        White-glove setup
+                    </span>
+                </div>
+            </div>
+
+            <!-- Visual column -->
+            <HeroVisual />
+        </div>
+    </div>
+</section>

@@ -1,0 +1,78 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Paths } from '@/lib/utils/paths';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+interface AudienceChip {
+    label: string;
+    href: string;
+    /** CSS color value for the chip's leading dot. Uses tokens directly. */
+    dotColor: string;
+}
+
+const audiences: AudienceChip[] = [
+    {
+        label: 'Tour operators',
+        href: Paths.AUDIENCE_TOUR_OPERATORS,
+        dotColor: 'hsl(var(--travelity-blue))',
+    },
+    {
+        label: 'Transfer providers',
+        href: Paths.AUDIENCE_TRANSFER_PROVIDERS,
+        dotColor: 'hsl(var(--travelity-teal))',
+    },
+    {
+        label: 'Accommodation hosts',
+        href: Paths.AUDIENCE_ACCOMMODATION_HOSTS,
+        dotColor: 'hsl(var(--travelity-blue-deep))',
+    },
+    {
+        label: 'Independent guides',
+        href: Paths.AUDIENCE_INDEPENDENT_GUIDES,
+        dotColor: 'hsl(var(--travelity-teal-deep))',
+    },
+];
+---
+
+<div class={cn('flex flex-wrap gap-2', className)} {...rest}>
+    {
+        audiences.map((audience) => (
+            <a
+                href={audience.href}
+                class:list={[
+                    'audience-chip',
+                    'inline-flex items-center gap-2',
+                    'px-[14px] py-[7px] rounded-full',
+                    'bg-paper border border-line',
+                    'font-body text-[13px] font-medium text-ink no-underline',
+                    'transition-all duration-200',
+                    'hover:border-[hsl(var(--travelity-teal)/0.4)] hover:-translate-y-px',
+                ]}
+            >
+                <span
+                    class="w-2 h-2 rounded-full flex-shrink-0"
+                    style={`background: ${audience.dotColor};`}
+                    aria-hidden="true"
+                />
+                {audience.label}
+            </a>
+        ))
+    }
+</div>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        .audience-chip {
+            transition: none !important;
+        }
+        .audience-chip:hover {
+            transform: none !important;
+        }
+    }
+</style>

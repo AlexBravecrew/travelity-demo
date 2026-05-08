@@ -1,0 +1,287 @@
+---
+import { ArrowRightIcon, LockIcon, CheckIcon, XCircleIcon } from '@/icons';
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+    class={cn(
+        'pc-card',
+        'absolute bottom-6 left-4 right-4 lg:bottom-7 lg:left-7 lg:right-auto',
+        'max-w-[320px] z-[3]',
+        'bg-paper border border-line rounded-[14px] p-[18px]',
+        'shadow-[0_24px_48px_-12px_hsl(var(--ink)/0.32)]',
+        className,
+    )}
+    {...rest}
+>
+    <!-- Header: eyebrow + elapsed time -->
+    <div
+        class="pc-header flex items-center justify-between mb-[14px] pb-[14px] border-b border-line"
+    >
+        <span
+            class="font-mono text-[10px] font-semibold uppercase tracking-[0.10em] text-ink-muted"
+        >
+            How a booking happens
+        </span>
+        <span
+            class="font-mono text-[10px] font-semibold tracking-[0.06em] text-travelity-teal"
+        >
+            ~1.0s
+        </span>
+    </div>
+
+    <!-- Flow: 3 steps -->
+    <div class="pc-flow flex flex-col">
+        <!-- Step 1: Booking received -->
+        <div
+            class="pc-step grid grid-cols-[22px_1fr_auto] gap-3 items-start py-[10px] relative"
+        >
+            <span
+                class="pc-step-icon w-[22px] h-[22px] rounded-full inline-flex items-center justify-center flex-shrink-0 z-[2]"
+            >
+                <ArrowRightIcon
+                    class="w-[11px] h-[11px]"
+                    stroke-width="2.4"
+                    aria-hidden="true"
+                />
+            </span>
+            <span
+                class="pc-step-text font-display text-[13px] font-semibold text-ink leading-[1.3] tracking-[-0.01em]"
+            >
+                Booking received
+                <span
+                    class="pc-step-sub block font-body font-normal text-[11.5px] text-ink-muted mt-0.5 leading-[1.4]"
+                >
+                    via widget · 4 guests
+                </span>
+            </span>
+            <span
+                class="pc-step-time font-mono text-[10px] text-ink-muted tracking-[0.04em] whitespace-nowrap mt-1"
+            >
+                0s
+            </span>
+        </div>
+
+        <!-- Step 2: Seats locked (the featured / active step) -->
+        <div
+            class="pc-step pc-step-featured grid grid-cols-[22px_1fr_auto] gap-3 items-start py-3 px-[10px] relative -mx-[10px] my-1 rounded-lg"
+        >
+            <span
+                class="pc-step-icon w-[22px] h-[22px] rounded-full inline-flex items-center justify-center flex-shrink-0 z-[2]"
+            >
+                <LockIcon
+                    class="w-[11px] h-[11px]"
+                    stroke-width="2.2"
+                    aria-hidden="true"
+                />
+            </span>
+            <span
+                class="pc-step-text font-display text-[13px] font-semibold text-ink leading-[1.3] tracking-[-0.01em]"
+            >
+                Seats locked across 3 channels
+                <span
+                    class="pc-step-sub block font-body font-normal text-[11.5px] text-ink-muted mt-0.5 leading-[1.4]"
+                >
+                    availability check + multi-channel sync
+                </span>
+                <span
+                    class="pc-prevented inline-flex items-center gap-[5px] mt-1.5 font-body text-[10.5px] font-semibold px-2 py-[3px] rounded"
+                >
+                    <XCircleIcon
+                        class="w-[10px] h-[10px]"
+                        stroke-width="2.4"
+                        aria-hidden="true"
+                    />
+                    1 double-booking prevented
+                </span>
+            </span>
+            <span
+                class="pc-step-time font-mono text-[10px] text-ink-muted tracking-[0.04em] whitespace-nowrap mt-1"
+            >
+                0.2s
+            </span>
+        </div>
+
+        <!-- Step 3: Confirmed (done state) -->
+        <div
+            class="pc-step pc-step-done grid grid-cols-[22px_1fr_auto] gap-3 items-start py-[10px] relative"
+        >
+            <span
+                class="pc-step-icon w-[22px] h-[22px] rounded-full inline-flex items-center justify-center flex-shrink-0 z-[2]"
+            >
+                <CheckIcon
+                    class="w-[11px] h-[11px]"
+                    stroke-width="2.6"
+                    aria-hidden="true"
+                />
+            </span>
+            <span
+                class="pc-step-text font-display text-[13px] font-semibold text-ink leading-[1.3] tracking-[-0.01em]"
+            >
+                Confirmed &amp; invoiced
+                <span
+                    class="pc-step-sub block font-body font-normal text-[11.5px] text-ink-muted mt-0.5 leading-[1.4]"
+                >
+                    guest receives confirmation
+                </span>
+            </span>
+            <span
+                class="pc-step-time font-mono text-[10px] text-ink-muted tracking-[0.04em] whitespace-nowrap mt-1"
+            >
+                1s
+            </span>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ============================================================
+       Step icon coloring — three states (neutral, featured, done)
+       ============================================================ */
+
+    /* Neutral state: teal-on-tinted-teal (steps 1 and default) */
+    .pc-step-icon {
+        background: hsl(var(--travelity-teal) / 0.12);
+        color: hsl(var(--travelity-teal));
+        border: 2px solid hsl(var(--paper));
+        box-shadow: 0 0 0 1px hsl(var(--travelity-teal) / 0.18);
+    }
+
+    /* Featured (active step 2) — keep teal but bump the tint */
+    .pc-step-featured .pc-step-icon {
+        background: hsl(var(--travelity-teal) / 0.16);
+        color: hsl(var(--travelity-teal));
+        box-shadow: 0 0 0 1px hsl(var(--travelity-teal) / 0.24);
+    }
+
+    /* Featured row background — subtle teal wash */
+    .pc-step-featured {
+        background: linear-gradient(
+            90deg,
+            hsl(var(--travelity-teal) / 0.06) 0%,
+            hsl(var(--travelity-teal) / 0.02) 100%
+        );
+    }
+
+    /* Done state — solid success green icon */
+    .pc-step-done .pc-step-icon {
+        background: hsl(var(--success));
+        color: hsl(0 0% 100%);
+        box-shadow: 0 0 0 1px hsl(var(--success) / 0.24);
+    }
+
+    /* ============================================================
+       Connector lines between steps (vertical thin gradient)
+       ============================================================ */
+
+    .pc-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 30px;
+        bottom: -4px;
+        width: 1.5px;
+        background: linear-gradient(
+            180deg,
+            hsl(var(--travelity-teal) / 0.4) 0%,
+            hsl(var(--travelity-teal) / 0.15) 100%
+        );
+    }
+
+    /* The featured step's connector starts slightly lower because of the row's padding */
+    .pc-step-featured::after {
+        top: 36px;
+        bottom: -2px;
+    }
+
+    /* ============================================================
+       Prevented pill — semantic destructive (red) for "bad thing prevented"
+       Not an error state — same color, different context.
+       ============================================================ */
+
+    .pc-prevented {
+        color: hsl(var(--destructive));
+        background: hsl(var(--destructive) / 0.08);
+    }
+
+    /* ============================================================
+       Animation choreography — total runtime ~3 seconds
+       Step 1: t=0.3s   row fades in,   t=0.4s icon pops
+       Step 2: t=1.4s   row fades in,   t=1.5s icon pops
+       Prevented pill:  t=1.9s          fades in inside step 2
+       Step 3: t=2.5s   row fades in,   t=2.6s icon pops (done state)
+       ============================================================ */
+
+    @keyframes pc-step-in {
+        0% {
+            opacity: 0;
+            transform: translateX(-6px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes pc-step-icon-pop {
+        0% {
+            transform: scale(0.6);
+            opacity: 0;
+        }
+        60% {
+            transform: scale(1.15);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .pc-step:nth-child(1) {
+        animation: pc-step-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    }
+    .pc-step:nth-child(2) {
+        animation: pc-step-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) 1.4s both;
+    }
+    .pc-step:nth-child(3) {
+        animation: pc-step-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) 2.5s both;
+    }
+
+    .pc-step:nth-child(1) .pc-step-icon {
+        animation: pc-step-icon-pop 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+    }
+    .pc-step:nth-child(2) .pc-step-icon {
+        animation: pc-step-icon-pop 0.4s cubic-bezier(0.4, 0, 0.2, 1) 1.5s both;
+    }
+    .pc-step:nth-child(3) .pc-step-icon {
+        animation: pc-step-icon-pop 0.4s cubic-bezier(0.4, 0, 0.2, 1) 2.6s both;
+    }
+
+    .pc-prevented {
+        animation: pc-step-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) 1.9s both;
+    }
+
+    /* ============================================================
+       Reduced motion — short-circuit ALL animations.
+       Card renders in its final state (all 3 steps visible, prevented
+       pill present, done state lit).
+       ============================================================ */
+
+    @media (prefers-reduced-motion: reduce) {
+        .pc-step,
+        .pc-step .pc-step-icon,
+        .pc-prevented {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    }
+</style>

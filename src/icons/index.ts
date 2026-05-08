@@ -10,5 +10,11 @@
 
 export { ArrowRight as ArrowRightIcon } from '@lucide/astro';
 export { ChevronDown as ChevronDownIcon } from '@lucide/astro';
-export { Menu as MenuIcon } from '@lucide/astro'; // mobile-only (hamburger)
-export { X as XIcon } from '@lucide/astro'; // mobile-only (close)
+export { Menu as MenuIcon } from '@lucide/astro';
+export { X as XIcon } from '@lucide/astro';
+
+// Booking-flow card + Hero trust row (Phase 3a)
+export { Lock as LockIcon } from '@lucide/astro'; // step 2 icon (seats locked)
+export { Check as CheckIcon } from '@lucide/astro'; // step 3 icon + trust row checks
+// XCircle was renamed to CircleX in lucide; export alias keeps the consumer name stable.
+export { CircleX as XCircleIcon } from '@lucide/astro'; // "prevented" pill icon
