@@ -1,0 +1,214 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { PainGrid, PainCard } from '@/components/shared/pain-grid';
+import { SolutionMap, SolutionRow } from '@/components/shared/solution-map';
+import { FeaturePillars, PillarRow } from '@/components/shared/feature-pillars';
+import { Workflow, WorkflowStep } from '@/components/shared/workflow';
+import { PlanRec } from '@/components/shared/plan-rec';
+
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import {
+    RouteIcon,
+    MapPinIcon,
+    TrendingUpIcon,
+    BriefcaseIcon,
+    CalendarDaysIcon,
+    MessageSquareIcon,
+    FileCheckIcon,
+    BarChartIcon,
+} from '@/icons';
+---
+
+<MarketingLayout
+    title="For Transfer Providers · Travelity"
+    description="Built for the people moving travelers from A to B. Routes, vehicles, drivers, and pricing — modeled the way they actually sell."
+>
+    <Nav />
+
+    <main>
+        <ProductHero eyebrow="For Transfer Providers">
+            <Fragment slot="headline">
+                Built for the people <em>moving travelers from A to B</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Airport pickups, point-to-point routes, multi-stop, daily fleet
+                logistics. Travelity models transfers the way they actually sell
+                — by route and vehicle, not by day-tour conventions awkwardly
+                bent into shape.
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact
+                    label="Vehicle types"
+                    value="Sedan · Van · Coach · Custom"
+                />
+                <QuickFact
+                    label="Pricing models"
+                    value="Per-vehicle · Per-person · Per-km"
+                />
+                <QuickFact label="Recommended plan" value="Ultimate" />
+            </Fragment>
+        </ProductHero>
+
+        <PainGrid>
+            <PainCard
+                num="Problem 01"
+                title="Routes that feel like spreadsheets"
+                description="Yerevan to Tbilisi. Tbilisi to Borjomi. Yerevan airport to Dilijan. Each with multiple vehicle options, transit times, and price tiers. Most software treats them like tours and breaks."
+            />
+            <PainCard
+                num="Problem 02"
+                title="Vehicle utilization is a guessing game"
+                description="Did the Sprinter run full yesterday? Are we underbooking the sedan on Friday afternoons? Without a single view, ops just assigns whatever feels right."
+            />
+            <PainCard
+                num="Problem 03"
+                title="Driver coordination via WhatsApp"
+                description="Pickup time, customer name, flight number, language, special requests. All sent as messages, screenshotted, copied to the next day's roster."
+            />
+        </PainGrid>
+
+        <SolutionMap>
+            <SolutionRow
+                pain="Routes that feel like spreadsheets"
+                solution="Routes as products, not as forced day-tours"
+                sub="Every route gets its own model — origin, destination, transit, vehicle options, per-vehicle pricing. Multi-stop, return, and one-way all native."
+            />
+            <SolutionRow
+                pain="Vehicle utilization is a guessing game"
+                solution="Vehicle utilization in one view"
+                sub="See every vehicle's bookings across the week. Empty seats, overbookings, idle days — all visible at a glance, exportable for finance."
+            />
+            <SolutionRow
+                pain="Driver coordination via WhatsApp"
+                solution="Driver routes, generated and shared"
+                sub="Each driver gets their day's routes — pickup time, location, customer, flight number, language note — in a clean PDF or shareable link."
+            />
+        </SolutionMap>
+
+        <FeaturePillars>
+            <PillarRow
+                title="Native transfer routing"
+                description="Routes as a first-class product type. Origins, destinations, multi-stop, return trips — all natively supported."
+                spotlight
+            >
+                <RouteIcon
+                    slot="icon"
+                    class="w-5 h-5"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </PillarRow>
+            <PillarRow
+                title="Vehicle-aware availability"
+                description="Sell by vehicle, not by seat count. Sedan, van, coach, custom — capacity per type, blocked when assigned."
+            >
+                <MapPinIcon
+                    slot="icon"
+                    class="w-5 h-5"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </PillarRow>
+            <PillarRow
+                title="Per-route, per-vehicle pricing"
+                description="Yerevan-to-Tbilisi sedan: $80. Same route, van: $140. Set once, applies on every channel."
+            >
+                <TrendingUpIcon
+                    slot="icon"
+                    class="w-5 h-5"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </PillarRow>
+            <PillarRow
+                title="Driver assignments and route sheets"
+                description="Assign drivers to routes. Generate per-driver day sheets with full pickup details. Share via link or PDF."
+            >
+                <BriefcaseIcon
+                    slot="icon"
+                    class="w-5 h-5"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </PillarRow>
+            <PillarRow
+                title="Airport-pickup-aware bookings"
+                description="Flight numbers, terminals, language preferences, sign request. The fields that actually matter for a pickup, on the booking form."
+            >
+                <MapPinIcon
+                    slot="icon"
+                    class="w-5 h-5"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </PillarRow>
+        </FeaturePillars>
+
+        <Workflow
+            heading="A typical week for a Tbilisi-based transfer company running 8 vehicles."
+        >
+            <WorkflowStep
+                when="Monday"
+                title="Schedule the week"
+                description="Set vehicle availability for Mon–Sun. Block one Sprinter for Friday's wedding charter. Sync to all channels in one save."
+            >
+                <CalendarDaysIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </WorkflowStep>
+            <WorkflowStep
+                when="Tuesday"
+                title="Bookings come in"
+                description="Six airport pickups, three intercity routes, one multi-stop sightseeing day. All assigned to the right vehicle automatically."
+            >
+                <MessageSquareIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </WorkflowStep>
+            <WorkflowStep
+                when="Thursday"
+                title="Driver day sheets"
+                description="Pull route sheets for each driver. Pickup time, customer name, flight info, special notes — all on one page per driver."
+            >
+                <FileCheckIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </WorkflowStep>
+            <WorkflowStep
+                when="Sunday"
+                title="Week closeout"
+                description="See utilization per vehicle. Sprinter ran 92%, sedan ran 64%. Adjust next week's pricing to balance."
+            >
+                <BarChartIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="1.75"
+                    aria-hidden="true"
+                />
+            </WorkflowStep>
+        </Workflow>
+
+        <PlanRec
+            planName="Ultimate"
+            description="For transfer companies with multiple vehicles, routes, and drivers — when manual coordination stops scaling."
+        />
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

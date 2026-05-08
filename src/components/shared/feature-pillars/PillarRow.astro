@@ -1,0 +1,67 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    title: string;
+    description: string;
+    /** Tints the row with a teal-to-transparent gradient. Used to highlight a key capability. */
+    spotlight?: boolean;
+    /** Small uppercase label visible only when spotlight is true (e.g. "Spotlight"). */
+    spotlightLabel?: string;
+    class?: string;
+}
+
+const {
+    title,
+    description,
+    spotlight = false,
+    spotlightLabel = 'Spotlight',
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<div
+    class={cn(
+        'pillar-row',
+        'grid grid-cols-[56px_1fr] gap-5 px-7 py-6 items-start',
+        'border-b border-line last:border-b-0',
+        spotlight && 'pillar-row-spotlight',
+        className,
+    )}
+    {...rest}
+>
+    <div
+        class="w-10 h-10 rounded-[10px] bg-[hsl(var(--travelity-teal)/0.10)] text-travelity-teal flex items-center justify-center flex-shrink-0"
+    >
+        <slot name="icon" />
+    </div>
+    <div>
+        <h4
+            class="font-display text-[16px] font-semibold leading-[1.3] tracking-[-0.015em] text-ink mb-1 inline-flex items-center gap-2 flex-wrap"
+        >
+            {title}
+            {
+                spotlight && (
+                    <span class="font-mono text-[9.5px] font-semibold uppercase tracking-[0.10em] text-travelity-teal bg-[hsl(var(--travelity-teal)/0.10)] px-2 py-0.5 rounded">
+                        {spotlightLabel}
+                    </span>
+                )
+            }
+        </h4>
+        <p class="text-[14px] text-ink-muted leading-[1.55] m-0">
+            {description}
+        </p>
+    </div>
+</div>
+
+<style>
+    .pillar-row-spotlight {
+        background: linear-gradient(
+            90deg,
+            hsl(var(--travelity-teal) / 0.06) 0%,
+            transparent 100%
+        );
+    }
+</style>

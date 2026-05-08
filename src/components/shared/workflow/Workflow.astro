@@ -1,0 +1,55 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { SectionHeader } from '@/components/ui/section-header';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'section'> {
+    eyebrow?: string;
+    heading: string;
+    class?: string;
+}
+
+const {
+    eyebrow = 'A typical day',
+    heading,
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<section
+    class={cn('workflow-section bg-paper py-16 md:py-24', className)}
+    {...rest}
+>
+    <div class="container mx-auto px-6">
+        <SectionHeader eyebrow={eyebrow} eyebrowWithRule align="center">
+            <Fragment slot="headline">{heading}</Fragment>
+        </SectionHeader>
+        <div
+            class="workflow grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4 relative max-w-[1100px] mx-auto"
+        >
+            <slot />
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Decorative connector line between steps on desktop. */
+    @media (min-width: 768px) {
+        .workflow::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 14%;
+            right: 14%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                hsl(var(--travelity-teal) / 0.4) 0%,
+                hsl(var(--travelity-teal) / 0.2) 100%
+            );
+            z-index: 0;
+            pointer-events: none;
+        }
+    }
+</style>

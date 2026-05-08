@@ -50,3 +50,15 @@ export { Database as DatabaseIcon } from '@lucide/astro'; // data, isolation
 export { ChartColumn as BarChartIcon } from '@lucide/astro'; // reporting
 export { Webhook as WebhookIcon } from '@lucide/astro'; // integrations, API
 export { Languages as LanguagesIcon } from '@lucide/astro'; // multi-currency / locale
+
+// Phase 6 — Audience pages (FeaturePillars + Workflow rows)
+export { CalendarDays as CalendarDaysIcon } from '@lucide/astro';
+export { MapPin as MapPinIcon } from '@lucide/astro';
+export { Workflow as WorkflowIcon } from '@lucide/astro';
+export { LayoutGrid as LayoutGridIcon } from '@lucide/astro';
+export { Route as RouteIcon } from '@lucide/astro';
+export { Bed as BedIcon } from '@lucide/astro';
+export { Briefcase as BriefcaseIcon } from '@lucide/astro';
+export { TrendingUp as TrendingUpIcon } from '@lucide/astro';
+export { MessageSquare as MessageSquareIcon } from '@lucide/astro';
+export { Clock3 as Clock3Icon } from '@lucide/astro';
