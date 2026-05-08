@@ -1,0 +1,190 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { CheckIcon, MinusIcon } from '@/icons';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface PlanFeature {
+    label: string;
+    /** Optional sub-text under the feature label. */
+    sub?: string;
+    /** When true, renders as muted with a Minus icon (excluded). */
+    muted?: boolean;
+}
+
+export interface Props extends HTMLAttributes<'div'> {
+    name: string;
+    tagline: string;
+    priceAmount: string;
+    priceCurrency?: string;
+    pricePeriod?: string;
+    billing: string;
+    ctaLabel: string;
+    ctaHref: string;
+    ctaVariant?: 'primary' | 'outline';
+    includesLabel: string;
+    features: PlanFeature[];
+    featured?: boolean;
+    badgeLabel?: string;
+    class?: string;
+}
+
+const {
+    name,
+    tagline,
+    priceAmount,
+    priceCurrency = '$',
+    pricePeriod = '/month',
+    billing,
+    ctaLabel,
+    ctaHref,
+    ctaVariant = 'outline',
+    includesLabel,
+    features,
+    featured = false,
+    badgeLabel,
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<Card
+    variant={featured ? 'featured' : 'default'}
+    interactive
+    topAccent={featured}
+    class={cn(
+        'pricing-plan flex flex-col',
+        featured && 'lg:-translate-y-3 lg:scale-[1.02] hover:lg:-translate-y-4',
+        className,
+    )}
+    {...rest}
+>
+    {
+        featured && badgeLabel && (
+            <span class="pricing-plan-badge absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-[5px] rounded-full whitespace-nowrap bg-travelity-teal text-white font-mono text-[10px] font-semibold uppercase tracking-[0.10em] shadow-[0_4px_12px_-2px_hsl(var(--travelity-teal)/0.4)]">
+                {badgeLabel}
+            </span>
+        )
+    }
+
+    <div class="px-7 pt-8 pb-7 flex flex-col flex-1">
+        <!-- Header: name + tagline -->
+        <div
+            class={cn(
+                'font-display text-[14px] font-semibold uppercase tracking-[0.04em] mb-1.5',
+                featured ? 'text-travelity-teal' : 'text-ink-muted',
+            )}
+        >
+            {name}
+        </div>
+        <div class="text-[14px] text-ink-muted leading-[1.5] mb-6 min-h-[42px]">
+            {tagline}
+        </div>
+
+        <!-- Price -->
+        <div class="flex items-baseline gap-1 mb-1.5">
+            <span
+                class="font-display text-[22px] font-semibold text-ink-muted mr-0.5"
+            >
+                {priceCurrency}
+            </span>
+            <span
+                class="font-display text-[48px] font-bold tracking-[-0.035em] leading-none text-ink"
+            >
+                {priceAmount}
+            </span>
+            <span class="text-[14px] text-ink-muted ml-1">
+                {pricePeriod}
+            </span>
+        </div>
+        <div
+            class="font-mono text-[11px] text-ink-muted tracking-[0.04em] mb-6"
+        >
+            {billing}
+        </div>
+
+        <!-- CTA -->
+        <div class="mb-6">
+            <Button
+                href={ctaHref}
+                variant={ctaVariant}
+                size="lg"
+                class="w-full justify-center"
+            >
+                {ctaLabel}
+            </Button>
+        </div>
+
+        <!-- Divider -->
+        <hr class="h-px border-0 bg-line mb-[18px]" />
+
+        <!-- Includes label -->
+        <div
+            class="font-mono text-[11px] font-semibold uppercase tracking-[0.10em] text-ink-muted mb-3.5"
+        >
+            {includesLabel}
+        </div>
+
+        <!-- Features list -->
+        <ul class="list-none p-0 m-0 flex flex-col gap-2.5 flex-1">
+            {
+                features.map((feature) => (
+                    <li
+                        class={cn(
+                            'grid grid-cols-[18px_1fr] gap-2.5 items-start text-[13.5px] leading-[1.5]',
+                            feature.muted ? 'text-ink-muted' : 'text-ink',
+                        )}
+                    >
+                        {feature.muted ? (
+                            <MinusIcon
+                                class="w-3.5 h-3.5 mt-1 flex-shrink-0 text-ink-soft"
+                                stroke-width="2.5"
+                                aria-hidden="true"
+                            />
+                        ) : (
+                            <CheckIcon
+                                class={cn(
+                                    'w-3.5 h-3.5 mt-1 flex-shrink-0',
+                                    featured
+                                        ? 'text-travelity-teal'
+                                        : 'text-success',
+                                )}
+                                stroke-width="2.5"
+                                aria-hidden="true"
+                            />
+                        )}
+                        <div>
+                            <strong
+                                class={cn(
+                                    'font-display font-semibold',
+                                    feature.muted
+                                        ? 'text-ink-muted font-normal'
+                                        : 'text-ink',
+                                )}
+                            >
+                                {feature.label}
+                            </strong>
+                            {feature.sub && (
+                                <small class="block text-[12px] text-ink-muted mt-px">
+                                    {feature.sub}
+                                </small>
+                            )}
+                        </div>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</Card>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        .pricing-plan {
+            transform: none !important;
+        }
+        .pricing-plan:hover {
+            transform: none !important;
+        }
+    }
+</style>

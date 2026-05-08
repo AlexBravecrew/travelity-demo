@@ -26,24 +26,55 @@ type NavItem = {
 };
 
 function init() {
-    initStickyNavBorder();
+    initScrollHandlers();
     initDesktopDropdowns();
     initMobileMenu();
 }
 
-// --- Sticky border on scroll ---------------------------------------
+// --- Scroll-driven effects (sticky nav border + parallax photo) ----
 
-function initStickyNavBorder() {
+function initScrollHandlers() {
     const nav = document.querySelector<HTMLElement>('[data-nav-root]');
-    if (!nav) return;
+    const parallaxPhoto = document.querySelector<HTMLElement>(
+        '[data-parallax-photo]',
+    );
+
+    if (!nav && !parallaxPhoto) return;
 
     let ticking = false;
+
     function onScroll() {
-        if (window.scrollY > SCROLL_THRESHOLD_PX) {
-            nav!.classList.add('scrolled');
-        } else {
-            nav!.classList.remove('scrolled');
+        // Sticky nav border
+        if (nav) {
+            if (window.scrollY > SCROLL_THRESHOLD_PX) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
         }
+
+        // Parallax photo: translate Y based on the photo container's position
+        // relative to the viewport. Range is ±40px (the container has -10%
+        // top/bottom margin so it can travel without exposing edges).
+        // Skip entirely under prefers-reduced-motion.
+        const prefersReducedMotion = window.matchMedia(
+            '(prefers-reduced-motion: reduce)',
+        ).matches;
+
+        if (parallaxPhoto && !prefersReducedMotion) {
+            const container = parallaxPhoto.parentElement;
+            if (container) {
+                const rect = container.getBoundingClientRect();
+                const viewportH = window.innerHeight;
+                if (rect.bottom > 0 && rect.top < viewportH) {
+                    const total = viewportH + rect.height;
+                    const progress = (viewportH - rect.top) / total;
+                    const offset = (progress - 0.5) * 80; // ±40px
+                    parallaxPhoto.style.transform = `translateY(${offset}px)`;
+                }
+            }
+        }
+
         ticking = false;
     }
 

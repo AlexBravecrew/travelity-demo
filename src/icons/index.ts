@@ -24,3 +24,6 @@ export { ClipboardList as ClipboardListIcon } from '@lucide/astro'; // Daily ope
 export { FileCheck as FileCheckIcon } from '@lucide/astro'; // Custom proposals
 export { Users as UsersIcon } from '@lucide/astro'; // Customer database
 export { CreditCard as CreditCardIcon } from '@lucide/astro'; // Payments
+
+// Pricing (Phase 3c)
+export { Minus as MinusIcon } from '@lucide/astro'; // excluded features in pricing

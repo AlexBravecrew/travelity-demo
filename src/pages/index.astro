@@ -5,6 +5,8 @@ import { Footer } from '@/components/chrome/footer';
 import { Hero } from '@/components/home/hero';
 import { ChannelsSection } from '@/components/home/channels-section';
 import { FeaturesSection } from '@/components/home/features-section';
+import { ParallaxBreak } from '@/components/home/parallax-break';
+import { PricingSection } from '@/components/home/pricing-section';
 ---
 
 <MarketingLayout
@@ -17,15 +19,17 @@ import { FeaturesSection } from '@/components/home/features-section';
         <Hero />
         <ChannelsSection />
         <FeaturesSection />
+        <ParallaxBreak />
+        <PricingSection />
 
-        <!-- Phase 3c–3d will add Parallax, Pricing, GoLive, ClosingCTA here -->
+        <!-- Phase 3d will add GoLive + ClosingCTA here -->
         <div
             class="container mx-auto px-6 py-32 text-center border-t border-line"
         >
             <p
                 class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft"
             >
-                Sections 4–7 — Phase 3c onward
+                Sections 6–7 — Phase 3d
             </p>
         </div>
     </main>

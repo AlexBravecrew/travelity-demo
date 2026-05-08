@@ -1,0 +1,135 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { SectionHeader } from '@/components/ui/section-header';
+import { Paths } from '@/lib/utils/paths';
+import PricingPlan, { type PlanFeature } from './PricingPlan.astro';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'section'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+interface Plan {
+    name: string;
+    tagline: string;
+    priceAmount: string;
+    billing: string;
+    ctaLabel: string;
+    ctaHref: string;
+    ctaVariant: 'primary' | 'outline';
+    includesLabel: string;
+    features: PlanFeature[];
+    featured?: boolean;
+    badgeLabel?: string;
+}
+
+// TODO: replace placeholder feature copy with real plan details before launch.
+// All CTAs route to BOOK_DEMO until a signup/contact-sales flow exists.
+const plans: Plan[] = [
+    {
+        name: 'Free',
+        tagline: 'For solo guides and small operators just getting started.',
+        priceAmount: '0',
+        billing: 'Free forever · No credit card',
+        ctaLabel: 'Start Free',
+        ctaHref: Paths.BOOK_DEMO,
+        ctaVariant: 'outline',
+        includesLabel: "What's included",
+        features: [
+            { label: 'Plan feature one', sub: 'short qualifier text' },
+            { label: 'Plan feature two', sub: 'short qualifier text' },
+            { label: 'Plan feature three' },
+            { label: 'Plan feature four' },
+            { label: 'Plan feature five' },
+            { label: 'Excluded feature one', muted: true },
+            { label: 'Excluded feature two', muted: true },
+        ],
+    },
+    {
+        name: 'Plus',
+        tagline: 'For growing operators who sell across multiple channels.',
+        priceAmount: '79',
+        billing: 'Billed monthly · or $69/mo annually',
+        ctaLabel: 'Start 30-day Trial',
+        ctaHref: Paths.BOOK_DEMO,
+        ctaVariant: 'primary',
+        includesLabel: 'Everything in Free, plus',
+        features: [
+            { label: 'Plus feature one' },
+            { label: 'Plus feature two', sub: 'short qualifier text' },
+            { label: 'Plus feature three', sub: 'short qualifier text' },
+            { label: 'Plus feature four' },
+            { label: 'Plus feature five' },
+            { label: 'Plus feature six' },
+            { label: 'Plus feature seven' },
+        ],
+        featured: true,
+        badgeLabel: 'Most popular',
+    },
+    {
+        name: 'Ultimate',
+        tagline:
+            'For multi-product operators with serious volume and complexity.',
+        priceAmount: '199',
+        billing: 'Billed monthly · custom enterprise plans available',
+        ctaLabel: 'Talk to Sales',
+        ctaHref: Paths.BOOK_DEMO,
+        ctaVariant: 'outline',
+        includesLabel: 'Everything in Plus, plus',
+        features: [
+            { label: 'Ultimate feature one' },
+            { label: 'Ultimate feature two', sub: 'short qualifier text' },
+            { label: 'Ultimate feature three' },
+            { label: 'Ultimate feature four' },
+            { label: 'Ultimate feature five' },
+            { label: 'Ultimate feature six' },
+            { label: 'Ultimate feature seven' },
+        ],
+    },
+];
+---
+
+<section
+    class={cn('pricing-section relative bg-paper py-24', className)}
+    {...rest}
+>
+    <div class="container mx-auto px-6">
+        <SectionHeader eyebrow="Pricing" eyebrowWithRule align="center">
+            <Fragment slot="headline">
+                Plans for every <em>size of operation.</em>
+            </Fragment>
+            <p
+                slot="dek"
+                class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
+            >
+                From solo guides on the Free plan to multi-product operators on
+                Ultimate. Same booking engine, same channel reach — different
+                limits, different support tiers.
+            </p>
+        </SectionHeader>
+
+        <div
+            class="pricing-cards grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-4 max-w-[1100px] mx-auto items-stretch"
+        >
+            {
+                plans.map((plan) => (
+                    <PricingPlan
+                        name={plan.name}
+                        tagline={plan.tagline}
+                        priceAmount={plan.priceAmount}
+                        billing={plan.billing}
+                        ctaLabel={plan.ctaLabel}
+                        ctaHref={plan.ctaHref}
+                        ctaVariant={plan.ctaVariant}
+                        includesLabel={plan.includesLabel}
+                        features={plan.features}
+                        featured={plan.featured}
+                        badgeLabel={plan.badgeLabel}
+                    />
+                ))
+            }
+        </div>
+    </div>
+</section>
