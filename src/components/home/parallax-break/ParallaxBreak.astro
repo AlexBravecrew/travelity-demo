@@ -1,5 +1,6 @@
 ---
 import ParallaxScene from './ParallaxScene.astro';
+import { cn } from '@/lib/utils/cn';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends HTMLAttributes<'div'> {
@@ -10,7 +11,7 @@ const { class: className, ...rest } = Astro.props;
 ---
 
 <div
-    class={`parallax-break relative overflow-hidden h-[480px] ${className ?? ''}`}
+    class={cn('parallax-break relative overflow-hidden h-[480px]', className)}
     {...rest}
 >
     <!-- Photo layer — gets translated on scroll by nav.client.ts.
