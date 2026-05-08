@@ -33,3 +33,7 @@ export { Settings as SettingsIcon } from '@lucide/astro'; // 1. Setup assistance
 export { GraduationCap as GraduationCapIcon } from '@lucide/astro'; // 2. Personalized training
 export { Headphones as HeadphonesIcon } from '@lucide/astro'; // 3. Dedicated support
 export { Sparkles as SparklesIcon } from '@lucide/astro'; // 4. Ongoing updates
+
+// Phase 4 — used by cross-page-component preview/consumers
+// (none of the Phase 4 components themselves import icons; consumers do)
+export { Globe as GlobeIcon } from '@lucide/astro'; // OTAs / international

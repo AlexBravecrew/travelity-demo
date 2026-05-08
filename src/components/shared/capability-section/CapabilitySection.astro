@@ -1,0 +1,90 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { CheckIcon } from '@/icons';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface CapabilityBullet {
+    label: string;
+}
+
+export interface Props extends HTMLAttributes<'section'> {
+    /** Anchor id (e.g. "be-products" — used by sticky anchor nav on Booking Engine page). */
+    id?: string;
+    /** Eyebrow text above the headline. */
+    eyebrow: string;
+    /** Bulleted feature list. Each renders with a teal-tinted check. */
+    bullets?: CapabilityBullet[];
+    /** When true, swaps text/visual sides. Default: text on left, visual on right. */
+    flip?: boolean;
+    class?: string;
+}
+
+const {
+    id,
+    eyebrow,
+    bullets = [],
+    flip = false,
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<section
+    id={id}
+    class={cn(
+        'capability border-b border-line py-16 md:py-24 last:border-b-0',
+        className,
+    )}
+    {...rest}
+>
+    <div class="container mx-auto px-6">
+        <div
+            class={cn(
+                'grid grid-cols-1 gap-10 items-center',
+                'lg:gap-16',
+                flip ? 'lg:grid-cols-[1.1fr_1fr]' : 'lg:grid-cols-[1fr_1.1fr]',
+            )}
+        >
+            <!-- Text column -->
+            <div class={cn('max-w-[540px]', flip && 'lg:order-2')}>
+                <Eyebrow withRule>{eyebrow}</Eyebrow>
+
+                <h2
+                    class="font-serif font-semibold text-ink leading-[1.15] tracking-[-0.025em] mt-5 mb-4"
+                    style="font-size: clamp(26px, 3vw, 36px);"
+                >
+                    <slot name="headline" />
+                </h2>
+
+                <p class="text-[17px] text-ink-muted leading-[1.55] mb-6">
+                    <slot name="lead" />
+                </p>
+
+                {
+                    bullets.length > 0 && (
+                        <ul class="list-none p-0 m-0">
+                            {bullets.map((bullet) => (
+                                <li class="flex gap-3 py-2.5 text-[15px] text-ink leading-[1.5] items-start">
+                                    <span class="check-icon w-[18px] h-[18px] rounded-full bg-[hsl(var(--travelity-teal)/0.12)] text-travelity-teal inline-flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <CheckIcon
+                                            class="w-[11px] h-[11px]"
+                                            stroke-width="2.5"
+                                            aria-hidden="true"
+                                        />
+                                    </span>
+                                    <span>{bullet.label}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )
+                }
+            </div>
+
+            <!-- Visual column -->
+            <div class={cn(flip && 'lg:order-1')}>
+                <slot name="visual" />
+            </div>
+        </div>
+    </div>
+</section>

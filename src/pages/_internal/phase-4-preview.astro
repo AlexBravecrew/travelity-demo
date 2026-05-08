@@ -1,0 +1,166 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Paths } from '@/lib/utils/paths';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
+import { SocialProof, TestimonialCard } from '@/components/shared/social-proof';
+
+import { CalendarIcon, GlobeIcon, UsersIcon } from '@/icons';
+---
+
+<MarketingLayout
+    title="Phase 4 Preview"
+    description="Cross-page components testbed"
+>
+    <Nav />
+
+    <main>
+        <!-- ProductHero example: a Solutions-style page hero -->
+        <ProductHero eyebrow="Booking Engine">
+            <Fragment slot="headline">
+                The engine that <em>runs your operation</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Products, scheduling, pricing, bookings, and daily ops in one
+                back-office. Built for operators who outgrew spreadsheets — and
+                outgrew the SaaS that came after.
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact
+                    label="Product types"
+                    value="Tours · Transfers · Stays"
+                />
+                <QuickFact
+                    label="Channels"
+                    value="3"
+                    sub="back-office, widget, OTAs"
+                />
+                <QuickFact
+                    label="No double-bookings"
+                    value="Guaranteed"
+                    sub="across all channels"
+                />
+            </Fragment>
+        </ProductHero>
+
+        <!-- CapabilitySection example: text on left -->
+        <CapabilitySection
+            eyebrow="Products & Options"
+            bullets={[
+                { label: 'Products with multiple bookable variations' },
+                { label: 'Per-channel pricing and capacity' },
+                { label: 'Automatic stock management' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Every product modeled the way it actually sells.
+            </Fragment>
+            <Fragment slot="lead">
+                Every product has bookable options — Standard, VIP, Shared
+                Shuttle, Private Sedan — with their own pricing, capacity, and
+                channel rules. The shape of your business, modeled.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm"
+                >
+                    [Screenshot slot]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <!-- CapabilitySection example: flipped (text on right) -->
+        <CapabilitySection
+            eyebrow="Scheduling"
+            flip
+            bullets={[
+                { label: 'Recurring schedules with exception dates' },
+                { label: 'Multi-resource booking' },
+                { label: 'Time-zone-aware availability' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Schedules that bend without breaking.
+            </Fragment>
+            <Fragment slot="lead">
+                Build out a season's schedule once, then handle the inevitable
+                last-minute changes — driver out sick, route closed for a parade
+                — without breaking your booked guests.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm"
+                >
+                    [Screenshot slot]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <!-- SocialProof example -->
+        <SocialProof>
+            <TestimonialCard
+                quote="[Testimonial pending — operator interview in progress. Real quote replaces this placeholder before launch.]"
+                who="Tour Operator"
+                where="Yerevan, Armenia"
+            />
+            <TestimonialCard
+                quote="[Testimonial pending — operator interview in progress. Real quote replaces this placeholder before launch.]"
+                who="Transfer Provider"
+                where="Tbilisi, Georgia"
+            />
+            <TestimonialCard
+                quote="[Testimonial pending — operator interview in progress. Real quote replaces this placeholder before launch.]"
+                who="Accommodation Host"
+                where="Dilijan, Armenia"
+            />
+        </SocialProof>
+
+        <!-- CrossSell example -->
+        <CrossSell>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_WIDGET}
+                title="Booking Widget"
+                description="Embed Travelity directly on your website with three lines of code."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+
+            <CrossSellCard
+                href={Paths.SOLUTIONS_INTEGRATIONS}
+                title="OTA Integrations"
+                description="Native two-way connections with GetYourGuide, Viator, Klook."
+            >
+                <GlobeIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+
+            <CrossSellCard
+                href={Paths.SOLUTIONS_PROPOSALS}
+                title="Custom Proposals"
+                description="Build a quote, send a signed link, get paid."
+            >
+                <UsersIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
+    </main>
+
+    <Footer />
+</MarketingLayout>
