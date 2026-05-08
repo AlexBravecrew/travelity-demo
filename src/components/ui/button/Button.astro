@@ -1,6 +1,7 @@
 ---
 import { cn } from '@/lib/utils/cn';
 import { ArrowRightIcon } from '@/icons';
+import { externalAttrs } from '@/lib/utils/external-attrs';
 import type { HTMLAttributes } from 'astro/types';
 
 type ButtonVariant = 'primary' | 'outline' | 'ghost';
@@ -39,10 +40,7 @@ const {
 
 const isLink = href !== undefined;
 
-const externalAttrs =
-    isLink && external
-        ? { target: '_blank' as const, rel: 'noopener noreferrer' }
-        : {};
+const linkAttrs = isLink ? { href, ...externalAttrs(external) } : {};
 
 const base =
     'inline-flex items-center justify-center gap-2 rounded-[8px] font-body font-semibold ' +
@@ -76,11 +74,7 @@ const classes = cn(base, sizeClasses[size], variantClasses[variant], className);
 const Tag = isLink ? 'a' : 'button';
 ---
 
-<Tag
-    class={classes}
-    {...isLink ? { href, ...externalAttrs } : { type, disabled }}
-    {...rest}
->
+<Tag class={classes} {...isLink ? linkAttrs : { type, disabled }} {...rest}>
     <slot />
     {
         withArrow && (

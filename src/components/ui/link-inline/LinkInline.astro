@@ -1,6 +1,7 @@
 ---
 import { cn } from '@/lib/utils/cn';
 import { ArrowRightIcon } from '@/icons';
+import { externalAttrs } from '@/lib/utils/external-attrs';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
@@ -34,12 +35,10 @@ const base =
 
 const classes = cn(base, className);
 
-const externalAttrs = external
-    ? { target: '_blank', rel: 'noopener noreferrer' }
-    : {};
+const externalAttrsResult = externalAttrs(external);
 ---
 
-<a class={classes} href={href} {...externalAttrs} {...rest}>
+<a class={classes} href={href} {...externalAttrsResult} {...rest}>
     <slot />
     {
         withArrow && (
