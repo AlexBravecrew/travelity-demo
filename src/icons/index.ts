@@ -37,3 +37,16 @@ export { Sparkles as SparklesIcon } from '@lucide/astro'; // 4. Ongoing updates
 // Phase 4 — used by cross-page-component preview/consumers
 // (none of the Phase 4 components themselves import icons; consumers do)
 export { Globe as GlobeIcon } from '@lucide/astro'; // OTAs / international
+
+// Phase 5 — Solutions pages (capability bullets + cross-sell card icons)
+export { Boxes as BoxesIcon } from '@lucide/astro'; // products & catalog
+export { CircleDollarSign as DollarIcon } from '@lucide/astro'; // pricing rules
+export { Receipt as ReceiptIcon } from '@lucide/astro'; // invoices, orders
+export { Building2 as BuildingIcon } from '@lucide/astro'; // multi-location, enterprise
+export { Shield as ShieldIcon } from '@lucide/astro'; // security
+export { ShieldCheck as ShieldCheckIcon } from '@lucide/astro'; // compliance
+export { Database as DatabaseIcon } from '@lucide/astro'; // data, isolation
+// BarChart3 was deprecated in lucide; ChartColumn is the canonical successor.
+export { ChartColumn as BarChartIcon } from '@lucide/astro'; // reporting
+export { Webhook as WebhookIcon } from '@lucide/astro'; // integrations, API
+export { Languages as LanguagesIcon } from '@lucide/astro'; // multi-currency / locale

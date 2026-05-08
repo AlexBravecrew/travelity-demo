@@ -1,0 +1,186 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Paths } from '@/lib/utils/paths';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
+
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import { CalendarIcon, GlobeIcon, ShieldIcon } from '@/icons';
+---
+
+<MarketingLayout
+    title="Reporting & BI · Travelity"
+    description="Operations data, actually queryable. Seven curated reports plus direct connectors to Looker, Metabase, and Superset."
+>
+    <Nav />
+
+    <main>
+        <ProductHero eyebrow="Reporting & BI">
+            <Fragment slot="headline">
+                Operations data, <em>actually queryable</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Seven curated reports for the questions every operator asks. CSV
+                and XLSX export for the rest. Direct connectors to Looker,
+                Metabase, and Superset for teams with their own BI stack.
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact label="Curated reports" value="7" sub="endpoints" />
+                <QuickFact label="Export" value="CSV · XLSX" />
+                <QuickFact label="BI tools" value="Looker · Metabase" />
+            </Fragment>
+        </ProductHero>
+
+        <CapabilitySection
+            eyebrow="The reports"
+            bullets={[
+                {
+                    label: 'Revenue by channel — direct vs widget vs each OTA, time series',
+                },
+                {
+                    label: 'Capacity utilization — sold vs available across products and dates',
+                },
+                {
+                    label: 'Booking funnel — visit → product viewed → checkout started → booked',
+                },
+                {
+                    label: 'Customer cohorts — first-time vs returning, LTV by acquisition channel',
+                },
+                {
+                    label: "Daily ops summary — today's departures, capacity, revenue",
+                },
+                {
+                    label: 'Cancellations & refunds — volume, value, attribution by reason',
+                },
+                {
+                    label: 'Multi-currency P&L — revenue by currency, conversion lag, FX exposure',
+                },
+            ]}
+        >
+            <Fragment slot="headline">Seven views, every one earned.</Fragment>
+            <Fragment slot="lead">
+                Each report answers a question operators actually ask. None of
+                these are placeholder dashboards — they're the views your sales,
+                ops, and finance leads will open weekly.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: reports gallery — 7 mini-chart cards]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="Export"
+            flip
+            bullets={[
+                { label: 'CSV files that open cleanly in Excel' },
+                { label: 'XLSX with proper types and formatting' },
+                { label: 'Date-ranged or full history' },
+                { label: 'Filter chains preserved in the export' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Take it to your spreadsheet, your accountant, your BI.
+            </Fragment>
+            <Fragment slot="lead">
+                Every report exports to CSV or XLSX. The data model is
+                documented — same columns, same types, no surprises when you
+                pivot it in Excel or load it into Looker.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: single report detail — large primary chart,
+                    secondary breakdowns, filters, export buttons]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="BI tools"
+            bullets={[
+                {
+                    label: 'Looker — schema mapped, LookML starter blocks provided',
+                },
+                {
+                    label: 'Metabase — direct connection, sample dashboards exportable',
+                },
+                {
+                    label: 'Superset — open-source, self-hosted, read-only DB role',
+                },
+                {
+                    label: 'Documented schema with read-only credentials on request',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                Connect to the BI stack you already run.
+            </Fragment>
+            <Fragment slot="lead">
+                For teams that want to query the data directly — read-only
+                credentials, documented schema, your existing Looker / Metabase
+                / Superset setup pointed at Travelity.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: BI connection settings — read-only credential,
+                    schema link, supported tools]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CrossSell heading="Where the data comes from.">
+            <CrossSellCard
+                href={Paths.SOLUTIONS_BOOKING_ENGINE}
+                title="Booking Engine"
+                description="The source — orders, products, schedules, payments — all reportable."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_INTEGRATIONS}
+                title="OTA Integrations"
+                description="Channel attribution comes from here — every booking tagged with origin."
+            >
+                <GlobeIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_SECURITY}
+                title="Security & Compliance"
+                description="Read-only credentials, audited access, data residency in the EU."
+            >
+                <ShieldIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

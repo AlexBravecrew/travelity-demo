@@ -1,0 +1,187 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Button } from '@/components/ui/button';
+import { Paths } from '@/lib/utils/paths';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
+
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import { CalendarIcon, GlobeIcon, BarChartIcon } from '@/icons';
+---
+
+<MarketingLayout
+    title="Booking Widget · Travelity"
+    description="Turn your website into a sales channel. Embed Travelity's booking flow directly on your site — no commission, your branding."
+>
+    <Nav />
+
+    <main>
+        <ProductHero eyebrow="Booking Widget">
+            <Fragment slot="headline">
+                Turn your website <em>into a sales channel</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Embed Travelity's booking flow into your own site. No OTA
+                commission, your branding, shared availability with everything
+                else you sell.
+            </Fragment>
+            <Fragment slot="ctas">
+                <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
+                    Book a Demo
+                </Button>
+                {/* TODO: split when a live-demo destination exists */}
+                <Button href={Paths.BOOK_DEMO} size="lg" variant="outline">
+                    View live demo
+                </Button>
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact label="Bundle size" value="42" sub="KB gzipped" />
+                <QuickFact label="Embed code" value="3" sub="lines" />
+                <QuickFact label="Style" value="Isolated" sub="shadow DOM" />
+            </Fragment>
+        </ProductHero>
+
+        <CapabilitySection
+            eyebrow="Why the widget matters"
+            bullets={[
+                {
+                    label: 'Commission-free direct bookings via your own site, bypassing OTA fees entirely',
+                },
+                {
+                    label: '42KB gzipped — loads on slow connections, no render-blocking, no CLS',
+                },
+                {
+                    label: 'Branded with your colors, fonts, and tone, style-isolated from host CSS',
+                },
+                {
+                    label: 'Shares one availability pool with OTAs and back-office — no double-bookings',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                Three reasons operators ship it on day one.
+            </Fragment>
+            <Fragment slot="lead">
+                When a guest books on your site, the seat locks for everyone —
+                including OTAs and your back-office. Same availability pool,
+                three doors in.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: embedded widget on a host site — date picker
+                    open or product card with selection]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="Customization"
+            flip
+            bullets={[
+                { label: 'Eleven preset themes in the dashboard' },
+                {
+                    label: 'Override accent color and theme variant via window.travelity config',
+                },
+                { label: 'Light, dark, and auto modes' },
+                {
+                    label: 'Style isolation via shadow DOM — host CSS never leaks in',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                Three themes shown. Eight more in the dashboard.
+            </Fragment>
+            <Fragment slot="lead">
+                Drop the script tag, set your accent, pick your theme. Or hand
+                the config to a designer who can match your existing site
+                exactly.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: theme gallery — 3 widget previews in different
+                    palettes side by side]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="Performance"
+            bullets={[
+                { label: '42KB gzipped, including framework' },
+                {
+                    label: 'Time to interactive under 1s on 4G, mid-tier device',
+                },
+                { label: 'Lighthouse accessibility score: 100/100' },
+                { label: 'WCAG 2.2 AA compliant out of the box' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Built for speed and accessibility.
+            </Fragment>
+            <Fragment slot="lead">
+                Every metric measured against the production build, on a
+                mid-tier mobile device, on a 4G connection.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: performance metrics — 42KB · &lt;1s TTI ·
+                    100/100 a11y]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CrossSell heading="More tools that connect to your widget.">
+            <CrossSellCard
+                href={Paths.SOLUTIONS_BOOKING_ENGINE}
+                title="Booking Engine"
+                description="The back-office that powers the widget — products, scheduling, orders."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_INTEGRATIONS}
+                title="OTA Integrations"
+                description="Same availability pool fans out to GetYourGuide, Viator, Klook."
+            >
+                <GlobeIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_REPORTING}
+                title="Reporting & BI"
+                description="See widget conversion vs OTA vs direct — same data, comparable."
+            >
+                <BarChartIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

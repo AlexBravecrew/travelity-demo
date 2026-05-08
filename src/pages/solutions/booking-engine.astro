@@ -1,0 +1,285 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Paths } from '@/lib/utils/paths';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
+import { AnchorNav } from '@/components/shared/anchor-nav';
+
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import { BoxesIcon, GlobeIcon, FileCheckIcon } from '@/icons';
+
+const anchorItems = [
+    { id: 'be-products', label: 'Products & Options' },
+    { id: 'be-scheduling', label: 'Scheduling' },
+    { id: 'be-pricing', label: 'Pricing Rules' },
+    { id: 'be-bookings', label: 'Bookings & Orders' },
+    { id: 'be-ops', label: 'Daily Operations' },
+    { id: 'be-currency', label: 'Multi-currency' },
+];
+---
+
+<MarketingLayout
+    title="Booking Engine · Travelity"
+    description="The engine that runs your operation. Products, scheduling, pricing, bookings, and daily ops in one back-office."
+>
+    <Nav />
+
+    <main>
+        <ProductHero eyebrow="Booking Engine">
+            <Fragment slot="headline">
+                The engine that <em>runs your operation</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Products, scheduling, pricing, bookings, and daily ops in one
+                back-office. Built for operators who outgrew spreadsheets — and
+                outgrew the SaaS that came after.
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact
+                    label="Product types"
+                    value="Tours · Transfers · Stays"
+                />
+                <QuickFact
+                    label="Channels"
+                    value="3"
+                    sub="back-office, widget, OTAs"
+                />
+                <QuickFact
+                    label="No double-bookings"
+                    value="Guaranteed"
+                    sub="across all channels"
+                />
+            </Fragment>
+        </ProductHero>
+
+        <AnchorNav items={anchorItems} />
+
+        <CapabilitySection
+            id="be-products"
+            eyebrow="Products & Options"
+            bullets={[
+                { label: 'Products with multiple bookable variations' },
+                { label: 'Capacity types: Shared, Private, Inventory' },
+                { label: 'Per-option channel visibility' },
+                { label: 'Holdback for direct sales' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Every product modeled the way it actually sells.
+            </Fragment>
+            <Fragment slot="lead">
+                Every product has bookable options — Standard, VIP, Shared
+                Shuttle, Private Sedan — with their own pricing, capacity, and
+                channel rules. The shape of your business, modeled.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: products list view — mix of tour, transfer,
+                    accommodation rows]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            id="be-scheduling"
+            eyebrow="Scheduling & Availability"
+            flip
+            bullets={[
+                { label: 'Availability calculated in advance, ready to sell' },
+                {
+                    label: 'Block out dates, override capacity, add ad-hoc departures',
+                },
+                {
+                    label: 'Cancellation policies that actually enforce themselves',
+                },
+                { label: 'Built to handle holiday-rush concurrent traffic' },
+            ]}
+        >
+            <Fragment slot="headline">
+                The same seat. Three sales channels. Never double-sold.
+            </Fragment>
+            <Fragment slot="lead">
+                When a guest books — whether on your widget, through
+                GetYourGuide, or directly in your back-office — that seat is
+                locked the instant they click Book. Concurrent attempts from
+                other channels are blocked.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: schedule / availability calendar — sold-out,
+                    available, schedule-exception dates]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            id="be-pricing"
+            eyebrow="Pricing Rules"
+            bullets={[
+                { label: 'Date-range and seasonal tiers' },
+                { label: 'Group-size tiered pricing' },
+                { label: 'Per-channel price overrides' },
+                {
+                    label: 'Per-unit calculation (per person, per vehicle, per night)',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                Seasonal, group-tiered, prioritized.
+            </Fragment>
+            <Fragment slot="lead">
+                Build the pricing logic real operators use — high season,
+                holiday surcharge, group discount — with priority ordering so
+                the right rule wins. No more separate price lists per quarter.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: pricing rules editor — 3-5 active rules,
+                    priority order, override visible]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            id="be-bookings"
+            eyebrow="Bookings & Orders"
+            flip
+            bullets={[
+                { label: 'Every order tagged with where it came from' },
+                { label: 'Built-in CRM with full order history' },
+                { label: 'Gateway-integrated refunds with audit trail' },
+                {
+                    label: 'Document generation: confirmations, vouchers, route sheets',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                Every order, every channel, one record.
+            </Fragment>
+            <Fragment slot="lead">
+                Orders carry full context: who booked, on which channel, what
+                they paid, what they cancelled. The audit log is automatic. The
+                refund flows are built in.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: order detail view — line items, paid status,
+                    channel attribution]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            id="be-ops"
+            eyebrow="Daily Operations"
+            bullets={[
+                { label: 'Departure list with status indicators' },
+                { label: 'Vehicle and guide assignment' },
+                { label: 'Route sheet generation' },
+                { label: 'Team workspaces with role-based access' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Today's view, with everything assigned.
+            </Fragment>
+            <Fragment slot="lead">
+                Departures, routes, vehicles, guides — assigned and visible at a
+                glance. The view your ops manager opens at 8am to know exactly
+                what's happening today.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: daily ops dashboard — 5–10 departures, mix of
+                    statuses, vehicles/guides assigned]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            id="be-currency"
+            eyebrow="Multi-currency"
+            flip
+            bullets={[
+                { label: 'USD, EUR, AMD, GEL out of the box' },
+                { label: 'Daily rate refresh from CBA source' },
+                { label: 'Conversion at payment, audited and logged' },
+                { label: 'Per-channel currency display rules' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Sell in their currency, reconcile in yours.
+            </Fragment>
+            <Fragment slot="lead">
+                Centralized rates from the Central Bank source. Conversion
+                happens at payment time, not at display time — so the price the
+                guest sees is the price the gateway charges.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: multi-currency settings — currency list, CBA
+                    rate sources, conversion timing]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CrossSell heading="The booking engine is one part of the picture.">
+            <CrossSellCard
+                href={Paths.SOLUTIONS_WIDGET}
+                title="Booking Widget"
+                description="Embed Travelity into your own site. No commission, your branding."
+            >
+                <BoxesIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_INTEGRATIONS}
+                title="OTA Integrations"
+                description="GetYourGuide, Viator, Klook — connected, deep, and current."
+            >
+                <GlobeIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_PROPOSALS}
+                title="Proposals"
+                description="Custom quotes that close themselves. One link, signed and paid."
+            >
+                <FileCheckIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

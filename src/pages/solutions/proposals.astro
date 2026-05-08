@@ -1,0 +1,194 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Paths } from '@/lib/utils/paths';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
+
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import { CalendarIcon, BarChartIcon, ShieldIcon } from '@/icons';
+---
+
+<MarketingLayout
+    title="Proposals · Travelity"
+    description="Turn quotes into bookings with one signed link. The customer reviews, adds extras, and pays — without leaving the page."
+>
+    <Nav />
+
+    <main>
+        <ProductHero eyebrow="Proposals">
+            <Fragment slot="headline">
+                Turn quotes into bookings <em>with one link</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Build a custom proposal in your back-office. Send a signed link.
+                The customer reviews, adds extras, and pays — all without
+                leaving the page. The booking lands in your orders.
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact
+                    label="Link security"
+                    value="Tamper-proof"
+                    sub="signed URLs"
+                />
+                <QuickFact label="Payment" value="Inline" sub="via gateway" />
+                <QuickFact
+                    label="Customer flow"
+                    value="Self-serve"
+                    sub="add-ons, accept, pay"
+                />
+            </Fragment>
+        </ProductHero>
+
+        <CapabilitySection
+            eyebrow="The flow"
+            bullets={[
+                {
+                    label: '1. Operator builds — pick products, set prices, attach files, send',
+                },
+                {
+                    label: '2. Customer reviews — signed link, adjusts add-ons, no login required',
+                },
+                {
+                    label: '3. Customer pays — inline checkout, booking confirmed instantly',
+                },
+            ]}
+        >
+            <Fragment slot="headline">Three steps. No back-and-forth.</Fragment>
+            <Fragment slot="lead">
+                A custom quote that closes itself. The operator never has to
+                follow up to clarify, re-send a corrected version, or chase a
+                signature.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: customer-facing proposal page — branded header,
+                    multi-day itinerary, line items, Pay/Confirm button]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="What's in the proposal"
+            flip
+            bullets={[
+                {
+                    label: 'Tamper-proof signed links — revoke, rotate, or expire from the back-office',
+                },
+                {
+                    label: 'Inline payment via gateway, multi-currency, refunds via the same flow',
+                },
+                {
+                    label: 'Customer self-service — add-ons, optional extras, capacity adjustments before paying',
+                },
+                {
+                    label: 'File attachments — PDF itineraries, contracts, maps',
+                },
+                {
+                    label: 'Expiry & re-issue — set proposal expiry, re-send a fresh link, audit preserved',
+                },
+                {
+                    label: 'Conversion tracking — sent / opened / paid / declined per proposal',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                Everything a real B2B sale needs.
+            </Fragment>
+            <Fragment slot="lead">
+                The proposal is more than a quote — it carries the full sale
+                from generated link through paid booking, with every step logged
+                and every attachment versioned.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: proposal builder — line items, attachments,
+                    link settings, conversion stats]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="Use cases"
+            bullets={[
+                {
+                    label: 'Group inquiries — a 30-person family reunion needs a custom quote',
+                },
+                {
+                    label: 'Custom packages — multi-day trip with 4 tours, 2 transfers, 3 nights',
+                },
+                {
+                    label: 'B2B partner orders — hotels and travel agents reselling, with net pricing',
+                },
+            ]}
+        >
+            <Fragment slot="headline">
+                When proposals do the work that direct bookings can't.
+            </Fragment>
+            <Fragment slot="lead">
+                Direct bookings work for a single product on a single date.
+                Proposals are for everything else — the bespoke, the multi-line,
+                the partner-priced, the negotiated.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: proposals list — group inquiry, custom package,
+                    B2B partner order — different statuses]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CrossSell heading="Where proposals fit in.">
+            <CrossSellCard
+                href={Paths.SOLUTIONS_BOOKING_ENGINE}
+                title="Booking Engine"
+                description="Where the booking lands once the customer accepts the proposal."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_REPORTING}
+                title="Reporting & BI"
+                description="Conversion stats per sales rep, per month — alongside other channels."
+            >
+                <BarChartIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_SECURITY}
+                title="Security & Compliance"
+                description="Signed-link tamper protection, audit trails, payment-data handling."
+            >
+                <ShieldIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

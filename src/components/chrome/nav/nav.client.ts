@@ -267,3 +267,8 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
+// Mark this file as an ES module so its top-level `init` doesn't collide
+// with other client scripts (e.g. anchor-nav.client.ts) when the TypeScript
+// compiler treats them as scripts in a shared global scope.
+export {};

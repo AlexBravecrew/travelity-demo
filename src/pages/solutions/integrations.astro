@@ -1,0 +1,169 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Paths } from '@/lib/utils/paths';
+
+import { ProductHero, QuickFact } from '@/components/shared/product-hero';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
+
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import { CalendarIcon, BoxesIcon, BarChartIcon } from '@/icons';
+---
+
+<MarketingLayout
+    title="OTA Integrations · Travelity"
+    description="Native two-way connections to GetYourGuide, Viator, and Klook. Inventory, prices, and bookings flow both directions."
+>
+    <Nav />
+
+    <main>
+        <ProductHero eyebrow="OTA Integrations">
+            <Fragment slot="headline">
+                Connect to <em>GetYourGuide, Viator, and Klook</em>.
+            </Fragment>
+            <Fragment slot="lead">
+                Real, two-way integrations with the OTAs operators actually use.
+                Inventory and pricing flow both ways. Bookings land in your
+                back-office alongside direct sales, automatically tagged with
+                where each one came from.
+            </Fragment>
+            <Fragment slot="aside">
+                <QuickFact label="GetYourGuide" value="Live" />
+                <QuickFact label="Viator" value="In Beta" />
+                <QuickFact label="Klook" value="Live" />
+            </Fragment>
+        </ProductHero>
+
+        <CapabilitySection
+            eyebrow="OTA connections"
+            bullets={[
+                {
+                    label: 'GetYourGuide — live, full two-way sync of products, schedules, prices, availability',
+                },
+                {
+                    label: 'Viator — in beta, same two-way sync; full release this quarter',
+                },
+                {
+                    label: 'Klook — live, products go up with the inventory and prices you set',
+                },
+                {
+                    label: 'Bookings land in your back-office with full guest details and channel tags',
+                },
+            ]}
+        >
+            <Fragment slot="headline">Each one, in detail.</Fragment>
+            <Fragment slot="lead">
+                These aren't third-party connectors with daily batch jobs.
+                They're built and maintained by us, integrated into the same
+                booking engine, and updated as the OTAs evolve.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: integrations dashboard — GYG live with
+                    last-sync timestamp · Viator + Klook with their statuses]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="Holdback"
+            flip
+            bullets={[
+                { label: 'Per-option, per-channel holdback rules' },
+                { label: 'Time-based release (e.g. 24h before departure)' },
+                { label: 'Fixed seats or percentage of capacity' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Reserve seats for direct sales.
+            </Fragment>
+            <Fragment slot="lead">
+                Hold back a fixed number or percentage of seats from each OTA —
+                and release them only if direct sales don't fill them by a
+                deadline you set. Simple rule, real margin protection.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: per-channel pricing & holdback — same product,
+                    different prices on Direct / GYG / Viator / Widget]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CapabilitySection
+            eyebrow="Channel pricing"
+            bullets={[
+                { label: 'Channel-specific price overrides' },
+                { label: 'Automatic application by booking source' },
+                { label: 'OTA commission already factored in' },
+            ]}
+        >
+            <Fragment slot="headline">
+                Different prices per channel, automatic.
+            </Fragment>
+            <Fragment slot="lead">
+                Charge different prices on GetYourGuide, your widget, and direct
+                — without managing three separate price lists. Set the rule
+                once, the engine applies it everywhere.
+            </Fragment>
+            <Fragment slot="visual">
+                <div
+                    class="aspect-video bg-surface-alt border border-line rounded-xl flex items-center justify-center text-ink-muted font-mono text-sm p-4 text-center"
+                >
+                    [Screenshot: pricing rules with per-channel override columns
+                    — base price + Direct/GYG/Viator/Widget overrides]
+                </div>
+            </Fragment>
+        </CapabilitySection>
+
+        <CrossSell heading="What feeds the integrations.">
+            <CrossSellCard
+                href={Paths.SOLUTIONS_BOOKING_ENGINE}
+                title="Booking Engine"
+                description="Source of truth for products, schedules, prices the OTAs receive."
+            >
+                <CalendarIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_WIDGET}
+                title="Booking Widget"
+                description="Direct bookings on your site. Same availability pool, no commission."
+            >
+                <BoxesIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+            <CrossSellCard
+                href={Paths.SOLUTIONS_REPORTING}
+                title="Reporting & BI"
+                description="Compare OTA channels side-by-side. Revenue, capacity, refunds, by source."
+            >
+                <BarChartIcon
+                    slot="icon"
+                    class="w-4 h-4"
+                    stroke-width="2"
+                    aria-hidden="true"
+                />
+            </CrossSellCard>
+        </CrossSell>
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>
