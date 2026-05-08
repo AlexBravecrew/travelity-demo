@@ -1,0 +1,101 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { ProductHero } from '@/components/shared/product-hero';
+import { SectionHeader } from '@/components/ui/section-header';
+import { CoverageList, CoverageItem } from '@/components/shared/coverage-list';
+
+import BookDemoForm from '@/components/forms/book-demo/BookDemoForm';
+
+export const prerender = true;
+---
+
+<MarketingLayout
+    title="Book a Demo · Travelity"
+    description="30 minutes. Zero prep needed. We'll walk you through Travelity in your own context."
+>
+    <Nav />
+
+    <main>
+        <!-- Centered ProductHero (no aside, no quick-facts) -->
+        <ProductHero eyebrow="Book a demo" class="text-center">
+            <Fragment slot="headline">
+                30 minutes. <em>Zero prep needed.</em>
+            </Fragment>
+            <Fragment slot="lead">
+                We'll walk you through Travelity in your own context — bring
+                your current booking spreadsheet if you have one. No credit card
+                required.
+            </Fragment>
+            <Fragment slot="ctas">
+                {/* No CTAs in the hero — the form below IS the action. */}
+            </Fragment>
+            <Fragment slot="aside">
+                {/* No aside — single-column centered layout. */}
+            </Fragment>
+        </ProductHero>
+
+        <!-- "What we'll cover" coverage list -->
+        <section class="bg-paper py-12 md:py-16">
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="What we'll cover"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">
+                        A working session, not a sales pitch.
+                    </Fragment>
+                </SectionHeader>
+
+                <CoverageList class="mt-2">
+                    <CoverageItem
+                        title="Walk through the platform"
+                        description="The actual back-office, with your products and channels in mind."
+                    />
+                    <CoverageItem
+                        title="Look at your bookings"
+                        description="Bring an example, a spreadsheet, or just a question. We'll model it together."
+                    />
+                    <CoverageItem
+                        title="Discuss your channels"
+                        description="OTAs you sell on, your widget setup, holdback rules, channel pricing."
+                    />
+                    <CoverageItem
+                        title="Map a path forward"
+                        description="If we're a fit, we'll set up trial access and a migration plan."
+                    />
+                </CoverageList>
+            </div>
+        </section>
+
+        <!-- The form (React island) -->
+        <section class="bg-surface-alt py-16 md:py-24" id="form">
+            <div class="container mx-auto px-6">
+                <SectionHeader
+                    eyebrow="Tell us about you"
+                    eyebrowWithRule
+                    align="center"
+                >
+                    <Fragment slot="headline">
+                        We'll reply within one business day.
+                    </Fragment>
+                    <p
+                        slot="dek"
+                        class="text-[16px] text-ink-muted leading-[1.55] max-w-[48ch] mx-auto"
+                    >
+                        Five fields. We use them to make the call useful — not
+                        to spam you.
+                    </p>
+                </SectionHeader>
+
+                <div class="max-w-[680px] mx-auto mt-2">
+                    <BookDemoForm client:load />
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <Footer />
+</MarketingLayout>

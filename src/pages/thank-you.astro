@@ -1,0 +1,39 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Button } from '@/components/ui/button';
+
+export const prerender = true;
+---
+
+<MarketingLayout
+    title="Thanks for reaching out · Travelity"
+    description="We received your demo request and will be in touch within one business day."
+>
+    <Nav />
+
+    <main class="min-h-[60vh] flex items-center bg-paper">
+        <div class="container mx-auto px-6 py-24 text-center">
+            <div class="max-w-[520px] mx-auto">
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mb-5"
+                    style="font-size: clamp(32px, 4vw, 48px);"
+                >
+                    Thanks — we got it.
+                </h1>
+                <p
+                    class="font-body text-[18px] text-ink-muted leading-[1.55] mb-8"
+                >
+                    We'll reply within one business day with a few times that
+                    work for both of us.
+                </p>
+                <Button href="/" variant="outline" size="lg">
+                    Back to home
+                </Button>
+            </div>
+        </div>
+    </main>
+
+    <Footer />
+</MarketingLayout>
