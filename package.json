@@ -16,7 +16,7 @@
         "format:check": "prettier --check \"**/*.{js,ts,astro,md,json,css}\""
     },
     "dependencies": {
-        "@astrojs/node": "^10.1.0",
+        "@astrojs/netlify": "^7.0.8",
         "@astrojs/react": "^5.0.4",
         "@hookform/resolvers": "^5.2.2",
         "@lucide/astro": "^1.14.0",
