@@ -1,0 +1,73 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Button } from '@/components/ui/button';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { Paths } from '@/lib/utils/paths';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'section'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<section
+    class={cn(
+        'closing-cta-section relative overflow-hidden bg-paper text-center',
+        className,
+    )}
+    style="padding-top: 120px; padding-bottom: 120px;"
+    {...rest}
+>
+    <!-- Atmospheric blob, centered behind the content. Two stacked radial gradients. -->
+    <span
+        class="absolute pointer-events-none"
+        style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.08) 0%, transparent 50%), radial-gradient(circle, hsl(var(--travelity-blue) / 0.06) 0%, transparent 60%);"
+        aria-hidden="true"></span>
+
+    <div class="relative z-[1] max-w-[640px] mx-auto px-6">
+        <Eyebrow withRule centered>Get started</Eyebrow>
+
+        <h2
+            class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] max-w-[16ch] mx-auto mt-5 mb-5"
+            style="font-size: clamp(36px, 4.6vw, 56px);"
+        >
+            See Travelity
+            <em class="not-italic">
+                <span class="italic font-medium text-travelity-teal"
+                    >working in your operation.</span
+                >
+            </em>
+        </h2>
+
+        <p
+            class="text-[18px] text-ink-muted leading-[1.55] max-w-[50ch] mx-auto mb-9"
+        >
+            30 minutes. Zero prep. Bring your booking spreadsheet — we'll show
+            you how it works the day you walk away from it.
+        </p>
+
+        <div class="flex flex-wrap gap-3 justify-center mb-7">
+            <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
+                Book a Demo
+            </Button>
+            {
+                /* TODO: split when signup page exists; for now points to BOOK_DEMO */
+            }
+            <Button href={Paths.BOOK_DEMO} size="lg" variant="outline">
+                Start Free Trial
+            </Button>
+        </div>
+
+        <div
+            class="font-mono text-[11.5px] uppercase tracking-[0.06em] text-ink-muted"
+        >
+            No credit card
+            <span class="mx-2 opacity-50">·</span>
+            30-day trial
+            <span class="mx-2 opacity-50">·</span>
+            Cancel anytime
+        </div>
+    </div>
+</section>

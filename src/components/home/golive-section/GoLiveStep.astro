@@ -1,0 +1,28 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    title: string;
+    description: string;
+    class?: string;
+}
+
+const { title, description, class: className, ...rest } = Astro.props;
+---
+
+<div class={cn('golive-step flex flex-col items-start', className)} {...rest}>
+    <div
+        class="w-[52px] h-[52px] rounded-xl bg-[hsl(var(--travelity-teal)/0.12)] text-travelity-teal flex items-center justify-center mb-[22px]"
+    >
+        <slot name="icon" />
+    </div>
+    <h4
+        class="font-display text-[19px] font-bold tracking-[-0.02em] text-ink leading-[1.25] m-0 mb-2.5"
+    >
+        {title}
+    </h4>
+    <p class="text-[14.5px] text-ink-muted leading-[1.55] m-0">
+        {description}
+    </p>
+</div>

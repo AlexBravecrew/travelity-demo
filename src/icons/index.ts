@@ -27,3 +27,9 @@ export { CreditCard as CreditCardIcon } from '@lucide/astro'; // Payments
 
 // Pricing (Phase 3c)
 export { Minus as MinusIcon } from '@lucide/astro'; // excluded features in pricing
+
+// GoLive section (Phase 3d)
+export { Settings as SettingsIcon } from '@lucide/astro'; // 1. Setup assistance
+export { GraduationCap as GraduationCapIcon } from '@lucide/astro'; // 2. Personalized training
+export { Headphones as HeadphonesIcon } from '@lucide/astro'; // 3. Dedicated support
+export { Sparkles as SparklesIcon } from '@lucide/astro'; // 4. Ongoing updates

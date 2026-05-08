@@ -1,0 +1,101 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { SectionHeader } from '@/components/ui/section-header';
+import {
+    SettingsIcon,
+    GraduationCapIcon,
+    HeadphonesIcon,
+    SparklesIcon,
+} from '@/icons';
+import GoLiveStep from './GoLiveStep.astro';
+import type { HTMLAttributes } from 'astro/types';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+
+export interface Props extends HTMLAttributes<'section'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+interface Step {
+    title: string;
+    description: string;
+    Icon: AstroComponentFactory;
+}
+
+const steps: Step[] = [
+    {
+        title: 'Setup assistance',
+        description:
+            'We import your products, schedules, and pricing — you run it from day one.',
+        Icon: SettingsIcon,
+    },
+    {
+        title: 'Personalized training',
+        description:
+            'Live walkthroughs with your team. Roles and workflows mapped to your operation.',
+        Icon: GraduationCapIcon,
+    },
+    {
+        title: 'Dedicated support',
+        description:
+            'Real humans, regional time zones. Same channel for sales and support.',
+        Icon: HeadphonesIcon,
+    },
+    {
+        title: 'Ongoing updates',
+        description:
+            'New features ship monthly. Existing customers get them first, no migration drama.',
+        Icon: SparklesIcon,
+    },
+];
+---
+
+<section
+    class={cn(
+        'golive-section relative overflow-hidden bg-paper py-24',
+        className,
+    )}
+    {...rest}
+>
+    <!-- Subtle teal bloom in upper-center area -->
+    <span
+        class="absolute pointer-events-none"
+        style="top: -100px; left: 50%; transform: translateX(-50%); width: 600px; height: 400px; background: radial-gradient(ellipse at center, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%);"
+        aria-hidden="true"></span>
+
+    <div class="container mx-auto px-6 relative z-[1]">
+        <SectionHeader eyebrow="Onboarding" eyebrowWithRule align="center">
+            <Fragment slot="headline">
+                We help you <em>go live.</em>
+            </Fragment>
+            <p
+                slot="dek"
+                class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
+            >
+                From spreadsheets or another platform — we handle the migration
+                so your business doesn't pause.
+            </p>
+        </SectionHeader>
+
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-x-8 lg:gap-y-12 mt-6"
+        >
+            {
+                steps.map((step) => (
+                    <GoLiveStep
+                        title={step.title}
+                        description={step.description}
+                    >
+                        <step.Icon
+                            slot="icon"
+                            class="w-6 h-6"
+                            stroke-width="1.75"
+                            aria-hidden="true"
+                        />
+                    </GoLiveStep>
+                ))
+            }
+        </div>
+    </div>
+</section>

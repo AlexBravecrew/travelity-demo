@@ -7,6 +7,8 @@ import { ChannelsSection } from '@/components/home/channels-section';
 import { FeaturesSection } from '@/components/home/features-section';
 import { ParallaxBreak } from '@/components/home/parallax-break';
 import { PricingSection } from '@/components/home/pricing-section';
+import { GoLiveSection } from '@/components/home/golive-section';
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
 ---
 
 <MarketingLayout
@@ -21,17 +23,8 @@ import { PricingSection } from '@/components/home/pricing-section';
         <FeaturesSection />
         <ParallaxBreak />
         <PricingSection />
-
-        <!-- Phase 3d will add GoLive + ClosingCTA here -->
-        <div
-            class="container mx-auto px-6 py-32 text-center border-t border-line"
-        >
-            <p
-                class="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft"
-            >
-                Sections 6–7 — Phase 3d
-            </p>
-        </div>
+        <GoLiveSection />
+        <ClosingCTASection />
     </main>
 
     <Footer />
