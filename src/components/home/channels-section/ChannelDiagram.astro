@@ -3,6 +3,11 @@ import { cn } from '@/lib/utils/cn';
 import ChannelSourceCard from './ChannelSourceCard.astro';
 import ChannelConnectorLines from './ChannelConnectorLines.astro';
 import ChannelHub from './ChannelHub.astro';
+import {
+    GygLogo,
+    ViatorLogo,
+    KlookLogo,
+} from '@/components/decorative/ota-logos';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends HTMLAttributes<'div'> {
@@ -16,14 +21,41 @@ const wrapperClasses = cn(
     'relative overflow-hidden',
     'bg-gradient-to-br from-paper to-[hsl(var(--surface-alt)/0.6)]',
     'border border-line rounded-[18px]',
-    'p-7 pt-7 pb-8',
+    'p-7',
     className,
 );
+
+const otaBadgeClasses = cn(
+    'channel-ota',
+    'w-16 h-16 rounded-full',
+    'flex items-center justify-center',
+    'bg-paper border border-line',
+    'shadow-[0_6px_16px_-6px_hsl(var(--ink)/0.10)]',
+    'transition-transform duration-200',
+    'hover:-translate-y-0.5',
+);
+
+const otaLogoClasses = 'w-10 h-auto';
+
+/**
+ * Element positions in % of the orbit container. Intentionally slightly
+ * asymmetric — strict 14/78 percentages felt mechanical, so each axis
+ * carries a few-point offset for a more organic, hand-placed feel.
+ * The connector line endpoints in ChannelConnectorLines.astro match
+ * these values exactly.
+ */
+const POS = {
+    backoffice: { left: '17%', top: '24%' },
+    widget: { left: '19%', top: '77%' },
+    gyg: { left: '76%', top: '18%' },
+    viator: { left: '90%', top: '53%' },
+    klook: { left: '78%', top: '83%' },
+    hub: { left: '50%', top: '50%' },
+} as const;
 ---
 
 <div class={wrapperClasses} {...rest}>
-    <!-- Decorative atmospheric blooms — two diffuse radials in opposite corners.
-         Use teal + teal-deep so the blooms read as visually distinct. -->
+    <!-- Decorative atmospheric blooms — kept per design call. -->
     <div
         class="absolute -top-20 -right-20 w-60 h-60 rounded-full pointer-events-none"
         style="background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.12) 0%, transparent 70%);"
@@ -37,73 +69,165 @@ const wrapperClasses = cn(
     >
     </div>
 
-    <!-- Three source cards in a row (stacks vertically on small screens) -->
+    <!-- Orbit (>= sm): 5 peripheral elements + central hub, all absolute. -->
     <div
-        class="grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-[2] mb-20 sm:mb-20"
+        class="hidden sm:block relative w-full aspect-[5/4] min-h-[440px] z-[2]"
     >
-        <!-- Back-office: 3-row dotted list -->
+        <!-- Connector lines (behind elements via z-[1] in its own file) -->
+        <ChannelConnectorLines />
+
+        <!-- Back-office -->
+        <div
+            class="absolute z-[2]"
+            style={`left: ${POS.backoffice.left}; top: ${POS.backoffice.top}; transform: translate(-50%, -50%);`}
+        >
+            <ChannelSourceCard
+                kind="backoffice"
+                title="Back-office"
+                subtitle="Direct sales"
+            >
+                <ul class="flex flex-col gap-1.5 m-0 p-0 list-none">
+                    <li
+                        class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                    >
+                        Manual orders
+                    </li>
+                    <li
+                        class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                    >
+                        Partner B2B
+                    </li>
+                    <li
+                        class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                    >
+                        Walk-ins
+                    </li>
+                </ul>
+            </ChannelSourceCard>
+        </div>
+
+        <!-- Widget -->
+        <div
+            class="absolute z-[2]"
+            style={`left: ${POS.widget.left}; top: ${POS.widget.top}; transform: translate(-50%, -50%);`}
+        >
+            <ChannelSourceCard
+                kind="widget"
+                title="Widget"
+                subtitle="On your site"
+            >
+                <p class="text-[11px] text-ink font-medium leading-[1.5] m-0">
+                    Embeds <span class="text-travelity-teal font-semibold"
+                        >directly on your website</span
+                    >
+                    — your branding, no commission.
+                </p>
+            </ChannelSourceCard>
+        </div>
+
+        <!-- GYG -->
+        <div
+            class="absolute z-[2]"
+            style={`left: ${POS.gyg.left}; top: ${POS.gyg.top}; transform: translate(-50%, -50%);`}
+            aria-label="GetYourGuide"
+        >
+            <div class={otaBadgeClasses}>
+                <GygLogo class={otaLogoClasses} />
+            </div>
+        </div>
+
+        <!-- Viator -->
+        <div
+            class="absolute z-[2]"
+            style={`left: ${POS.viator.left}; top: ${POS.viator.top}; transform: translate(-50%, -50%);`}
+            aria-label="Viator"
+        >
+            <div class={otaBadgeClasses}>
+                <ViatorLogo class={otaLogoClasses} />
+            </div>
+        </div>
+
+        <!-- Klook -->
+        <div
+            class="absolute z-[2]"
+            style={`left: ${POS.klook.left}; top: ${POS.klook.top}; transform: translate(-50%, -50%);`}
+            aria-label="Klook"
+        >
+            <div class={otaBadgeClasses}>
+                <KlookLogo class={otaLogoClasses} />
+            </div>
+        </div>
+
+        <!-- Central hub -->
+        <div
+            class="absolute"
+            style={`left: ${POS.hub.left}; top: ${POS.hub.top}; transform: translate(-50%, -50%); z-index: 3;`}
+        >
+            <ChannelHub />
+        </div>
+    </div>
+
+    <!-- Mobile fallback: vertical stack, no orbit / no connectors. -->
+    <div
+        class="sm:hidden relative z-[2] flex flex-col items-center gap-4 py-2"
+    >
         <ChannelSourceCard
             kind="backoffice"
             title="Back-office"
             subtitle="Direct sales"
         >
-            <ul class="flex flex-col gap-2 m-0 p-0 list-none">
+            <ul class="flex flex-col gap-1.5 m-0 p-0 list-none">
                 <li
-                    class="flex items-center gap-2 font-body text-[12px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                    class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
                 >
                     Manual orders
                 </li>
                 <li
-                    class="flex items-center gap-2 font-body text-[12px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                    class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
                 >
                     Partner B2B
                 </li>
                 <li
-                    class="flex items-center gap-2 font-body text-[12px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
+                    class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
                 >
                     Walk-ins
                 </li>
             </ul>
         </ChannelSourceCard>
-
-        <!-- Widget: single-line description with teal emphasis -->
-        <ChannelSourceCard kind="widget" title="Widget" subtitle="On your site">
-            <p class="text-[12.5px] text-ink font-medium leading-[1.5] m-0">
+        <ChannelSourceCard
+            kind="widget"
+            title="Widget"
+            subtitle="On your site"
+        >
+            <p class="text-[11px] text-ink font-medium leading-[1.5] m-0">
                 Embeds <span class="text-travelity-teal font-semibold"
                     >directly on your website</span
                 >
-                — your branding, your guest, no commission.
+                — your branding, no commission.
             </p>
         </ChannelSourceCard>
-
-        <!-- OTAs: 3 placeholder boxes (to be replaced with real logos when sourced) -->
-        <ChannelSourceCard kind="otas" title="OTAs" subtitle="Marketplaces">
-            <ul
-                class="flex flex-col gap-1.5 m-0 p-0 list-none"
-                aria-label="OTA partners — real logos to be added in production"
-            >
-                <li
-                    class="flex items-center justify-center h-[30px] bg-surface-alt border border-dashed border-line rounded-md font-display text-[11px] font-bold text-ink-muted tracking-[0.04em]"
-                >
-                    [GYG logo]
-                </li>
-                <li
-                    class="flex items-center justify-center h-[30px] bg-surface-alt border border-dashed border-line rounded-md font-display text-[11px] font-bold text-ink-muted tracking-[0.04em]"
-                >
-                    [Viator logo]
-                </li>
-                <li
-                    class="flex items-center justify-center h-[30px] bg-surface-alt border border-dashed border-line rounded-md font-display text-[11px] font-bold text-ink-muted tracking-[0.04em]"
-                >
-                    [Klook logo]
-                </li>
-            </ul>
-        </ChannelSourceCard>
+        <ChannelHub class="my-2" />
+        <div class="flex items-center gap-3">
+            <div class={otaBadgeClasses}>
+                <GygLogo class={otaLogoClasses} />
+            </div>
+            <div class={otaBadgeClasses}>
+                <ViatorLogo class={otaLogoClasses} />
+            </div>
+            <div class={otaBadgeClasses}>
+                <KlookLogo class={otaLogoClasses} />
+            </div>
+        </div>
     </div>
-
-    <!-- Connector lines overlay (hidden on small viewports) -->
-    <ChannelConnectorLines />
-
-    <!-- Travelity hub at the bottom-center -->
-    <ChannelHub />
 </div>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        .channel-ota {
+            transition: none !important;
+        }
+        .channel-ota:hover {
+            transform: none !important;
+        }
+    }
+</style>

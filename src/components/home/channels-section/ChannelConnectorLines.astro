@@ -8,76 +8,176 @@ export interface Props extends HTMLAttributes<'div'> {
 
 const { class: className, ...rest } = Astro.props;
 
-const classes = cn(
-    'channel-connector-lines',
-    'absolute top-[168px] left-6 right-6 h-[100px]',
-    'pointer-events-none z-[1]',
-    'hidden sm:block' /* hide on small phones, the diagram becomes vertical */,
-    className,
-);
+/**
+ * Five connector tracks converging on the central logo. Each connector
+ * is two overlaid SVG <line>s:
+ *
+ *   1. A static guide — solid, thin, low-opacity backbone, with a soft
+ *      glow via an SVG <filter>.
+ *   2. An animated pulse — short dashes flowing along the track via
+ *      stroke-dashoffset, with a prominent glow via a second filter.
+ *
+ * Glow uses SVG <filter> + feGaussianBlur (not CSS filter:drop-shadow),
+ * because the latter's default filter region is too tight on thin SVG
+ * strokes and the halo gets clipped. The filter blurs the source in its
+ * own color, so each line glows in its assigned color automatically.
+ *
+ * Coordinates are in viewBox % (0–100), matching the orbit positions in
+ * ChannelDiagram.astro.
+ *
+ * OTA brand hex literals (#FF5533, #028768, #FF5B01) — partner brand
+ * colors, not part of the Travelity palette. Used here only on the
+ * connector strokes so each OTA's pulse trails in its own brand color.
+ */
+const lines: {
+    id: string;
+    from: { x: number; y: number };
+    color: string;
+    delay: string;
+}[] = [
+    {
+        id: 'backoffice',
+        from: { x: 17, y: 24 },
+        color: 'hsl(var(--travelity-blue))',
+        delay: '0s',
+    },
+    {
+        id: 'widget',
+        from: { x: 19, y: 77 },
+        color: 'hsl(var(--travelity-teal))',
+        delay: '0.15s',
+    },
+    {
+        id: 'gyg',
+        from: { x: 76, y: 18 },
+        color: '#FF5533',
+        delay: '0.3s',
+    },
+    {
+        id: 'viator',
+        from: { x: 90, y: 53 },
+        color: '#028768',
+        delay: '0.45s',
+    },
+    {
+        id: 'klook',
+        from: { x: 78, y: 83 },
+        color: '#FF5B01',
+        delay: '0.6s',
+    },
+];
+
+const center = { x: 50, y: 50 };
 ---
 
-<div class={classes} aria-hidden="true" {...rest}>
+<div
+    class={cn(
+        'channel-connector-lines',
+        'absolute inset-0 z-[1]',
+        'pointer-events-none',
+        'hidden sm:block',
+        className,
+    )}
+    aria-hidden="true"
+    {...rest}
+>
     <svg
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         class="w-full h-full block overflow-visible"
     >
         <defs>
-            <linearGradient
-                id="connector-line-blue"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
+            <!-- Subtle glow for the static guide line. Single blur pass
+                 + source overlay. -->
+            <filter
+                id="channel-guide-glow"
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
             >
-                <stop offset="0%" stop-color="hsl(218 42% 48% / 0.7)"></stop>
-                <stop offset="100%" stop-color="hsl(218 42% 48% / 0.2)"></stop>
-            </linearGradient>
-            <linearGradient
-                id="connector-line-teal"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
+                <feGaussianBlur stdDeviation="0.7" result="blur"></feGaussianBlur>
+                <feMerge>
+                    <feMergeNode in="blur"></feMergeNode>
+                    <feMergeNode in="SourceGraphic"></feMergeNode>
+                </feMerge>
+            </filter>
+            <!-- Prominent glow for the pulse. Double blur merge gives
+                 the dashes a bright halo. -->
+            <filter
+                id="channel-pulse-glow"
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
             >
-                <stop offset="0%" stop-color="hsl(194 56% 57% / 0.7)"></stop>
-                <stop offset="100%" stop-color="hsl(194 56% 57% / 0.2)"></stop>
-            </linearGradient>
-            <linearGradient
-                id="connector-line-deep"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
-            >
-                <stop offset="0%" stop-color="hsl(218 50% 38% / 0.7)"></stop>
-                <stop offset="100%" stop-color="hsl(194 56% 57% / 0.2)"></stop>
-            </linearGradient>
+                <feGaussianBlur stdDeviation="1.4" result="blur"></feGaussianBlur>
+                <feMerge>
+                    <feMergeNode in="blur"></feMergeNode>
+                    <feMergeNode in="blur"></feMergeNode>
+                    <feMergeNode in="SourceGraphic"></feMergeNode>
+                </feMerge>
+            </filter>
         </defs>
 
-        <!-- Left card → hub: curves from x=16 (left card's bottom-center) to x=50 (hub top-center) -->
-        <path
-            d="M 16 0 Q 16 60 50 100"
-            stroke="url(#connector-line-blue)"
-            stroke-width="0.6"
-            stroke-dasharray="1.5,1.5"
-            fill="none"></path>
-
-        <!-- Middle card → hub: straight vertical line -->
-        <path
-            d="M 50 0 L 50 100"
-            stroke="url(#connector-line-teal)"
-            stroke-width="0.6"
-            stroke-dasharray="1.5,1.5"
-            fill="none"></path>
-
-        <!-- Right card → hub: curves from x=84 (right card's bottom-center) to x=50 -->
-        <path
-            d="M 84 0 Q 84 60 50 100"
-            stroke="url(#connector-line-deep)"
-            stroke-width="0.6"
-            stroke-dasharray="1.5,1.5"
-            fill="none"></path>
+        {
+            lines.map((line) => (
+                <>
+                    <line
+                        class="channel-guide"
+                        x1={line.from.x}
+                        y1={line.from.y}
+                        x2={center.x}
+                        y2={center.y}
+                        stroke={line.color}
+                        stroke-width="0.6"
+                        stroke-opacity="0.35"
+                        filter="url(#channel-guide-glow)"
+                    />
+                    <line
+                        class="channel-pulse"
+                        x1={line.from.x}
+                        y1={line.from.y}
+                        x2={center.x}
+                        y2={center.y}
+                        stroke={line.color}
+                        stroke-width="1.4"
+                        stroke-linecap="round"
+                        stroke-opacity="0.78"
+                        pathLength="100"
+                        stroke-dasharray="8 22"
+                        filter="url(#channel-pulse-glow)"
+                        style={`animation-delay: ${line.delay};`}
+                    />
+                </>
+            ))
+        }
     </svg>
 </div>
+
+<style>
+    /* Pulse slide. pathLength=100 normalizes every line. Dasharray "5 25"
+       (period 30) puts ~3-4 dashes visible on the line at any moment.
+       Animating dashoffset by exactly one period (-30) makes the dashes
+       flow seamlessly — when one dash reaches the logo, the next has
+       already taken its place along the path. */
+    .channel-pulse {
+        animation: channel-pulse 0.8s linear infinite;
+    }
+
+    @keyframes channel-pulse {
+        from {
+            stroke-dashoffset: 0;
+        }
+        to {
+            stroke-dashoffset: -30;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .channel-pulse {
+            animation: none !important;
+            opacity: 0;
+        }
+    }
+</style>
