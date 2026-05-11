@@ -1,5 +1,5 @@
 ---
-import NavLogo from '../nav/NavLogo.astro';
+import { Logo, LogoSmall } from '@/components/brand';
 import FooterColumn from './FooterColumn.astro';
 import { Paths } from '@/lib/utils/paths';
 ---
@@ -12,7 +12,20 @@ import { Paths } from '@/lib/utils/paths';
             <!-- Brand column -->
             <div>
                 <div class="footer-brand-logo mb-4">
-                    <NavLogo />
+                    <a
+                        href={Paths.HOME}
+                        aria-label="Travelity home"
+                        class="footer-logo-link inline-flex items-center"
+                    >
+                        <Logo
+                            class="hidden md:block h-6 w-auto"
+                            label="Travelity"
+                        />
+                        <LogoSmall
+                            class="block md:hidden h-6 w-auto"
+                            label="Travelity"
+                        />
+                    </a>
                 </div>
                 <p
                     class="font-serif italic text-[16px] text-[hsl(0_0%_75%)] leading-[1.5] max-w-[30ch]"
@@ -114,11 +127,3 @@ import { Paths } from '@/lib/utils/paths';
         </div>
     </div>
 </footer>
-
-<style>
-    /* The NavLogo's wordmark uses text-travelity-blue by default.
-       In the footer's dark context, override to white. */
-    .footer-brand-logo :global(span) {
-        color: hsl(0 0% 100%);
-    }
-</style>

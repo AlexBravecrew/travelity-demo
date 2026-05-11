@@ -1,7 +1,7 @@
 ---
 import { Button } from '@/components/ui/button';
 import { Paths } from '@/lib/utils/paths';
-import NavLogo from './NavLogo.astro';
+import { Logo, LogoSmall } from '@/components/brand';
 import NavLink from './NavLink.astro';
 import MobileMenu from './MobileMenu.astro';
 import { navLinks } from './nav-data';
@@ -13,7 +13,17 @@ import { navLinks } from './nav-data';
 >
     <div class="container mx-auto px-6 h-full">
         <div class="flex items-center justify-between gap-6 h-full">
-            <NavLogo />
+            <a
+                href={Paths.HOME}
+                aria-label="Travelity home"
+                class="nav-logo-link inline-flex items-center"
+            >
+                <Logo class="hidden md:block h-7 w-auto" label="Travelity" />
+                <LogoSmall
+                    class="block md:hidden h-7 w-auto"
+                    label="Travelity"
+                />
+            </a>
 
             <!-- Desktop links — hidden <1024px -->
             <div class="hidden lg:flex gap-1">

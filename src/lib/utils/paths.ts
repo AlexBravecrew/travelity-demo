@@ -40,6 +40,13 @@ export const Paths = {
 
     // Utility
     CONTACT: '/contact',
+    /**
+     * No-JS fallback target. The React form islands swap to a success
+     * component in-place rather than redirecting, so nothing currently
+     * navigates to THANK_YOU. The constant remains as the destination
+     * for any future form that hard-redirects (e.g. a non-React form,
+     * or a server-rendered form action that uses `Astro.redirect`).
+     */
     THANK_YOU: '/thank-you',
 
     // Legal (Phase 9)

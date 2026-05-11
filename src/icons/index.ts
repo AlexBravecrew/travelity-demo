@@ -42,15 +42,9 @@ export { Plus as PlusIcon } from '@lucide/astro'; // FAQ expand/collapse (rotate
 
 // Phase 5 — Solutions pages (capability bullets + cross-sell card icons)
 export { Boxes as BoxesIcon } from '@lucide/astro'; // products & catalog
-export { CircleDollarSign as DollarIcon } from '@lucide/astro'; // pricing rules
-export { Receipt as ReceiptIcon } from '@lucide/astro'; // invoices, orders
-export { Building2 as BuildingIcon } from '@lucide/astro'; // multi-location, enterprise
 export { Shield as ShieldIcon } from '@lucide/astro'; // security
-export { ShieldCheck as ShieldCheckIcon } from '@lucide/astro'; // compliance
-export { Database as DatabaseIcon } from '@lucide/astro'; // data, isolation
 // BarChart3 was deprecated in lucide; ChartColumn is the canonical successor.
 export { ChartColumn as BarChartIcon } from '@lucide/astro'; // reporting
-export { Webhook as WebhookIcon } from '@lucide/astro'; // integrations, API
 export { Languages as LanguagesIcon } from '@lucide/astro'; // multi-currency / locale
 
 // Phase 6 — Audience pages (FeaturePillars + Workflow rows)

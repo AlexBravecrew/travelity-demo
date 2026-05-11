@@ -1,0 +1,30 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'svg'> {
+    /** Accessible label. Defaults to "Travelity". */
+    label?: string;
+    class?: string;
+}
+
+const { label = 'Travelity', class: className, ...rest } = Astro.props;
+---
+
+<svg
+    width="125"
+    height="99"
+    viewBox="0 0 125 99"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label={label}
+    class={cn('travelity-logo-small', className)}
+    {...rest}
+>
+    <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M2.68399 4.2469C4.15999 6.5822 10.379 16.5878 16.504 26.4805C55.809 89.965 62.363 100.017 63.597 98.721C64.568 97.7 99.256 41.9871 121.174 6.2454L125.003 0H97.514H70.025V6.4952V12.9904H81.025C88.576 12.9904 92.025 13.3472 92.025 14.1266C92.025 15.5366 63.754 64.879 62.922 64.921C62.045 64.966 33.025 15.4067 33.025 13.8638C33.025 13.3832 37.975 12.9904 44.025 12.9904H55.025V6.4952V0H27.512H0L2.68399 4.2469Z"
+        fill="#55B5CF"></path>
+</svg>
