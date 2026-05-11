@@ -1,0 +1,49 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props extends HTMLAttributes<'div'> {
+    /** YouTube video ID. Defaults to the Travelity walkthrough video ported from v1. */
+    videoId?: string;
+    /** Accessible iframe title. Defaults to a descriptive Travelity walkthrough label. */
+    title?: string;
+    class?: string;
+}
+
+const {
+    videoId = '65Ei1kv8TNc',
+    title = 'Travelity product walkthrough',
+    class: className,
+    ...rest
+} = Astro.props;
+
+/**
+ * youtube-nocookie.com so we don't drop cookies until the visitor presses
+ * play — privacy-enhanced and avoids GDPR/cookie-banner issues for users
+ * who never engage with the video.
+ *
+ * `?rel=0` suppresses other-channel related videos on the end-screen
+ * (carried over from v1's URL).
+ */
+const src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
+---
+
+<div
+    class={cn(
+        'aspect-video w-full',
+        'rounded-[20px] overflow-hidden',
+        'bg-black',
+        'shadow-[0_16px_40px_-12px_hsl(var(--ink)/0.18)]',
+        className,
+    )}
+    {...rest}
+>
+    <iframe
+        src={src}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+        class="w-full h-full block border-0"></iframe>
+</div>

@@ -8,10 +8,20 @@ import type { HTMLAttributes } from 'astro/types';
 export interface Props extends HTMLAttributes<'section'> {
     /** Eyebrow text (e.g. "Booking Engine" or "For Tour Operators"). */
     eyebrow: string;
+    /** Horizontal alignment of the ctas slot within the left column. Defaults to 'start'. */
+    ctasAlign?: 'start' | 'center';
     class?: string;
 }
 
-const { eyebrow, class: className, ...rest } = Astro.props;
+const {
+    eyebrow,
+    ctasAlign = 'start',
+    class: className,
+    ...rest
+} = Astro.props;
+
+const ctasJustify =
+    ctasAlign === 'center' ? 'justify-center' : 'justify-start';
 ---
 
 <section
@@ -44,7 +54,7 @@ const { eyebrow, class: className, ...rest } = Astro.props;
                     <slot name="lead" />
                 </p>
 
-                <div class="flex flex-wrap gap-3">
+                <div class={cn('flex flex-wrap gap-3', ctasJustify)}>
                     <slot name="ctas">
                         {/* Default CTAs if consumer doesn't override */}
                         <Button href={Paths.BOOK_DEMO} size="lg" withArrow>

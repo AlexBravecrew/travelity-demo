@@ -6,7 +6,8 @@ import { ProductHero } from '@/components/shared/product-hero';
 import { SectionHeader } from '@/components/ui/section-header';
 import { CoverageList, CoverageItem } from '@/components/shared/coverage-list';
 
-import BookDemoForm from '@/components/forms/book-demo/BookDemoForm';
+import { Button } from '@/components/ui/button';
+import { BookDemoVideo, CalendlyWidget } from '@/components/book-demo';
 
 export const prerender = true;
 ---
@@ -18,8 +19,11 @@ export const prerender = true;
     <Nav />
 
     <main>
-        <!-- Centered ProductHero (no aside, no quick-facts) -->
-        <ProductHero eyebrow="Book a demo" class="text-center">
+        <!-- Two-column hero: text on the left (left-aligned), product
+             walkthrough video on the right. Button centered within the
+             left column via ctasAlign so it doesn't anchor to the leftmost
+             edge under the lead paragraph. -->
+        <ProductHero eyebrow="Book a demo" ctasAlign="center">
             <Fragment slot="headline">
                 30 minutes. <em>Zero prep needed.</em>
             </Fragment>
@@ -29,10 +33,12 @@ export const prerender = true;
                 required.
             </Fragment>
             <Fragment slot="ctas">
-                {/* No CTAs in the hero — the form below IS the action. */}
+                <Button href="#schedule" size="lg" withArrow>
+                    Pick a time
+                </Button>
             </Fragment>
             <Fragment slot="aside">
-                {/* No aside — single-column centered layout. */}
+                <BookDemoVideo />
             </Fragment>
         </ProductHero>
 
@@ -70,28 +76,33 @@ export const prerender = true;
             </div>
         </section>
 
-        <!-- The form (React island) -->
-        <section class="bg-surface-alt py-16 md:py-24" id="form">
+        <!-- Calendly inline widget (React island). scroll-mt offsets the
+             anchor jump so the section heading lands under the sticky nav,
+             not behind it. -->
+        <section
+            class="bg-surface-alt py-12 md:py-16 scroll-mt-[var(--nav-height)]"
+            id="schedule"
+        >
             <div class="container mx-auto px-6">
                 <SectionHeader
-                    eyebrow="Tell us about you"
+                    eyebrow="Pick a time"
                     eyebrowWithRule
                     align="center"
                 >
                     <Fragment slot="headline">
-                        We'll reply within one business day.
+                        Schedule a 30-minute walkthrough.
                     </Fragment>
                     <p
                         slot="dek"
                         class="text-[16px] text-ink-muted leading-[1.55] max-w-[48ch] mx-auto"
                     >
-                        Five fields. We use them to make the call useful — not
-                        to spam you.
+                        Pick a time that works for you. We'll send a calendar
+                        invite with a video link — no software install required.
                     </p>
                 </SectionHeader>
 
-                <div class="max-w-[680px] mx-auto mt-2">
-                    <BookDemoForm client:load />
+                <div class="max-w-[840px] mx-auto">
+                    <CalendlyWidget client:load />
                 </div>
             </div>
         </section>

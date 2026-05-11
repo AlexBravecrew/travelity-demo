@@ -135,6 +135,8 @@ html {
     background: hsl(var(--paper));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Smooth anchor scrolling. Reduced-motion override below resets this. */
+    scroll-behavior: smooth;
 }
 
 body {

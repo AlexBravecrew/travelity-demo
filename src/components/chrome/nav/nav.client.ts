@@ -142,7 +142,8 @@ function initDesktopSubrow() {
         // The pinned section's teal text is set by SSR and doesn't change.
         triggers.forEach((t) => {
             const triggerLabel = t.dataset.sectionLabel;
-            const btn = t.querySelector<HTMLButtonElement>('[data-nav-trigger]');
+            const btn =
+                t.querySelector<HTMLButtonElement>('[data-nav-trigger]');
             if (!btn) return;
             const isOpen = label !== null && triggerLabel === label;
             t.classList.toggle('open', isOpen);
@@ -153,7 +154,8 @@ function initDesktopSubrow() {
         // that isn't the pinned one (or there's no pinned one). The class
         // triggers the max-height transition.
         const showingHoverPreview =
-            label !== null && (!pinnedPanel || panelByLabel.get(label) !== pinnedPanel);
+            label !== null &&
+            (!pinnedPanel || panelByLabel.get(label) !== pinnedPanel);
         subrow.classList.toggle('is-hover-preview', showingHoverPreview);
     }
 
@@ -190,7 +192,8 @@ function initDesktopSubrow() {
     triggers.forEach((trigger) => {
         const label = trigger.dataset.sectionLabel;
         if (!label) return;
-        const btn = trigger.querySelector<HTMLButtonElement>('[data-nav-trigger]');
+        const btn =
+            trigger.querySelector<HTMLButtonElement>('[data-nav-trigger]');
         if (!btn) return;
 
         trigger.addEventListener('mouseenter', () => scheduleOpen(label));
@@ -232,7 +235,10 @@ function initDesktopSubrow() {
     document.addEventListener('click', (e) => {
         const target = e.target as Element | null;
         if (!target) return;
-        if (target.closest('[data-nav-root]') || target.closest('[data-nav-subrow]')) {
+        if (
+            target.closest('[data-nav-root]') ||
+            target.closest('[data-nav-subrow]')
+        ) {
             return;
         }
         if (previewLabel !== null) {
