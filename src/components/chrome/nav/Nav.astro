@@ -3,13 +3,29 @@ import { Button } from '@/components/ui/button';
 import { Paths } from '@/lib/utils/paths';
 import { Logo, LogoSmall } from '@/components/brand';
 import NavLink from './NavLink.astro';
+import NavSubRow from './NavSubRow.astro';
 import MobileMenu from './MobileMenu.astro';
 import { navLinks } from './nav-data';
+import { getActiveSection } from './nav-active';
+
+const pathname = Astro.url.pathname;
+const activeSection = getActiveSection(pathname, navLinks);
+const sectionsWithItems = navLinks.filter((l) => !!l.items?.length);
+const hasSubrow = activeSection !== null;
+
+const stripSlash = (p: string) =>
+    p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
+const normalizedPath = stripSlash(pathname);
+const isLinkActive = (link: (typeof navLinks)[number]) => {
+    if (link.items?.length) return link === activeSection;
+    return !!link.href && stripSlash(link.href) === normalizedPath;
+};
 ---
 
 <nav
     class="nav-root sticky top-0 z-50 h-[68px] backdrop-blur-[14px] backdrop-saturate-[180%] bg-[hsl(var(--paper)/0.85)] border-b border-transparent transition-[border-color,background] duration-200"
     data-nav-root
+    data-has-subnav={hasSubrow ? 'true' : undefined}
 >
     <div class="container mx-auto px-6 h-full">
         <div class="flex items-center justify-between gap-6 h-full">
@@ -27,7 +43,15 @@ import { navLinks } from './nav-data';
 
             <!-- Desktop links — hidden <1024px -->
             <div class="hidden lg:flex gap-1">
-                {navLinks.map((link, i) => <NavLink link={link} index={i} />)}
+                {
+                    navLinks.map((link, i) => (
+                        <NavLink
+                            link={link}
+                            index={i}
+                            isActive={isLinkActive(link)}
+                        />
+                    ))
+                }
             </div>
 
             <!-- Right side: CTA on desktop, hamburger on mobile -->
@@ -44,6 +68,16 @@ import { navLinks } from './nav-data';
         </div>
     </div>
 </nav>
+
+<!-- Secondary row: direct sibling of <nav> so it can be sticky without
+     an overflow:hidden ancestor breaking it. The sub-row itself owns
+     the max-height collapse + overflow:hidden; styling lives in
+     NavSubRow.astro. Hidden on mobile (< 1024px) via Tailwind. -->
+<NavSubRow
+    sections={sectionsWithItems}
+    activeSection={activeSection}
+    pathname={pathname}
+/>
 
 <script>
     import './nav.client.ts';

@@ -3,13 +3,12 @@
  *
  * Responsibilities:
  *   1. Add `.scrolled` to the nav after the page scrolls past 4px.
- *   2. Open dropdowns on hover (with 100ms intent delay) and on click.
- *   3. Open dropdowns on Enter/Space when the trigger has keyboard focus.
- *   4. Close dropdowns on hover-leave (120ms close delay), Escape, or
- *      outside-click. Only one dropdown open at a time.
- *   5. Update `aria-expanded` on each trigger to match its open state.
- *   6. Hamburger toggles the mobile menu (slide-down panel).
- *   7. Mobile menu's accordion sections expand/collapse independently.
+ *   2. Desktop sub-row: hover (with intent delay) swaps the visible panel.
+ *      Pinned panels (determined at SSR by route) stay shown on leave.
+ *   3. Click on a trigger toggles its panel as a preview.
+ *   4. Escape/outside-click reverts to the pinned panel (or hides).
+ *   5. Hamburger toggles the mobile menu (slide-down panel).
+ *   6. Mobile menu's accordion sections expand/collapse independently.
  *
  * No external state library. Plain DOM, plain TypeScript.
  */
@@ -18,16 +17,9 @@ const HOVER_OPEN_DELAY_MS = 100;
 const HOVER_CLOSE_DELAY_MS = 120;
 const SCROLL_THRESHOLD_PX = 4;
 
-type NavItem = {
-    el: HTMLElement;
-    trigger: HTMLButtonElement;
-    openTimer: number | null;
-    closeTimer: number | null;
-};
-
 function init() {
     initScrollHandlers();
-    initDesktopDropdowns();
+    initDesktopSubrow();
     initMobileMenu();
 }
 
@@ -92,105 +84,170 @@ function initScrollHandlers() {
     onScroll(); // initial state on load
 }
 
-// --- Desktop dropdowns --------------------------------------------
+// --- Desktop sub-row hover-swap ----------------------------------
 
-function initDesktopDropdowns() {
-    const items: NavItem[] = Array.from(
-        document.querySelectorAll<HTMLElement>('.nav-item'),
-    )
-        .map((el): NavItem | null => {
-            const trigger =
-                el.querySelector<HTMLButtonElement>('[data-nav-trigger]');
-            return trigger
-                ? { el, trigger, openTimer: null, closeTimer: null }
-                : null;
-        })
-        .filter((x): x is NavItem => x !== null);
+function initDesktopSubrow() {
+    const navRoot = document.querySelector<HTMLElement>('[data-nav-root]');
+    const subrowEl = document.querySelector<HTMLElement>('[data-nav-subrow]');
+    if (!navRoot || !subrowEl) return;
+    const subrow: HTMLElement = subrowEl;
 
-    if (!items.length) return;
+    const triggers = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-nav-item]'),
+    );
+    if (!triggers.length) return;
 
-    function openItem(target: NavItem) {
-        // Cancel any pending close on the target
-        if (target.closeTimer !== null) {
-            window.clearTimeout(target.closeTimer);
-            target.closeTimer = null;
+    const panels = Array.from(
+        subrow.querySelectorAll<HTMLElement>('[data-subrow-section]'),
+    );
+    if (!panels.length) return;
+
+    // The pinned panel (if any) was marked at SSR. It's the panel we
+    // revert to on hover-leave; null means "hide the row entirely."
+    const pinnedPanel =
+        panels.find((p) => p.dataset.subrowPinned === 'true') ?? null;
+
+    const panelByLabel = new Map<string, HTMLElement>();
+    panels.forEach((p) => {
+        const label = p.dataset.subrowSection;
+        if (label) panelByLabel.set(label, p);
+    });
+
+    let openTimer: number | null = null;
+    let closeTimer: number | null = null;
+    /** Label currently being previewed via hover/click, or null for "show pinned (or nothing)". */
+    let previewLabel: string | null = null;
+
+    function clearTimers() {
+        if (openTimer !== null) {
+            window.clearTimeout(openTimer);
+            openTimer = null;
         }
-        // Close all others
-        items.forEach((other) => {
-            if (other !== target && other.el.classList.contains('open')) {
-                other.el.classList.remove('open');
-                other.trigger.setAttribute('aria-expanded', 'false');
-            }
-        });
-        // Open this one
-        target.el.classList.add('open');
-        target.trigger.setAttribute('aria-expanded', 'true');
+        if (closeTimer !== null) {
+            window.clearTimeout(closeTimer);
+            closeTimer = null;
+        }
     }
 
-    function closeItem(target: NavItem) {
-        target.el.classList.remove('open');
-        target.trigger.setAttribute('aria-expanded', 'false');
+    function setActivePanel(label: string | null) {
+        const targetPanel =
+            label !== null ? (panelByLabel.get(label) ?? null) : pinnedPanel;
+
+        panels.forEach((p) => {
+            p.dataset.subrowActive =
+                p === targetPanel && targetPanel !== null ? 'true' : 'false';
+        });
+
+        // Open/close styling on the trigger (chevron rotate + bg hint).
+        // The pinned section's teal text is set by SSR and doesn't change.
+        triggers.forEach((t) => {
+            const triggerLabel = t.dataset.sectionLabel;
+            const btn = t.querySelector<HTMLButtonElement>('[data-nav-trigger]');
+            if (!btn) return;
+            const isOpen = label !== null && triggerLabel === label;
+            t.classList.toggle('open', isOpen);
+            btn.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        // Host slide: add `is-hover-preview` when we're showing a panel
+        // that isn't the pinned one (or there's no pinned one). The class
+        // triggers the max-height transition.
+        const showingHoverPreview =
+            label !== null && (!pinnedPanel || panelByLabel.get(label) !== pinnedPanel);
+        subrow.classList.toggle('is-hover-preview', showingHoverPreview);
     }
 
-    items.forEach((item) => {
-        const { el, trigger } = item;
+    function scheduleOpen(label: string) {
+        if (closeTimer !== null) {
+            window.clearTimeout(closeTimer);
+            closeTimer = null;
+        }
+        if (openTimer !== null) {
+            window.clearTimeout(openTimer);
+        }
+        openTimer = window.setTimeout(() => {
+            previewLabel = label;
+            setActivePanel(label);
+            openTimer = null;
+        }, HOVER_OPEN_DELAY_MS);
+    }
 
-        // Hover: open after intent delay
-        el.addEventListener('mouseenter', () => {
-            if (item.closeTimer !== null) {
-                window.clearTimeout(item.closeTimer);
-                item.closeTimer = null;
-            }
-            item.openTimer = window.setTimeout(() => {
-                openItem(item);
-                item.openTimer = null;
-            }, HOVER_OPEN_DELAY_MS);
-        });
+    function scheduleClose() {
+        if (openTimer !== null) {
+            window.clearTimeout(openTimer);
+            openTimer = null;
+        }
+        if (closeTimer !== null) {
+            window.clearTimeout(closeTimer);
+        }
+        closeTimer = window.setTimeout(() => {
+            previewLabel = null;
+            setActivePanel(null); // revert to pinned (or hide if no pin)
+            closeTimer = null;
+        }, HOVER_CLOSE_DELAY_MS);
+    }
 
-        // Hover: close after delay
-        el.addEventListener('mouseleave', () => {
-            if (item.openTimer !== null) {
-                window.clearTimeout(item.openTimer);
-                item.openTimer = null;
-            }
-            item.closeTimer = window.setTimeout(() => {
-                closeItem(item);
-                item.closeTimer = null;
-            }, HOVER_CLOSE_DELAY_MS);
-        });
+    triggers.forEach((trigger) => {
+        const label = trigger.dataset.sectionLabel;
+        if (!label) return;
+        const btn = trigger.querySelector<HTMLButtonElement>('[data-nav-trigger]');
+        if (!btn) return;
 
-        // Click: toggle
-        trigger.addEventListener('click', (e) => {
+        trigger.addEventListener('mouseenter', () => scheduleOpen(label));
+        trigger.addEventListener('mouseleave', () => scheduleClose());
+
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            const isOpen = el.classList.contains('open');
-            if (isOpen) {
-                closeItem(item);
+            clearTimers();
+            if (previewLabel === label) {
+                previewLabel = null;
+                setActivePanel(null);
             } else {
-                openItem(item);
+                previewLabel = label;
+                setActivePanel(label);
             }
         });
 
-        // Keyboard: Enter/Space opens (button default), Escape closes
-        trigger.addEventListener('keydown', (e) => {
+        btn.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                closeItem(item);
-                trigger.focus();
+                clearTimers();
+                previewLabel = null;
+                setActivePanel(null);
+                btn.focus();
             }
         });
     });
 
-    // Outside click closes all
+    // Keep the sub-row open while the mouse is over it (so the user can
+    // travel from the trigger down into the row).
+    subrow.addEventListener('mouseenter', () => {
+        if (closeTimer !== null) {
+            window.clearTimeout(closeTimer);
+            closeTimer = null;
+        }
+    });
+    subrow.addEventListener('mouseleave', () => scheduleClose());
+
+    // Outside click clears any hover-preview; pinned panel stays.
     document.addEventListener('click', (e) => {
         const target = e.target as Element | null;
-        if (!target || !target.closest('.nav-item')) {
-            items.forEach(closeItem);
+        if (!target) return;
+        if (target.closest('[data-nav-root]') || target.closest('[data-nav-subrow]')) {
+            return;
+        }
+        if (previewLabel !== null) {
+            clearTimers();
+            previewLabel = null;
+            setActivePanel(null);
         }
     });
 
-    // Escape anywhere closes all
+    // Escape anywhere clears the hover-preview.
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            items.forEach(closeItem);
+        if (e.key === 'Escape' && previewLabel !== null) {
+            clearTimers();
+            previewLabel = null;
+            setActivePanel(null);
         }
     });
 }

@@ -1,0 +1,132 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { NavLinkData } from './nav-data';
+
+export interface Props {
+    /** All dropdown-capable nav links — one panel per section. */
+    sections: NavLinkData[];
+    /** The section pinned by the current route, or null if none. */
+    activeSection: NavLinkData | null;
+    /** Current pathname, used to highlight the active child link. */
+    pathname: string;
+}
+
+const { sections, activeSection, pathname } = Astro.props;
+
+const stripSlash = (p: string) =>
+    p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
+const normalizedPath = stripSlash(pathname);
+---
+
+<div
+    class={cn(
+        'nav-subrow',
+        'hidden lg:block',
+        'sticky top-[68px] z-40',
+        'backdrop-blur-[14px] backdrop-saturate-[180%]',
+        'bg-[hsl(var(--paper)/0.85)]',
+        'border-b border-line',
+        'overflow-hidden',
+    )}
+    data-nav-subrow
+>
+    <div class="container mx-auto px-6 h-[44px]">
+        {
+            sections.map((section) => {
+                const isPinned = section === activeSection;
+                return (
+                    <ul
+                        class={cn(
+                            'nav-subrow-panel',
+                            'items-center gap-1 h-full m-0 p-0 list-none',
+                        )}
+                        data-subrow-section={section.label}
+                        data-subrow-pinned={isPinned ? 'true' : 'false'}
+                        data-subrow-active={isPinned ? 'true' : 'false'}
+                        role="menu"
+                        aria-label={`${section.label} pages`}
+                    >
+                        {section.items!.map((item) => {
+                            const isActive =
+                                stripSlash(item.href) === normalizedPath;
+                            return (
+                                <li role="none">
+                                    <a
+                                        href={item.href}
+                                        role="menuitem"
+                                        title={item.description}
+                                        class={cn(
+                                            'subrow-link',
+                                            'inline-flex items-center',
+                                            'h-[44px] px-3',
+                                            'font-body text-sm font-medium',
+                                            'no-underline',
+                                            'border-b-2 border-transparent',
+                                            'transition-colors duration-150',
+                                            isActive
+                                                ? 'text-ink'
+                                                : 'text-ink-muted hover:text-ink',
+                                        )}
+                                        data-subrow-link-active={
+                                            isActive ? 'true' : 'false'
+                                        }
+                                        aria-current={
+                                            isActive ? 'page' : undefined
+                                        }
+                                    >
+                                        {item.label}
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                );
+            })
+        }
+    </div>
+</div>
+
+<style>
+    /* Sub-row inherits the deeper scrolled background by reading the
+       parent nav's `.scrolled` state from a global selector. */
+    :global(.nav-root.scrolled) ~ .nav-subrow {
+        background: hsl(var(--paper) / 0.95);
+    }
+
+    /* Active child gets a 2px teal underline + stronger ink color. */
+    .subrow-link[data-subrow-link-active='true'] {
+        border-bottom-color: hsl(var(--travelity-teal));
+    }
+
+    /* Only one panel is visible at a time. display:none on inactive
+       removes them from rendering entirely — no overlap possible. */
+    .nav-subrow-panel {
+        display: none;
+    }
+    .nav-subrow-panel[data-subrow-active='true'] {
+        display: flex;
+    }
+
+    /* Max-height collapse pattern on the sub-row itself (not a parent),
+       so position:sticky on .nav-subrow keeps working. An ancestor with
+       overflow:hidden would break sticky; having overflow:hidden on the
+       sticky element itself is fine.
+       - Idle (no pin, no hover): max-height: 0  → 0px in flow
+       - Pinned (data-has-subnav on nav root): max-height: 44px instantly
+       - Hover-preview (is-hover-preview class via JS): max-height: 44px
+         with transition (slide-down feel). */
+    .nav-subrow {
+        max-height: 0;
+        transition: max-height 220ms var(--ease-default);
+    }
+    :global([data-nav-root][data-has-subnav]) ~ .nav-subrow,
+    .nav-subrow.is-hover-preview {
+        max-height: 44px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .nav-subrow {
+            transition: none;
+        }
+    }
+</style>

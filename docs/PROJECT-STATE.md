@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** end of Phase 11 (final marketing page shipped).
+> **Last updated:** Phase 14 — desktop nav reworked from hover-dropdown to pinned sub-row pattern.
 
 ---
 
@@ -77,8 +77,15 @@ src/
 │   │   ├── card/                    # default/featured + interactive + topAccent
 │   │   └── section-header/          # eyebrow + headline slot + dek + actions
 │   │
-│   ├── chrome/                      # Site-wide chrome (Phase 2)
-│   │   ├── nav/                     # Sticky nav, hover dropdowns, scroll handlers
+│   ├── chrome/                      # Site-wide chrome (Phase 2, nav reworked in Phase 14)
+│   │   ├── nav/                     # Sticky 68px nav + 44px sub-row pinned by route
+│   │   │   ├── Nav.astro            # Top row, computes active section from pathname
+│   │   │   ├── NavLink.astro        # Trigger (no popover) — teal when its section/page is active
+│   │   │   ├── NavSubRow.astro      # 44px sub-row, sticky top-[68px], underline-tab items
+│   │   │   ├── MobileMenu.astro     # Unchanged — mobile uses accordion menu
+│   │   │   ├── nav-data.ts          # Source of truth for nav structure
+│   │   │   ├── nav-active.ts        # getActiveSection(pathname, links)
+│   │   │   └── nav.client.ts        # Hover-swap, scroll handlers, mobile toggle
 │   │   └── footer/                  # 5/2/1-col responsive, dark ink
 │   │
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
@@ -447,29 +454,34 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. What's next
+## 10. Phase 14 — desktop nav redesign
 
-**Next session:** verify clean code + solid principles, update `rules-astro.md` to reflect what we've actually established.
+The hover-dropdown pattern (rectangular popover under each trigger) was replaced with a **pinned sub-row** pattern. Motivation: on `/solutions/widget` (or any sub-page) the old chrome gave no signal you were inside the Solutions section, and switching siblings cost two clicks.
 
-The current `rules-astro.md` was written before any code shipped. It documented intent. We've now shipped 11 phases and developed a stronger sense of:
+What shipped:
 
-- Which rules held (token rule, color-name purity, icon barrel — all kept clean)
-- Which rules needed clarification (the icon barrel rule's `.tsx` exemption emerged in Phase 7)
-- Which patterns repeated enough to deserve elevation to rules (variant API, reduced-motion, `<details>`-over-JS-accordion, slot-based composition)
-- Which abstractions stayed un-extracted on purpose (form primitives shared between BookDemoForm and ContactForm — only 2 consumers, deferred)
+- **Pinned secondary row** (44px, sticky `top: 68px` directly under the main nav). On `/solutions/*` and `/our-story|/faq|/guides|/help-center`, the row is present in SSR HTML and shows the section's child links as horizontal underline-tabs. Active child has a 2px teal `border-bottom` and `aria-current="page"`.
+- **Active nav indicator** in the top row: the parent section (Solutions / Resources) renders `text-travelity-teal`. Flat top-level links (Pricing) also render teal when on their own page.
+- **Hover-swap behavior**: hovering a different top-level trigger swaps the visible panel in the sub-row. The pinned parent's teal stays as the wayfinding anchor. On pages with no pinned section, hovering slides the sub-row down via a `max-height` transition (0 → 44px, 220ms) on the sub-row itself; on leave it collapses back. 100ms open intent + 120ms close delay (unchanged timings).
+- **Layout/sticky**: sub-row owns `overflow-hidden` + `max-height` directly (not a parent wrapper) — an ancestor with `overflow:hidden` would have killed `position: sticky` on the child.
+- **`--nav-height` CSS variable** (`global.css`): 68px default, 112px under `:root:has([data-nav-root][data-has-subnav])`. `AnchorNav` uses `top: var(--nav-height)` so it slots under the sub-row when one is pinned.
+- **New files**: `NavSubRow.astro`, `nav-active.ts` (`getActiveSection(pathname, links)`).
+- **Deleted**: `NavDropdown.astro`, `NavDropdownItem.astro`.
+- **Type rename**: `NavDropdownItemData` → `NavSubItemData` in `nav-data.ts`.
+- **Mobile is unchanged**: sub-row is `hidden lg:block`; mobile keeps the existing accordion menu.
 
-The next phase will:
+Rules ruleset addition: `rules-astro.md` §6.2.1 documents the pattern for future contributors.
 
-1. Review the codebase against current `rules-astro.md` for drift
-2. Update `rules-astro.md` to reflect current reality (some additions, some clarifications, possibly some removals)
-3. Add any solid-principles checks that surfaced during the build (e.g. "every component takes `class` and forwards rest props" was a Phase 1 decision that turned out load-bearing)
-4. Verify clean code passes: lint, format, type-check, build, no dead code, no unused exports, no orphaned imports, no `console.log` outside Astro Actions
+## 11. What's next
 
-After that pass, the engineering side is done. Anything else (real email wiring, real content, real photos) is content/operations work.
+The remaining engineering pass:
+
+1. Verify clean code passes: lint, format, type-check, build, no dead code, no unused exports, no orphaned imports, no `console.log` outside Astro Actions.
+2. Anything else (real email wiring, real content, real photos) is content/operations work — see §9.
 
 ---
 
-## 11. How to use this file
+## 12. How to use this file
 
 **At session start:**
 

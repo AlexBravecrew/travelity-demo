@@ -287,7 +287,7 @@ The `nav.client.ts` rAF loop (sticky nav border + parallax photo) checks `window
 All cross-cutting client-side behavior lives in `src/components/chrome/nav/nav.client.ts`:
 
 - Sticky nav border (scroll threshold)
-- Hover-intent dropdown open delay (100ms) + close delay (120ms)
+- Desktop sub-row hover-swap: 100ms open intent + 120ms close delay
 - Mobile menu toggle + body scroll lock
 - Mobile accordion section expand/collapse
 - Parallax photo translateY (added Phase 3c)
@@ -295,6 +295,18 @@ All cross-cutting client-side behavior lives in `src/components/chrome/nav/nav.c
 Don't add a second client script that duplicates the rAF loop. Add to this one.
 
 `anchor-nav.client.ts` is a separate file because it uses `IntersectionObserver` (different mechanism, different scope — single-page anchor scroll-spy).
+
+### 6.2.1 Desktop nav pattern — pinned sub-row, not dropdown
+
+The desktop nav uses a **persistent secondary row** (Phase 14), not a hover-dropdown popover. The pattern:
+
+- **Pinned by route.** On `/solutions/*` and `/our-story|/faq|/guides|/help-center`, the parent section (Solutions or Resources) renders teal in the top row and its child items render as horizontal underline-tabs in a 44px sub-row sticky beneath the main nav. The active child has a 2px teal `border-bottom`. `aria-current="page"` on the active child link.
+- **Hover-preview swap.** Hovering a different top-level trigger swaps the panel content (cross-fade via opacity, 150ms — no layout shift). The pinned parent's teal text stays as the wayfinding anchor.
+- **Hover-slide-down from idle.** On pages with no pinned section (e.g. `/`, `/pricing`), hovering a trigger slides the sub-row down via a `max-height` transition on the host wrapper (0 → 44px, 220ms). Content below pushes down smoothly.
+- **Total chrome height** lives in `--nav-height` (`global.css`): `68px` by default, `112px` when `[data-nav-root][data-has-subnav]` is present. Consumers: `AnchorNav` `style="top: var(--nav-height)"`; any future sticky offsets should use the variable too.
+- **`getActiveSection(pathname, navLinks)`** (`nav-active.ts`) resolves which section's panel is pinned. Returns `null` when no child href matches the current pathname → no sub-row renders.
+- **Mobile unchanged.** The sub-row host has `display: none` on `< 1024px`; mobile menu pattern is the same as before.
+- **Pinned state ships in SSR HTML.** No flicker on hydration; client only manages hover-swap transitions.
 
 ### 6.3 Italic-em — three documented patterns
 
