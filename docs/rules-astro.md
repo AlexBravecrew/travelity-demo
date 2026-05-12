@@ -1,6 +1,6 @@
 # Travelity Marketing Website — Project Rules
 
-> Read this before writing any code. **Authoritative as of end of Phase 11 + Phase 12 audit.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
+> Read this before writing any code. **Authoritative through Phase 17.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
 
 ---
 
@@ -25,7 +25,7 @@ There is no fifth layer. Don't invent one.
 | Adapter     | `@astrojs/node` (mode: `standalone`). Swap-friendly to Vercel/Netlify/Cloudflare.                                 |
 | Styling     | Tailwind v4 (CSS-first via `@theme` in `src/styles/global.css`). **No `tailwind.config.js`.**                     |
 | Type system | TypeScript 5.x strict                                                                                             |
-| Islands     | React 19 — only when state is genuinely needed (currently 2 forms)                                                |
+| Islands     | React 19 — only when state is genuinely needed (currently 2: `ContactForm`, `CalendlyWidget`)                     |
 | Forms       | React Hook Form + zod 4 (shared schemas with server-side Astro Actions)                                           |
 | Icons       | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Same icon set, different runtime bindings. |
 | Node        | 22+                                                                                                               |
@@ -42,10 +42,13 @@ If you need to reach for one of those, stop and ask. The discipline of refusing 
 
 ```
 src/
-├── actions/index.ts           # Astro Actions (currently bookDemo, contact)
+├── actions/index.ts           # Astro Actions (currently `contact` only; bookDemo removed Phase 16)
 ├── components/
-│   ├── chrome/                # site-wide chrome (Nav, Footer, MobileMenu)
-│   │   ├── nav/
+│   ├── book-demo/             # /book-demo page-specific (Phase 16)
+│   │   ├── CalendlyWidget.tsx
+│   │   └── BookDemoVideo.astro
+│   ├── chrome/                # site-wide chrome
+│   │   ├── nav/               # Nav + NavLink + NavSubRow + MobileMenuTrigger + MobileMenu
 │   │   └── footer/
 │   ├── home/                  # home-page sections only
 │   │   ├── hero/
@@ -65,7 +68,6 @@ src/
 │   │   ├── feature-pillars/
 │   │   ├── workflow/
 │   │   ├── plan-rec/
-│   │   ├── anchor-nav/
 │   │   ├── coverage-list/
 │   │   ├── comparison-table/
 │   │   ├── faq-accordion/
@@ -73,10 +75,9 @@ src/
 │   │   ├── guide-card/
 │   │   └── help-tile/
 │   ├── ui/                    # atoms (Button, Eyebrow, Tag, Card, etc.)
-│   ├── decorative/            # pure-SVG / illustration (MountainScene, ParallaxScene, TravelityMark)
+│   ├── decorative/            # bespoke SVG (mountain-scene + ota-logos)
 │   └── forms/                 # React form islands
-│       ├── book-demo/
-│       └── contact/
+│       └── contact/           # (book-demo removed Phase 16)
 ├── icons/index.ts             # the icon barrel (single source of truth)
 ├── layouts/MarketingLayout.astro
 ├── lib/utils/                 # cn(), Paths, externalAttrs
@@ -85,7 +86,7 @@ src/
 │   ├── audiences/
 │   ├── solutions/
 │   └── legal/
-└── styles/global.css          # @theme tokens + base resets + global utilities
+└── styles/global.css          # @theme tokens + base resets + --nav-height + smooth-scroll
 ```
 
 ### 2.2 Naming
@@ -134,7 +135,7 @@ const { variant = 'default', class: className, ...rest } = Astro.props;
 </div>
 ```
 
-**Exception:** internal "data-shaped" components — those that compose other components from a structured prop, rather than rendering a single root with arbitrary HTML attributes — do not need `HTMLAttributes`. Audit found 4 in this category: `LegalPageLayout`, `FooterColumn`, `NavLink`, `NavDropdown`. They take typed shape props (e.g. `{ items: TocItem[] }`) and render structured output. Adding `HTMLAttributes` to them would be surface area without consumers.
+**Exception:** internal "data-shaped" components — those that compose other components from a structured prop, rather than rendering a single root with arbitrary HTML attributes — do not need `HTMLAttributes`. Currently 3 in this category: `LegalPageLayout`, `FooterColumn`, `NavLink`. (Audit originally listed `NavDropdown` — deleted in Phase 14 when the dropdown pattern was replaced with the sub-row.) They take typed shape props (e.g. `{ items: TocItem[] }`) and render structured output. Adding `HTMLAttributes` to them would be surface area without consumers.
 
 ### 3.2 Class merging
 
@@ -288,25 +289,33 @@ All cross-cutting client-side behavior lives in `src/components/chrome/nav/nav.c
 
 - Sticky nav border (scroll threshold)
 - Desktop sub-row hover-swap: 100ms open intent + 120ms close delay
-- Mobile menu toggle + body scroll lock
+- Mobile drawer open/close + body scroll lock + backdrop tap + X button + link-tap close (Phase 17)
 - Mobile accordion section expand/collapse
 - Parallax photo translateY (added Phase 3c)
 
 Don't add a second client script that duplicates the rAF loop. Add to this one.
-
-`anchor-nav.client.ts` is a separate file because it uses `IntersectionObserver` (different mechanism, different scope — single-page anchor scroll-spy).
 
 ### 6.2.1 Desktop nav pattern — pinned sub-row, not dropdown
 
 The desktop nav uses a **persistent secondary row** (Phase 14), not a hover-dropdown popover. The pattern:
 
 - **Pinned by route.** On `/solutions/*` and `/our-story|/faq|/guides|/help-center`, the parent section (Solutions or Resources) renders teal in the top row and its child items render as horizontal underline-tabs in a 44px sub-row sticky beneath the main nav. The active child has a 2px teal `border-bottom`. `aria-current="page"` on the active child link.
-- **Hover-preview swap.** Hovering a different top-level trigger swaps the panel content (cross-fade via opacity, 150ms — no layout shift). The pinned parent's teal text stays as the wayfinding anchor.
-- **Hover-slide-down from idle.** On pages with no pinned section (e.g. `/`, `/pricing`), hovering a trigger slides the sub-row down via a `max-height` transition on the host wrapper (0 → 44px, 220ms). Content below pushes down smoothly.
-- **Total chrome height** lives in `--nav-height` (`global.css`): `68px` by default, `112px` when `[data-nav-root][data-has-subnav]` is present. Consumers: `AnchorNav` `style="top: var(--nav-height)"`; any future sticky offsets should use the variable too.
+- **Hover-preview swap.** Hovering a different top-level trigger swaps the visible panel via instant `display: none/flex` (a cross-fade was tried first but caused brief content overlap during transition — see Phase 14 narrative in PROJECT-STATE.md §10). The pinned parent's teal text stays as the wayfinding anchor.
+- **Click is a no-op on dropdown triggers** (Phase 17 — hover-only by product decision). Keyboard Escape still closes the hover-preview for accessibility. Flat top-level links navigate normally.
+- **Hover-slide-down from idle.** On pages with no pinned section (e.g. `/`, `/pricing`), hovering a trigger slides the sub-row down via a `max-height` transition on the sub-row itself (0 → 44px, 220ms). Content below pushes down smoothly.
+- **Total chrome height** lives in `--nav-height` (`global.css`): `68px` by default, `112px` when `[data-nav-root][data-has-subnav]` is present AND viewport is `>= 768px` (Phase 17 added the media-query gate so mobile chrome stays 68). Consumers: any `scroll-margin-top` on anchored sections (`#schedule` on `/book-demo`); add future sticky offsets via the variable.
 - **`getActiveSection(pathname, navLinks)`** (`nav-active.ts`) resolves which section's panel is pinned. Returns `null` when no child href matches the current pathname → no sub-row renders.
-- **Mobile unchanged.** The sub-row host has `display: none` on `< 1024px`; mobile menu pattern is the same as before.
+- **Breakpoint: 768px** (Phase 17 — `md`, was `lg`). Tablet shows the full desktop nav + sub-row; mobile (`< md`) gets the slide-from-right drawer instead.
 - **Pinned state ships in SSR HTML.** No flicker on hydration; client only manages hover-swap transitions.
+
+### 6.2.2 Mobile drawer pattern (Phase 17)
+
+The mobile menu is a **slide-from-right drawer** rendered as a **sibling** of `<nav>`, not a child:
+
+- **Why split.** `<nav>` has `backdrop-filter: blur(...)` which makes it a containing block for `position: fixed` descendants. Putting the drawer inside `<nav>` traps its fixed positioning inside the 68px nav box → invisible. The split (`MobileMenuTrigger.astro` inside, `MobileMenu.astro` as a sibling) is structural, not stylistic — don't merge them back.
+- **Drawer shape.** 85% width, max 380px, slides in via `translateX(100%)` → `translateX(0)` over 240ms. Backdrop scrim covers the rest of the viewport at 40% black. Body scroll lock when open. `role="dialog"`, `aria-modal="true"`.
+- **Close paths.** Backdrop tap, X button in drawer header, Escape key, any nav link tap. All wired in `nav.client.ts:initMobileMenu`.
+- **Hidden on `>= md`** (768px) — desktop nav shows from tablet up.
 
 ### 6.3 Italic-em — three documented patterns
 
@@ -331,9 +340,12 @@ The italic-em phrase is the project's editorial signature. Three coexisting patt
 Don't tune these without a deliberate decision; they were calibrated against the v2.5 reference:
 
 - **BookingFlowCard** (Hero): 3-step animation, ~3s total runtime. Step-in 0.5s with delays at 0.3s/1.4s/2.5s. Icon pop 0.4s with delays at 0.4s/1.5s/2.6s. Prevented pill 0.4s at 1.9s.
-- **ChannelHub** pulse: 3s ease-in-out infinite.
+- **ChannelHub** breath pulse: 4s ease-in-out infinite (Phase 15 retune from 3s).
+- **Channel connector pulses** (Phase 15): 0.8s linear infinite, 5 lines staggered by 0.15s.
 - **Card hover** (interactive): -4px translateY, 240ms.
-- **Nav dropdown**: 100ms open intent / 120ms close delay.
+- **Featured card animated border** (Phase 17): 10s linear infinite spin via `@property --card-gradient-angle`.
+- **Nav sub-row hover-swap**: 100ms open intent / 120ms close delay.
+- **Mobile drawer**: 240ms cubic-bezier slide-in; backdrop 240ms ease-out fade.
 
 ---
 
@@ -343,7 +355,7 @@ Don't tune these without a deliberate decision; they were calibrated against the
 
 React island + zod schema + Astro Action. The schema is shared between client validation and server input parsing — single source of truth.
 
-Don't extract a "shared form primitives" abstraction. Two consumers (`BookDemoForm`, `ContactForm`) don't justify it. Three would.
+Don't extract a "shared form primitives" abstraction. After Phase 16 only `ContactForm` remains as a true form. Three consumers would justify abstraction; one definitely doesn't.
 
 ### 7.2 State machine
 
@@ -373,7 +385,7 @@ subject: z.enum(SUBJECTS, { errorMap: () => ({ message: '…' }) });
 
 All actions live in `src/actions/index.ts` on a single `server` object. Each uses `defineAction({ accept: 'json', input: zodSchema, handler })`. Don't split actions across multiple files — there's one consumer (`astro:actions`) and the bundle re-exports based on this file's exports.
 
-The current handlers `console.log` + simulate latency. Real email/CRM destinations are a pre-launch swap (PROJECT-STATE.md §9).
+Currently only `contact` exists (Phase 16 removed `bookDemo` when /book-demo switched to Calendly). The handler `console.log`s + simulates latency. Real email destination is a pre-launch swap (PROJECT-STATE.md §9). Note: Calendly bookings flow through `CalendlyWidget.tsx`'s `event_scheduled` handler, not through an Astro Action — different pattern, separate TODO.
 
 ---
 
@@ -405,7 +417,7 @@ Every piece of placeholder content carries an unmistakable marker so a launch re
 | Screenshot slots       | `[Screenshot: brief description]`             | Solutions pages × ~21 slots          |
 | Future article URLs    | `href="#"`                                    | `guides.astro`                       |
 | Avatar fallbacks       | gradient circle (no `avatarSrc`)              | `TestimonialCard`                    |
-| OTA logos              | `[GYG logo]`, `[Viator logo]`, `[Klook logo]` | `ChannelDiagram`                     |
+| OTA logos              | ~~`[GYG logo]`, `[Viator logo]`, `[Klook logo]`~~ | **Done Phase 15** — real `GygLogo`/`ViatorLogo`/`KlookLogo` ship under `decorative/ota-logos/` |
 | Legal/AI-drafted prose | amber DRAFT banner                            | `LegalPageLayout`, `our-story.astro` |
 | Address                | `[Address TBD before launch]`                 | `contact.astro`                      |
 
@@ -425,17 +437,17 @@ When you address a TODO, remove the comment in the same change. Orphaned TODOs l
 
 These patterns shaped multiple phases. Don't deviate without a decision:
 
-1. **Card composition over inheritance.** `Card` is unopinionated about padding; consumers (`PricingPlan`, `FeatureCard`) bring their own `p-7`. `Card.featured + topAccent` adds a top gradient bar; `interactive` adds hover-lift. New "card-like" patterns extend Card via composition, not by adding variants to Card.
+1. **Card composition over inheritance.** `Card` is unopinionated about padding; consumers (`PricingPlan`, `FeatureCard`) bring their own `p-7`. `interactive` adds hover-lift. The `featured` variant now ships an **animated conic-gradient border** via the `.card-animated-border` class — card's own bg is the gradient, an inset pseudo paints the white interior (Phase 17 — see comment block in `Card.astro` for the painting-order rationale). `topAccent` prop still exists but is ignored on featured (the border IS the accent). New "card-like" patterns extend Card via composition, not by adding variants.
 
 2. **ClosingCTASection reuse.** Most marketing pages end with `<ClosingCTASection />` with default copy. The Phase 6.5 override surface (`eyebrow`, `description`, `primaryCtaLabel/Href`, `secondaryCtaLabel/Href`, named `headline` slot) is available but unused — pages can opt in when per-page tone is needed.
 
-3. **AnchorNav for in-page nav.** Sticky in-page nav is `AnchorNav` (Phase 5), an `IntersectionObserver` scroll-spy at `top: 68px` (under the main Nav). One consumer right now: `/solutions/booking-engine`. Add to other long pages (e.g. a future `/solutions/booking-engine/api-docs`) by passing `items={[{id, label}, …]}` matching `<section id="...">` in the page body.
+3. **PlanRec primary CTA → `/pricing`** (not `/book-demo`). Audience pages route their PlanRec to pricing because it's the next discovery step. Demo bookings happen via the explicit demo CTAs.
 
-4. **PlanRec primary CTA → `/pricing`** (not `/book-demo`). Audience pages route their PlanRec to pricing because it's the next discovery step. Demo bookings happen via the explicit demo CTAs.
+4. **Decorative SVG conventions.** Bespoke `hsl()` values are fine inside `src/components/decorative/`. The wrapper `<div>` is `aria-hidden="true"`. SVG root has `viewBox` and `preserveAspectRatio` matched to the layout shape. Partner brand SVGs (`ota-logos/`) keep their brand hex literals as a documented exemption — they're not Travelity's palette.
 
-5. **Decorative SVG conventions.** Bespoke `hsl()` values are fine inside `src/components/decorative/`. The wrapper `<div>` is `aria-hidden="true"`. SVG root has `viewBox` and `preserveAspectRatio` matched to the layout shape.
+5. **The home and Nav consume a single `nav-data.ts`.** Updating the desktop nav also updates the mobile drawer. Add new top-level links by editing the array, not by editing `Nav.astro` markup.
 
-6. **The home and Nav consume a single `nav-data.ts`.** Updating the desktop nav also updates the mobile menu. Add new top-level links by editing the array, not by editing `Nav.astro` markup.
+6. **Calendly is not a form.** `/book-demo` uses `react-calendly`'s `<InlineWidget>` (Phase 16), not a React Hook Form pattern. The booking is confirmed inside Calendly's iframe; our code only listens for `event_scheduled`, POSTs to CRM-sync, and redirects. CORS failures on the sync log but do not block the user flow.
 
 ---
 
@@ -455,12 +467,11 @@ Phase 5's Solutions-icons batch was the visible counter-example: 10 icons added,
 
 These are deliberately deferred. Don't "fix" them as cleanups; they're recorded in PROJECT-STATE.md §10 so future work has context. Selected highlights:
 
-- **Mobile menu animation timing** (200ms slide / 240ms accordion) may need tuning behind real home content. Carry-forward from Phase 2.
-- **iOS scroll-position preservation** when the mobile menu opens (`body.overflow = 'hidden'` doesn't preserve scroll position on iOS).
+- **iOS scroll-position preservation** when the mobile drawer opens (`body.overflow = 'hidden'` doesn't preserve scroll position on iOS).
 - **`HeroVisual.photoSrc`** is the swap-point for a real travel photo; ships with a `MountainScene` SVG mock.
-- **OTA placeholder boxes** (`[GYG logo]`, etc.) ready for real-logo swap.
-- **Calendly alternative.** The brief locked "form-based, not Calendly" but kept the Calendly swap in mind. `BookDemoForm` could be swapped for a Calendly embed component without touching the page or action.
-- **Real email/CRM destination** for both Astro Actions. Schema and contract don't change — only the handler body.
+- **CalendlyWidget CRM endpoint** points at v1's URL (`my.travelity.app/api/v1/cem/request-demo`). Swap when v2 backend ships. Also flag: CORS may block from new deploy origins until allowlisted.
+- **Calendly height (1050px)** is a fixed pick that fits the time-slot view. Calendly's iframe content height varies by view; we can't auto-size because the iframe is cross-origin.
+- **Real email destination** for the remaining `contact` Astro Action. Schema and contract don't change — only the handler body.
 
 ---
 

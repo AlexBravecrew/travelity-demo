@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 14 — desktop nav reworked from hover-dropdown to pinned sub-row pattern.
+> **Last updated:** Phase 17 — mobile drawer rebuild, tablet breakpoint, animated featured card border (full doc sync).
 
 ---
 
@@ -21,7 +21,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Framework      | Astro 6 (file-based routing, static-by-default with hybrid mode for Actions)                                                  |
 | Styling        | Tailwind v4 (CSS-first via `@theme` in `src/styles/global.css`)                                                               |
 | Type system    | TypeScript 5.x strict                                                                                                         |
-| Islands        | React 19 (only when state genuinely needed — currently 2 forms)                                                               |
+| Islands        | React 19 (only when state genuinely needed — currently 2: `ContactForm` and `CalendlyWidget`)                                 |
 | Server runtime | `@astrojs/node` adapter (mode: standalone). Swap-friendly to Vercel/Netlify/Cloudflare.                                       |
 | Forms          | React Hook Form + zod (shared schemas with server-side Astro Actions)                                                         |
 | Icons          | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Both reference the same icon set; the bindings differ. |
@@ -36,7 +36,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Path                             | Phase | Notes                                                                                     |
 | -------------------------------- | ----- | ----------------------------------------------------------------------------------------- |
 | `/`                              | 3a-3d | Home: Hero → Channels → Features → Parallax → Pricing → GoLive → ClosingCTA               |
-| `/solutions/booking-engine`      | 5     | The flagship Solutions page. Has sticky AnchorNav (6 capabilities).                       |
+| `/solutions/booking-engine`      | 5     | The flagship Solutions page. 6 capability sections.                                       |
 | `/solutions/widget`              | 5     | 3 capabilities                                                                            |
 | `/solutions/integrations`        | 5     | OTA integrations. 3 capabilities.                                                         |
 | `/solutions/proposals`           | 5     | 3 capabilities                                                                            |
@@ -47,7 +47,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | `/audiences/accommodation-hosts` | 6     | Same shape                                                                                |
 | `/audiences/independent-guides`  | 6     | Same shape                                                                                |
 | `/pricing`                       | 8     | Hero → 3 plan cards → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close |
-| `/book-demo`                     | 7     | React form island, 6 fields, posts to `bookDemo` Astro Action                             |
+| `/book-demo`                     | 7,16  | Calendly inline widget + YouTube walkthrough video in hero (Phase 16)                     |
 | `/thank-you`                     | 7     | Static fallback for non-JS form submission                                                |
 | `/legal/privacy`                 | 9     | AI-drafted GDPR-aware privacy policy                                                      |
 | `/legal/terms`                   | 9     | AI-drafted Terms of Service                                                               |
@@ -74,23 +74,24 @@ src/
 │   │   ├── eyebrow/                 # JetBrains Mono uppercase rule label
 │   │   ├── tag/                     # 4 semantic variants incl. destructive
 │   │   ├── link-inline/             # underlined inline link with optional arrow
-│   │   ├── card/                    # default/featured + interactive + topAccent
+│   │   ├── card/                    # default/featured (animated gradient border, Phase 17) + interactive
 │   │   └── section-header/          # eyebrow + headline slot + dek + actions
 │   │
-│   ├── chrome/                      # Site-wide chrome (Phase 2, nav reworked in Phase 14)
-│   │   ├── nav/                     # Sticky 68px nav + 44px sub-row pinned by route
+│   ├── chrome/                      # Site-wide chrome (Phase 2; nav Phase 14, mobile drawer Phase 17)
+│   │   ├── nav/                     # 68px nav + 44px sub-row pinned by route
 │   │   │   ├── Nav.astro            # Top row, computes active section from pathname
 │   │   │   ├── NavLink.astro        # Trigger (no popover) — teal when its section/page is active
 │   │   │   ├── NavSubRow.astro      # 44px sub-row, sticky top-[68px], underline-tab items
-│   │   │   ├── MobileMenu.astro     # Unchanged — mobile uses accordion menu
+│   │   │   ├── MobileMenuTrigger.astro  # Hamburger button — lives inside <nav> (Phase 17 split)
+│   │   │   ├── MobileMenu.astro     # Slide-from-right drawer + backdrop (sibling of <nav>, Phase 17)
 │   │   │   ├── nav-data.ts          # Source of truth for nav structure
-│   │   │   ├── nav-active.ts        # getActiveSection(pathname, links)
-│   │   │   └── nav.client.ts        # Hover-swap, scroll handlers, mobile toggle
+│   │   │   ├── nav-active.ts        # getActiveSection(pathname, links) (Phase 14)
+│   │   │   └── nav.client.ts        # Hover-swap, scroll handlers, mobile drawer + backdrop/close wiring
 │   │   └── footer/                  # 5/2/1-col responsive, dark ink
 │   │
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
 │   │   ├── hero/                    # Hero + HeroVisual + BookingFlowCard + AudienceChips
-│   │   ├── channels-section/        # Diagram with pulsing hub
+│   │   ├── channels-section/        # Orbit diagram: hub + 5 nodes + flowing dashed pulses (Phase 15)
 │   │   ├── features-section/        # 6-card grid with per-position color rotation
 │   │   ├── parallax-break/          # Scroll-driven photo break
 │   │   ├── pricing-section/         # 3 plan cards (reused on /pricing)
@@ -98,11 +99,10 @@ src/
 │   │   └── closing-cta-section/     # Final conversion strip
 │   │
 │   ├── shared/                      # Cross-page components
-│   │   ├── product-hero/            # Used by Solutions AND Audience pages (Phase 4)
+│   │   ├── product-hero/            # Used by Solutions AND Audience pages (Phase 4); ctasAlign prop Phase 16
 │   │   ├── capability-section/      # 2-col with `flip` prop (Phase 4)
 │   │   ├── cross-sell/              # 3-card "explore" strip (Phase 4)
 │   │   ├── social-proof/            # Testimonial cards (Phase 4)
-│   │   ├── anchor-nav/              # Sticky in-page nav with scroll-spy (Phase 5)
 │   │   ├── pain-grid/               # Audience problems (Phase 6)
 │   │   ├── solution-map/            # Pain→arrow→fix rows (Phase 6)
 │   │   ├── feature-pillars/         # Vertical capability list with optional spotlight (Phase 6)
@@ -116,13 +116,15 @@ src/
 │   │   └── help-tile/               # Help center hub tile (Phase 10)
 │   │
 │   ├── decorative/                  # Bespoke SVG components
-│   │   ├── travelity-mark/          # Gradient triangle logo SVG
 │   │   ├── mountain-scene/          # HeroVisual scene mock
-│   │   └── parallax-scene/          # Wider mountain ridges for parallax break
+│   │   └── ota-logos/               # GygLogo + ViatorLogo + KlookLogo (Phase 15)
 │   │
-│   └── forms/                       # React islands (Phase 7, 11)
-│       ├── book-demo/               # 6-field demo request form
-│       └── contact/                 # 4-field contact form
+│   ├── book-demo/                   # /book-demo page-specific React island + video (Phase 16)
+│   │   ├── CalendlyWidget.tsx       # InlineWidget + event_scheduled → CRM sync → redirect
+│   │   └── BookDemoVideo.astro      # YouTube walkthrough iframe (nocookie + lazy)
+│   │
+│   └── forms/                       # React form islands
+│       └── contact/                 # 4-field contact form (only form left after Phase 16)
 │
 ├── pages/
 │   ├── index.astro                  # /
@@ -140,10 +142,10 @@ src/
 │   └── thank-you.astro
 │
 ├── actions/
-│   └── index.ts                     # bookDemo + contact Astro Actions
+│   └── index.ts                     # contact Astro Action (bookDemo removed Phase 16 — Calendly handles)
 │
 ├── icons/
-│   └── index.ts                     # Single barrel for ~30 icons; .astro files import only from here
+│   └── index.ts                     # Single barrel for ~30 lucide icons; .astro files import only from here
 │
 ├── layouts/
 │   └── MarketingLayout.astro        # <html>/<head> wrapper, font links, meta tags
@@ -155,7 +157,7 @@ src/
 │       └── external-attrs.ts        # target=_blank + rel=noopener helper
 │
 └── styles/
-    └── global.css                   # Tailwind imports + @theme tokens + base resets
+    └── global.css                   # Tailwind imports + @theme tokens + base resets + --nav-height
 ```
 
 ---
@@ -273,16 +275,15 @@ To add a new token:
 
 ### 4.9 Astro Actions
 
-Defined in `src/actions/index.ts`. Both forms post to actions:
+Defined in `src/actions/index.ts`. Only `contact` remains (the `bookDemo` action was removed in Phase 16 when /book-demo switched to Calendly):
 
 ```ts
 export const server = {
-    bookDemo: defineAction({ accept: 'json', input: bookDemoSchema, handler: ... }),
-    contact:  defineAction({ accept: 'json', input: contactSchema,  handler: ... }),
+    contact: defineAction({ accept: 'json', input: contactSchema, handler: ... }),
 };
 ```
 
-Both currently log to console + simulate 600ms latency. **Real email service wiring is a pre-launch task.**
+Current handler logs to console + simulates 600ms latency. **Real email service wiring is a pre-launch task.** Calendly bookings are CRM-synced via a POST inside `CalendlyWidget.tsx` (separate concern, separate TODO).
 
 ### 4.10 Hydration directives
 
@@ -339,7 +340,7 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 | Component            | Animation                                | Duration / Easing                                                                               |
 | -------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | BookingFlowCard      | 3-step + prevented pill choreography     | Step 1: 0.3s. Step 2: 1.4s. Prevented: 1.9s. Step 3: 2.5s. Total ~3s. cubic-bezier(0.4,0,0.2,1) |
-| ChannelHub           | Pulse                                    | 3s ease-in-out infinite                                                                         |
+| ChannelHub           | Pulse breath                             | 4s ease-in-out infinite (gentler — Phase 15 retune; was 3s)                                     |
 | Card hover           | translateY-1 + shadow                    | 240ms cubic-bezier(0.4,0,0.2,1)                                                                 |
 | FaqItem              | Plus → minus rotation                    | 200ms (CSS transition; native `<details>` for state)                                            |
 | ParallaxBreak        | Scroll-driven translateY                 | rAF-driven, ±40px range                                                                         |
@@ -347,27 +348,27 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 
 ---
 
-## 6. Forms — both wired
+## 6. Forms — one wired
 
-### 6.1 Pattern
+### 6.1 Pattern (ContactForm only)
 
-Both `BookDemoForm` and `ContactForm` use the same pattern:
+`ContactForm` is the lone React form island after Phase 16. Pattern:
 
 - React Hook Form + zod, mode `onTouched`
-- Schema lives in a `.ts` file shared between the React island (client validation) and the Astro Action (server validation)
+- Schema in `contact-schema.ts` shared between the React island (client validation) and the Astro Action (server validation)
 - 4-state machine: `idle | submitting | submitted | error`
 - Submit button shows `Sending…` during the request
 - Success swaps the form in-place for a success card (no redirect)
 - Error renders an alert above the submit button
 - Field errors render with red borders, `aria-invalid`, `aria-describedby`
 
-### 6.2 Calendly swap-in
+### 6.2 Calendly — shipped (Phase 16)
 
-PO mentioned wanting Calendly eventually. The swap point is `BookDemoForm` — replace with a Calendly embed component when the trigger is pulled. The Astro Action becomes optional at that point (Calendly handles its own scheduling).
+`/book-demo` now uses `react-calendly`'s `<InlineWidget>` instead of a form. `CalendlyWidget.tsx` listens for the `event_scheduled` postMessage, POSTs the event + invitee URIs to a CRM sync endpoint (currently v1's `my.travelity.app/api/v1/cem/request-demo`), logs failures, then redirects to `/thank-you` unconditionally. The pre-Phase-16 BookDemoForm + bookDemoSchema + bookDemo Astro Action were deleted.
 
 ### 6.3 Real email service — pending
 
-Both action handlers currently `console.log` and return `{ ok: true }`. Real implementation routes by subject (for `contact`) to `sales@/support@/partnerships@/hello@travelity.app`. No structural changes to the actions; only handler bodies.
+`contact` action handler currently `console.log`s and returns `{ ok: true }`. Real implementation routes by subject to `sales@/support@/partnerships@/hello@travelity.app`. No structural changes to the action; only the handler body.
 
 ---
 
@@ -378,8 +379,7 @@ Patterns held throughout the build:
 - All decorative SVGs marked `aria-hidden="true"`
 - Form fields have `aria-invalid`, `aria-describedby` for errors, proper `<label htmlFor>` associations
 - Skip-to-content link in `MarketingLayout` (Phase 0)
-- Sticky nav has scroll-state class; mobile menu toggles `aria-hidden`, `aria-expanded`, body scroll lock
-- AnchorNav has `aria-label="Table of contents"` so screen readers see it as a separate landmark
+- Sticky nav has scroll-state class; mobile drawer toggles `aria-hidden`, `aria-expanded`, body scroll lock, has `role="dialog"` + `aria-modal="true"` (Phase 17)
 - FAQ uses native `<details>` / `<summary>` (no JS hacks for keyboard interaction)
 - All animations short-circuit under `prefers-reduced-motion: reduce`
 - Color contrast: not formally audited yet — pre-launch task
@@ -420,7 +420,8 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ### Must-haves (engineering)
 
-- [ ] **Wire real email service** to both Astro Actions (`bookDemo`, `contact`). Resend / SendGrid / Postmark or CRM/ticketing. Subject routing for `/contact` (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
+- [ ] **Wire real email service** to the `contact` Astro Action. Resend / SendGrid / Postmark or CRM/ticketing. Subject routing (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
+- [ ] **Swap Calendly CRM-sync endpoint** in `CalendlyWidget.tsx` when v2 backend ships. TODO marker in code at the exact call site. May need CORS allowlist on the new endpoint for the deploy origin.
 - [ ] **301 redirects** from old URLs: `/help` → `/help-center`, `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`. Only needed if external campaigns indexed the old paths.
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
@@ -440,7 +441,7 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 - [ ] **Real product screenshots** for the 5 simpler Solutions pages. Drop assets in `/public/`, swap `[Screenshot: …]` placeholder divs in CapabilitySection visual slots.
 - [ ] **Real travel photo** for HeroVisual. Component already takes `photoSrc` — pass when ready, MountainScene falls back automatically if unset.
-- [ ] **Real OTA logos** in ChannelDiagram. Replace `[GYG logo]`, `[Viator logo]`, `[Klook logo]` dashed placeholders.
+- [x] **Real OTA logos** in ChannelDiagram — done in Phase 15. `GygLogo`, `ViatorLogo`, `KlookLogo` ship as Astro components under `src/components/decorative/ota-logos/`.
 - [ ] **Real testimonials** in SocialProof. Currently 3 placeholder cards.
 - [ ] **9 guide articles** for `/guides`. Currently all card hrefs are `#`.
 
@@ -454,30 +455,57 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. Phase 14 — desktop nav redesign
+## 10. Phase narratives (13–17)
 
-The hover-dropdown pattern (rectangular popover under each trigger) was replaced with a **pinned sub-row** pattern. Motivation: on `/solutions/widget` (or any sub-page) the old chrome gave no signal you were inside the Solutions section, and switching siblings cost two clicks.
+Brief context for each post-build phase. Newer phases on top.
 
-What shipped:
+### Phase 17 — mobile drawer, tablet breakpoint, animated featured border
+
+- **Mobile menu rebuilt as a slide-from-right drawer**. The previous slide-down panel rendered invisibly because `<nav>`'s `backdrop-filter: blur(14px)` was acting as a containing block for the drawer's `position: fixed` — trapping it inside the 68px nav. Fix: split into `MobileMenuTrigger.astro` (button stays inside `<nav>`) + `MobileMenu.astro` (drawer renders as a sibling of `<nav>` so fixed positioning escapes the containing block). Wired backdrop tap, X button, link-tap, and Escape to close. Backdrop scrim, body scroll lock, `role="dialog"` + `aria-modal="true"`.
+- **Tablet shows desktop nav**. Breakpoint shifted `lg` (1024px) → `md` (768px) across Nav, NavSubRow, MobileMenuTrigger, MobileMenu. `--nav-height: 112px` rule now gated by `@media (min-width: 768px)` so mobile (where sub-row is `display:none`) keeps `--nav-height: 68px`.
+- **Click on dropdown trigger is a no-op** (hover-only per product call). Keyboard Escape still closes.
+- **Logo unified**: `LogoSmall` removed from `Nav` and `Footer`; full `Logo` works at all breakpoints.
+- **`AnchorNav` deleted entirely**. Was Phase 5 component, only used on `/solutions/booking-engine`. Removed from page, component folder deleted, global.css comment updated.
+- **Featured pricing card: animated conic-gradient border**. The static teal border + topAccent "hat" was reading as a floating brim. Replaced with `Card`'s `card-animated-border` class — card's own bg is the gradient, a 1.5px-inset `::before` pseudo paints a white interior, leaving a 1.5px gradient ring at edges. 10s linear spin via `@property` + keyframes; halts under prefers-reduced-motion. Two earlier approaches (`background-clip: border-box` and `pseudo-behind-with-z-index:-1`) failed due to Tailwind v4 cascade and CSS painting-order spec respectively — final approach documented in `Card.astro` source.
+
+### Phase 16 — Calendly integration on `/book-demo`
+
+- BookDemoForm + book-demo Astro Action + `bookDemoSchema` all deleted. Replaced with `react-calendly`'s `<InlineWidget>` in `CalendlyWidget.tsx` (React island under `src/components/book-demo/`). Iframe height 1050px to fit the time-slot view without internal scroll.
+- `event_scheduled` handler POSTs the event + invitee URIs to v1's CRM endpoint (`my.travelity.app/api/v1/cem/request-demo`), logs failures (not swallowed like v1), then redirects to `/thank-you` unconditionally so a backend hiccup doesn't break the user flow.
+- `PUBLIC_CALENDLY_URL` env var with v1's themed URL as fallback. Documented in `.env.example`.
+- **Hero re-laid out two-column**: text + centered "Pick a time" button on the left, `BookDemoVideo` (YouTube walkthrough, nocookie + lazy + aspect-video) on the right. Added `ctasAlign` prop to `ProductHero` so the button centers in its column without affecting other consumers.
+- `scroll-behavior: smooth` added to `html` in `global.css`. `#schedule` section gets `scroll-mt-[var(--nav-height)]` so the anchor jump lands under the sticky nav.
+- Two TODOs preserved in code: swap CRM sync endpoint for v2 backend; fire Google Ads conversion when GTM is wired.
+
+### Phase 15 — channels diagram orbit redesign
+
+- Home-page "All-in-one channel management" section's left visual swapped from rows-of-cards-converging-on-hub to an **orbit**: Travelity hub in the center (with "ONE PLATFORM" label and gentle 4s breath pulse), Back-office and Widget cards on the left, GYG/Viator/Klook OTA badges on the right at asymmetric distances (Viator pushed farthest).
+- Connector lines reworked: static dashed guide line + animated dashed pulses flowing inward, ~3-4 pulses visible per line at any moment. Each line tinted in its source's brand color (GYG `#FF5533`, Viator `#028768`, Klook `#FF5B01` — partner brand hex literals, documented exempt context). SVG `<filter>` + `feGaussianBlur` for glow halos (more reliable than CSS `filter: drop-shadow` on thin strokes).
+- OTA logos moved from `src/icons/` (where the user dropped them initially) to `src/components/decorative/ota-logos/` as small `.astro` wrappers — fits the project's "lucide-only barrel + bespoke SVGs in decorative" rule.
+- ChannelsSection grid widened `0.9fr_1.1fr` → `1fr_1fr` to give the orbit room.
+
+### Phase 14 — desktop nav redesign
+
+Hover-dropdown popovers replaced with a **pinned sub-row** pattern.
 
 - **Pinned secondary row** (44px, sticky `top: 68px` directly under the main nav). On `/solutions/*` and `/our-story|/faq|/guides|/help-center`, the row is present in SSR HTML and shows the section's child links as horizontal underline-tabs. Active child has a 2px teal `border-bottom` and `aria-current="page"`.
-- **Active nav indicator** in the top row: the parent section (Solutions / Resources) renders `text-travelity-teal`. Flat top-level links (Pricing) also render teal when on their own page.
-- **Hover-swap behavior**: hovering a different top-level trigger swaps the visible panel in the sub-row. The pinned parent's teal stays as the wayfinding anchor. On pages with no pinned section, hovering slides the sub-row down via a `max-height` transition (0 → 44px, 220ms) on the sub-row itself; on leave it collapses back. 100ms open intent + 120ms close delay (unchanged timings).
-- **Layout/sticky**: sub-row owns `overflow-hidden` + `max-height` directly (not a parent wrapper) — an ancestor with `overflow:hidden` would have killed `position: sticky` on the child.
-- **`--nav-height` CSS variable** (`global.css`): 68px default, 112px under `:root:has([data-nav-root][data-has-subnav])`. `AnchorNav` uses `top: var(--nav-height)` so it slots under the sub-row when one is pinned.
-- **New files**: `NavSubRow.astro`, `nav-active.ts` (`getActiveSection(pathname, links)`).
-- **Deleted**: `NavDropdown.astro`, `NavDropdownItem.astro`.
-- **Type rename**: `NavDropdownItemData` → `NavSubItemData` in `nav-data.ts`.
-- **Mobile is unchanged**: sub-row is `hidden lg:block`; mobile keeps the existing accordion menu.
+- **Active nav indicator** in the top row: the parent section renders `text-travelity-teal`. Flat top-level links (Pricing) also render teal when on their own page.
+- **Hover-swap behavior**: hovering a different top-level trigger swaps the visible panel in the sub-row via instant `display:none/flex` (the original cross-fade was dropped — it caused content overlap during transition). 100ms open intent + 120ms close delay. On pages with no pinned section, hovering slides the sub-row down via `max-height` transition (0 → 44px, 220ms) on the sub-row itself.
+- **Layout/sticky**: sub-row owns `overflow-hidden` + `max-height` directly (an ancestor with `overflow:hidden` would have killed `position: sticky`).
+- **`--nav-height` CSS variable**: 68px default, 112px under `:root:has([data-nav-root][data-has-subnav])`. Phase 17 added the `@media (min-width: 768px)` gate.
+- New files: `NavSubRow.astro`, `nav-active.ts`. Deleted: `NavDropdown.astro`, `NavDropdownItem.astro`. Type rename: `NavDropdownItemData` → `NavSubItemData`.
 
-Rules ruleset addition: `rules-astro.md` §6.2.1 documents the pattern for future contributors.
+### Phase 13 — brand / logo swap
+
+Logo system reworked. Phase 13 also bundled a Phase 12 audit ride-along (see commit `e5bda15`).
 
 ## 11. What's next
 
 The remaining engineering pass:
 
 1. Verify clean code passes: lint, format, type-check, build, no dead code, no unused exports, no orphaned imports, no `console.log` outside Astro Actions.
-2. Anything else (real email wiring, real content, real photos) is content/operations work — see §9.
+2. Wire real email/CRM destinations (see §9).
+3. Anything else (real content, real photos) is content/operations work — see §9.
 
 ---
 
