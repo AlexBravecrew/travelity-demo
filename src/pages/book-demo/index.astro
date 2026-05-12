@@ -2,12 +2,9 @@
 import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
-import { ProductHero } from '@/components/shared/product-hero';
-import { SectionHeader } from '@/components/ui/section-header';
+import { Eyebrow } from '@/components/ui/eyebrow';
 import { CoverageList, CoverageItem } from '@/components/shared/coverage-list';
-
-import { Button } from '@/components/ui/button';
-import { BookDemoVideo, CalendlyWidget } from '@/components/book-demo';
+import { CalendlyWidget } from '@/components/book-demo';
 
 export const prerender = true;
 ---
@@ -19,90 +16,67 @@ export const prerender = true;
     <Nav />
 
     <main>
-        <!-- Two-column hero: text on the left (left-aligned), product
-             walkthrough video on the right. Button centered within the
-             left column via ctasAlign so it doesn't anchor to the leftmost
-             edge under the lead paragraph. -->
-        <ProductHero eyebrow="Book a demo" ctasAlign="center">
-            <Fragment slot="headline">
-                30 minutes. <em>Zero prep needed.</em>
-            </Fragment>
-            <Fragment slot="lead">
-                We'll walk you through Travelity in your own context — bring
-                your current booking spreadsheet if you have one. No credit card
-                required.
-            </Fragment>
-            <Fragment slot="ctas">
-                <Button href="#schedule" size="lg" withArrow>
-                    Pick a time
-                </Button>
-            </Fragment>
-            <Fragment slot="aside">
-                <BookDemoVideo />
-            </Fragment>
-        </ProductHero>
-
-        <!-- "What we'll cover" coverage list -->
         <section class="bg-paper py-12 md:py-16">
             <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="What we'll cover"
-                    eyebrowWithRule
-                    align="center"
+                <div
+                    class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start"
                 >
-                    <Fragment slot="headline">
-                        A working session, not a sales pitch.
-                    </Fragment>
-                </SectionHeader>
+                    <!-- Left: text + coverage list -->
+                    <div>
+                        <Eyebrow withRule>Book a demo</Eyebrow>
 
-                <CoverageList class="mt-2">
-                    <CoverageItem
-                        title="Walk through the platform"
-                        description="The actual back-office, with your products and channels in mind."
-                    />
-                    <CoverageItem
-                        title="Look at your bookings"
-                        description="Bring an example, a spreadsheet, or just a question. We'll model it together."
-                    />
-                    <CoverageItem
-                        title="Discuss your channels"
-                        description="OTAs you sell on, your widget setup, holdback rules, channel pricing."
-                    />
-                    <CoverageItem
-                        title="Map a path forward"
-                        description="If we're a fit, we'll set up trial access and a migration plan."
-                    />
-                </CoverageList>
-            </div>
-        </section>
+                        <h1
+                            class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] mt-6 mb-6"
+                            style="font-size: clamp(36px, 4.2vw, 56px);"
+                        >
+                            30 minutes.
+                            <em class="not-italic">
+                                <span
+                                    class="italic font-medium text-travelity-teal"
+                                >
+                                    Zero prep needed.</span
+                                >
+                            </em>
+                        </h1>
 
-        <!-- Calendly inline widget (React island). scroll-mt offsets the
-             anchor jump so the section heading lands under the sticky nav,
-             not behind it. -->
-        <section
-            class="bg-surface-alt py-12 md:py-16 scroll-mt-[var(--nav-height)]"
-            id="schedule"
-        >
-            <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="Pick a time"
-                    eyebrowWithRule
-                    align="center"
-                >
-                    <Fragment slot="headline">
-                        Schedule a 30-minute walkthrough.
-                    </Fragment>
-                    <p
-                        slot="dek"
-                        class="text-[16px] text-ink-muted leading-[1.55] max-w-[48ch] mx-auto"
-                    >
-                        Pick a time that works for you. We'll send a calendar
-                        invite with a video link — no software install required.
-                    </p>
-                </SectionHeader>
+                        <p
+                            class="text-lg text-ink-muted leading-[1.55] max-w-[52ch] mb-8"
+                        >
+                            We'll walk you through Travelity in your own context
+                            — bring your current booking spreadsheet if you have
+                            one. No credit card required.
+                        </p>
 
-                <div class="max-w-[840px] mx-auto">
-                    <CalendlyWidget client:load />
+                        <p
+                            class="font-mono text-xs font-semibold uppercase tracking-[0.10em] text-ink-soft mb-4"
+                        >
+                            What we'll cover
+                        </p>
+
+                        <CoverageList class="mx-0 max-w-none">
+                            <CoverageItem
+                                title="Walk through the platform"
+                                description="The actual back-office, with your products and channels in mind."
+                            />
+                            <CoverageItem
+                                title="Look at your bookings"
+                                description="Bring an example, a spreadsheet, or just a question. We'll model it together."
+                            />
+                            <CoverageItem
+                                title="Discuss your channels"
+                                description="OTAs you sell on, your widget setup, holdback rules, channel pricing."
+                            />
+                            <CoverageItem
+                                title="Map a path forward"
+                                description="If we're a fit, we'll set up trial access and a migration plan."
+                            />
+                        </CoverageList>
+                    </div>
+
+                    <!-- Right: Calendly inline widget (native advanced embed) -->
+                    <div>
+                        <CalendlyWidget />
+                    </div>
                 </div>
             </div>
         </section>

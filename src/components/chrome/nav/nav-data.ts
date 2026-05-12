@@ -54,29 +54,4 @@ export const navLinks: NavLinkData[] = [
         label: 'Pricing',
         href: Paths.PRICING,
     },
-    {
-        label: 'Resources',
-        items: [
-            {
-                label: 'Guides',
-                description: 'How-tos for setting up and growing.',
-                href: Paths.GUIDES,
-            },
-            {
-                label: 'FAQ',
-                description: 'Answers to common questions.',
-                href: Paths.FAQ,
-            },
-            {
-                label: 'Help Center',
-                description: 'Product documentation.',
-                href: Paths.HELP_CENTER,
-            },
-            {
-                label: 'Our Story',
-                description: 'Why we built Travelity.',
-                href: Paths.OUR_STORY,
-            },
-        ],
-    },
 ];
