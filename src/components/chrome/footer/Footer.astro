@@ -7,7 +7,7 @@ import { Paths } from '@/lib/utils/paths';
 <footer class="bg-ink text-[hsl(0_0%_90%)] pt-16 pb-8 relative">
     <div class="container mx-auto px-6">
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-8 lg:gap-10 mb-12"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-8 lg:gap-10 mb-12"
         >
             <!-- Brand column -->
             <div>
@@ -21,7 +21,7 @@ import { Paths } from '@/lib/utils/paths';
                     </a>
                 </div>
                 <p
-                    class="font-serif italic text-[16px] text-[hsl(0_0%_75%)] leading-[1.5] max-w-[30ch]"
+                    class="font-serif italic text-base text-[hsl(0_0%_75%)] leading-normal max-w-[30ch]"
                 >
                     The booking platform travel businesses run on.
                 </p>
@@ -45,28 +45,6 @@ import { Paths } from '@/lib/utils/paths';
                         href: Paths.SOLUTIONS_REPORTING,
                     },
                     { label: 'Security', href: Paths.SOLUTIONS_SECURITY },
-                ]}
-            />
-
-            <FooterColumn
-                title="Audiences"
-                links={[
-                    {
-                        label: 'Tour Operators',
-                        href: Paths.AUDIENCE_TOUR_OPERATORS,
-                    },
-                    {
-                        label: 'Transfer Providers',
-                        href: Paths.AUDIENCE_TRANSFER_PROVIDERS,
-                    },
-                    {
-                        label: 'Accommodation Hosts',
-                        href: Paths.AUDIENCE_ACCOMMODATION_HOSTS,
-                    },
-                    {
-                        label: 'Independent Guides',
-                        href: Paths.AUDIENCE_INDEPENDENT_GUIDES,
-                    },
                 ]}
             />
 

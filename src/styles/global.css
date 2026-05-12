@@ -124,6 +124,20 @@
 }
 
 /* ============================================================
+   Container — site-wide content width cap.
+   Overrides Tailwind v4's breakpoint-grown default (which would
+   max at 1536px). Consumers use `container mx-auto px-6`; this
+   sets the outer bound. Components that need a tighter cap
+   (e.g. LegalPageLayout's 1200px for long-form prose) still win
+   via their own max-w-[*] on the same element.
+   ============================================================ */
+
+@utility container {
+    margin-inline: auto;
+    max-width: 1280px;
+}
+
+/* ============================================================
    Base resets — minimal, just enough to start
    ============================================================ */
 

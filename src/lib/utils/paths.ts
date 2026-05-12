@@ -18,12 +18,6 @@ export const Paths = {
     SOLUTIONS_REPORTING: '/solutions/reporting',
     SOLUTIONS_SECURITY: '/solutions/security',
 
-    // Audience cluster (Phase 6)
-    AUDIENCE_TOUR_OPERATORS: '/audiences/tour-operators',
-    AUDIENCE_TRANSFER_PROVIDERS: '/audiences/transfer-providers',
-    AUDIENCE_ACCOMMODATION_HOSTS: '/audiences/accommodation-hosts',
-    AUDIENCE_INDEPENDENT_GUIDES: '/audiences/independent-guides',
-
     // Conversion (Phase 7)
     BOOK_DEMO: '/book-demo',
 

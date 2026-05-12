@@ -331,7 +331,7 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 
 ### 5.4 Spacing rhythm
 
-- Page sections: `py-16 md:py-24` (most sections), `py-24` (heroes, big sections), `py-12 md:py-16` (subordinate/dense sections)
+- Page sections: `py-12 md:py-16` (canonical — every section, every page). The earlier three-tier system (`py-16 md:py-24`, `py-24`, `py-12 md:py-16`) was consolidated to a single tier for consistency; the home Hero keeps its own `pt-8 pb-4` because it sits directly under the nav and has its own `min-h`.
 - Card padding: `p-6` (small), `p-7` (default — feature cards, plan cards), `p-9` or `p-7 md:p-9` (forms, plan-rec)
 - Container: `container mx-auto px-6` plus a `max-w-*` constraint when the content is narrower than the page
 

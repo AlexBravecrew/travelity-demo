@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { CheckIcon } from '@/icons';
 import { Paths } from '@/lib/utils/paths';
-import AudienceChips from './AudienceChips.astro';
-import HeroVisual from './HeroVisual.astro';
+import BookDemoVideo from '@/components/book-demo/BookDemoVideo.astro';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends HTMLAttributes<'section'> {
@@ -26,19 +25,19 @@ const { class: className, ...rest } = Astro.props;
 >
     <div class="container mx-auto px-6">
         <div
-            class="hero-content relative z-[2] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-[72px] items-center min-h-[540px] lg:min-h-[600px] py-8"
+            class="hero-content relative z-2 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-18 items-center min-h-135 lg:min-h-150"
         >
             <!-- Text column -->
-            <div class="hero-text max-w-[560px]">
+            <div class="hero-text max-w-140">
                 <Eyebrow withRule
                     >Booking platform for travel businesses</Eyebrow
                 >
 
                 <h1
-                    class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] max-w-[13ch] mt-6 mb-6"
-                    style="font-size: clamp(40px, 5vw, 64px);"
+                    class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] mt-6 mb-6"
+                    style="font-size: clamp(36px, 4.2vw, 56px);"
                 >
-                    Run your travel business
+                    Run your travel business<br />
                     <em class="not-italic">
                         <span class="italic font-medium text-travelity-teal">
                             without the spreadsheets.</span
@@ -47,13 +46,32 @@ const { class: className, ...rest } = Astro.props;
                 </h1>
 
                 <p
-                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[46ch] mb-9"
+                    class="text-[22px] text-ink-muted leading-[1.55] max-w-[52ch] mb-4"
                 >
-                    Bookings, channels, payments, and operations — one platform
-                    for the people who run travel.
+                    Bookings, channels, OTA integrations, payments, and
+                    operations — all in one platform.
                 </p>
 
-                <AudienceChips class="mb-7" />
+                <p
+                    class="text-lg text-ink-muted leading-[1.55] max-w-[52ch] mb-9"
+                >
+                    Built for:
+                    <span class="font-semibold text-travelity-teal"
+                        >Tour Operators</span
+                    >
+                    |
+                    <span class="font-semibold text-travelity-teal"
+                        >Transfer Providers</span
+                    >
+                    |
+                    <span class="font-semibold text-travelity-teal"
+                        >Travel Agencies</span
+                    >
+                    |
+                    <span class="font-semibold text-travelity-teal"
+                        >Independent Guides</span
+                    >
+                </p>
 
                 <div class="flex flex-wrap gap-3 mb-7">
                     <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
@@ -72,7 +90,7 @@ const { class: className, ...rest } = Astro.props;
                 >
                     <span class="inline-flex items-center gap-1.5">
                         <CheckIcon
-                            class="w-[14px] h-[14px] text-travelity-teal"
+                            class="w-3.5 h-3.5 text-travelity-teal"
                             stroke-width="2.5"
                             aria-hidden="true"
                         />
@@ -80,7 +98,7 @@ const { class: className, ...rest } = Astro.props;
                     </span>
                     <span class="inline-flex items-center gap-1.5">
                         <CheckIcon
-                            class="w-[14px] h-[14px] text-travelity-teal"
+                            class="w-3.5 h-3.5 text-travelity-teal"
                             stroke-width="2.5"
                             aria-hidden="true"
                         />
@@ -88,7 +106,7 @@ const { class: className, ...rest } = Astro.props;
                     </span>
                     <span class="inline-flex items-center gap-1.5">
                         <CheckIcon
-                            class="w-[14px] h-[14px] text-travelity-teal"
+                            class="w-3.5 h-3.5 text-travelity-teal"
                             stroke-width="2.5"
                             aria-hidden="true"
                         />
@@ -98,7 +116,7 @@ const { class: className, ...rest } = Astro.props;
             </div>
 
             <!-- Visual column -->
-            <HeroVisual />
+            <BookDemoVideo videoId="HEFEvMcKxjw" />
         </div>
     </div>
 </section>

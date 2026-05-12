@@ -222,6 +222,34 @@ These are defined in `src/styles/global.css` as raw HSL triplets in `:root` and 
 
 If a component needs a color that isn't here, either it's wrong (use the existing palette) or the token system needs to grow. Decide before coding.
 
+### 4.4 Native Tailwind sizing — prefer over arbitrary-value brackets
+
+Use Tailwind's native scale utilities (`text-lg`, `w-3.5`, `gap-6`, `mt-9`) by default. Reach for arbitrary-value brackets (`text-[18px]`, `w-[14px]`, `gap-[72px]`) only when the value genuinely can't be expressed on the native scale.
+
+**Tailwind v4's dynamic spacing scale** accepts any integer for spacing utilities (`p-N`, `m-N`, `w-N`, `h-N`, `min-h-N`, `max-w-N`, `gap-N`) — the integer multiplied by 0.25rem (4px). So `min-h-[540px]` → `min-h-135` (135 × 4 = 540), `gap-[72px]` → `gap-18`. If your pixel value is a clean multiple of 4, the native utility exists.
+
+Common substitutions when writing new code:
+
+| Avoid          | Prefer    | Why                                    |
+| -------------- | --------- | -------------------------------------- |
+| `text-[14px]`  | `text-sm` | Tailwind `text-sm` = 14px              |
+| `text-[18px]`  | `text-lg` | Tailwind `text-lg` = 18px              |
+| `text-[20px]`  | `text-xl` | Tailwind `text-xl` = 20px              |
+| `text-[24px]`  | `text-2xl`| Tailwind `text-2xl` = 24px             |
+| `w-[14px]`     | `w-3.5`   | Tailwind `w-3.5` = 14px                |
+| `gap-[24px]`   | `gap-6`   | Tailwind `gap-6` = 24px                |
+| `gap-[72px]`   | `gap-18`  | Tailwind `gap-18` = 72px               |
+| `p-[28px]`     | `p-7`     | Tailwind `p-7` = 28px                  |
+
+Legitimate uses of bracket-arbitrary values (keep these as-is):
+
+- **Character-unit constraints** for readability: `max-w-[52ch]`, `max-w-[13ch]`.
+- **Off-scale design values** that don't land on Tailwind's 4px step: `text-[22px]`, `min-h-[540px]`.
+- **Exotic tracking / line-height / clamp**: `tracking-[-0.035em]`, `leading-[1.02]`, inline `style="font-size: clamp(...);"` for fluid type.
+- **Bespoke pixel values** for one-off shadow/border math.
+
+Why this matters: the native scale is self-documenting in Tailwind's mental model, IDE-autosuggested, and grep-friendly. Arbitrary values are escape hatches, not defaults. **Apply moving forward** — pre-existing arbitrary values aren't retroactively in scope to refactor; touch them when you're already editing the surrounding code.
+
 ---
 
 ## 5. Icon rules
@@ -475,10 +503,44 @@ These are deliberately deferred. Don't "fix" them as cleanups; they're recorded 
 
 ---
 
-## 13. When in doubt
+## 13. Code quality baseline — SOLID, clean code, accessibility
+
+Three baselines apply across every file. They aren't a PR checklist; they're the read on whether a change looks "right" in this codebase.
+
+### 13.1 SOLID — component-flavored
+
+- **Single-purpose components.** If a component branches on a prop into two visually distinct shapes, split it. Two named components read better than one with `if (variant === 'X')` blocks.
+- **Open via slots, closed to internal edits.** Composition through named slots (`headline`, `dek`, `ctas`, `aside`) is how consumers extend a component. New layout needs usually mean a new slot, not a new prop.
+- **Interface segregation.** Keep `Props` interfaces small. `Card` is unopinionated; `PricingPlan` brings the padding and content it needs. Don't pile every option onto every component.
+- **Dependency direction.** Atoms (`ui/`) know nothing about pages. Pages compose. `shared/` sits between. Never import upward (e.g., `Button` importing from `pages/`).
+
+### 13.2 Clean code
+
+- **Name by intent, not implementation.** `audiences` beats `items`; `BookDemoVideo` beats `RightColumn`.
+- **One reason to change per file.** Same as SOLID's first letter from another angle.
+- **No commented-out code.** Delete it; git remembers.
+- **Comments explain the why, not the what.** Non-obvious constraints, workarounds, the reason a choice was made over an obvious alternative. Identifiers should already describe the what.
+- **Inline first; extract on the third repeat.** Two similar blocks are fine; three earns the abstraction.
+- **No premature abstraction.** See §11.
+
+### 13.3 Accessibility — semantic HTML first
+
+- **Use the right element.** `<button>` for buttons, `<a>` for navigation, `<details>`/`<summary>` for disclosure, `<label htmlFor>` for form labels. Don't `role="button"` a `<div>`.
+- **Decorative content is hidden from AT.** All decorative SVGs and icon-only visuals carry `aria-hidden="true"`.
+- **Forms wire `aria-invalid` and `aria-describedby`** when fields can error; errors render with a stable id the input references.
+- **Modal surfaces declare themselves.** Drawers/dialogs use `role="dialog"` + `aria-modal="true"` and lock body scroll while open (see §6.2.2).
+- **Reduced-motion respect.** All transforms/keyframes carry a `prefers-reduced-motion: reduce` short-circuit. Color-only transitions exempt (§6.1).
+- **Skip-to-content link** in `MarketingLayout` stays put. Don't remove without a replacement.
+- **Color contrast** WCAG AA at minimum. Formal audit is a pre-launch task (PROJECT-STATE.md §9).
+
+Violation of any of these in new code is usually a sign the change needs rework, not a stylistic preference to negotiate.
+
+---
+
+## 14. When in doubt
 
 1. Read **PROJECT-STATE.md** to understand what already exists.
 2. Read the **codebase** to confirm.
-3. If the rule isn't here and the answer isn't obvious from §1–§12, ask the user.
+3. If the rule isn't here and the answer isn't obvious from §1–§13, ask the user.
 
 The codebase is the source of truth. This file and PROJECT-STATE.md should describe it accurately at any given moment; if they don't, fix the docs in the same change as the code.
