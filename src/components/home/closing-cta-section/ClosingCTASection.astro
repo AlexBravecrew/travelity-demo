@@ -14,10 +14,14 @@ export interface Props extends HTMLAttributes<'section'> {
     primaryCtaLabel?: string;
     /** Primary CTA href. */
     primaryCtaHref?: string;
+    /** Primary CTA opens in a new tab. */
+    primaryCtaExternal?: boolean;
     /** Secondary CTA button label. */
     secondaryCtaLabel?: string;
     /** Secondary CTA href. */
     secondaryCtaHref?: string;
+    /** Secondary CTA opens in a new tab. Defaults to `true` because the default secondary href is the external START_TRIAL admin app. */
+    secondaryCtaExternal?: boolean;
     class?: string;
 }
 
@@ -26,8 +30,10 @@ const {
     description = "30 minutes. Zero prep. Bring your booking spreadsheet — we'll show you how it works the day you walk away from it.",
     primaryCtaLabel = 'Book a Demo',
     primaryCtaHref = Paths.BOOK_DEMO,
+    primaryCtaExternal = false,
     secondaryCtaLabel = 'Start Free Trial',
-    secondaryCtaHref = Paths.BOOK_DEMO,
+    secondaryCtaHref = Paths.START_TRIAL,
+    secondaryCtaExternal = true,
     class: className,
     ...rest
 } = Astro.props;
@@ -71,13 +77,20 @@ const {
         </p>
 
         <div class="flex flex-wrap gap-3 justify-center mb-7">
-            <Button href={primaryCtaHref} size="lg" withArrow>
+            <Button
+                href={primaryCtaHref}
+                size="lg"
+                withArrow
+                external={primaryCtaExternal}
+            >
                 {primaryCtaLabel}
             </Button>
-            {
-                /* Secondary CTA — TODO: split href when signup/secondary destination exists. */
-            }
-            <Button href={secondaryCtaHref} size="lg" variant="outline">
+            <Button
+                href={secondaryCtaHref}
+                size="lg"
+                variant="outline"
+                external={secondaryCtaExternal}
+            >
                 {secondaryCtaLabel}
             </Button>
         </div>

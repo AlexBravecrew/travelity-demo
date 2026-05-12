@@ -51,8 +51,17 @@ const isLinkActive = (link: (typeof navLinks)[number]) => {
                 }
             </div>
 
-            <!-- Right side: CTA on tablet+, hamburger on mobile -->
+            <!-- Right side: CTAs on tablet+, hamburger on mobile -->
             <div class="flex items-center gap-2">
+                <Button
+                    href={Paths.START_TRIAL}
+                    size="sm"
+                    variant="outline"
+                    external
+                    class="hidden md:inline-flex"
+                >
+                    Start Free Trial
+                </Button>
                 <Button
                     href={Paths.BOOK_DEMO}
                     size="sm"

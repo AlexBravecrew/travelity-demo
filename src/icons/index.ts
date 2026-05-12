@@ -17,13 +17,14 @@ export { Check as CheckIcon } from '@lucide/astro';
 // XCircle was renamed to CircleX in lucide; export alias keeps the consumer name stable.
 export { CircleX as XCircleIcon } from '@lucide/astro';
 
-// Feature cards (Phase 3b)
+// Feature cards (Phase 3b — extended in Phase 19 for the 9-card home features grid)
 export { Clock as ClockIcon } from '@lucide/astro'; // Real-time availability
 export { Calendar as CalendarIcon } from '@lucide/astro'; // Booking management
 export { ClipboardList as ClipboardListIcon } from '@lucide/astro'; // Daily operations
-export { FileCheck as FileCheckIcon } from '@lucide/astro'; // Custom proposals
-export { Users as UsersIcon } from '@lucide/astro'; // Customer database
-export { CreditCard as CreditCardIcon } from '@lucide/astro'; // Payments
+export { FileCheck as FileCheckIcon } from '@lucide/astro'; // Trip proposal builder
+export { Users as UsersIcon } from '@lucide/astro'; // CRM
+export { CreditCard as CreditCardIcon } from '@lucide/astro'; // Payment gateways
+export { Share2 as Share2Icon } from '@lucide/astro'; // Channel manager (Phase 19)
 
 // Pricing (Phase 3c)
 export { Minus as MinusIcon } from '@lucide/astro'; // excluded features in pricing

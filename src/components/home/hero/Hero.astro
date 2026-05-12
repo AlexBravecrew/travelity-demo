@@ -77,10 +77,12 @@ const { class: className, ...rest } = Astro.props;
                     <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
                         Book a Demo
                     </Button>
-                    {
-                        /* TODO: split when signup page exists; for now points to BOOK_DEMO */
-                    }
-                    <Button href={Paths.BOOK_DEMO} size="lg" variant="outline">
+                    <Button
+                        href={Paths.START_TRIAL}
+                        size="lg"
+                        variant="outline"
+                        external
+                    >
                         Start Free Trial
                     </Button>
                 </div>

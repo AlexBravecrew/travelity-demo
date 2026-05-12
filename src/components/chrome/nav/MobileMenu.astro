@@ -110,8 +110,17 @@ import { navLinks } from './nav-data';
             </ul>
         </nav>
 
-        <!-- Drawer footer: primary CTA so the menu always offers an action -->
-        <div class="px-5 py-4 border-t border-line">
+        <!-- Drawer footer: primary CTAs so the menu always offers an action -->
+        <div class="px-5 py-4 border-t border-line flex flex-col gap-2">
+            <Button
+                href={Paths.START_TRIAL}
+                size="md"
+                variant="outline"
+                external
+                class="w-full"
+            >
+                Start Free Trial
+            </Button>
             <Button href={Paths.BOOK_DEMO} size="md" class="w-full">
                 Book a demo
             </Button>

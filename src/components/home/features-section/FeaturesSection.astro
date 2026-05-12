@@ -3,12 +3,15 @@ import { cn } from '@/lib/utils/cn';
 import { SectionHeader } from '@/components/ui/section-header';
 import { LinkInline } from '@/components/ui/link-inline';
 import {
+    Share2Icon,
+    CodeIcon,
     ClockIcon,
+    FileCheckIcon,
+    CreditCardIcon,
     CalendarIcon,
     ClipboardListIcon,
-    FileCheckIcon,
     UsersIcon,
-    CreditCardIcon,
+    MessageSquareIcon,
 } from '@/icons';
 import { Paths } from '@/lib/utils/paths';
 import FeatureCard from './FeatureCard.astro';
@@ -26,6 +29,64 @@ const sectionClasses = cn(
     'py-12 md:py-16',
     className,
 );
+
+// TODO: replace placeholder feature descriptions before launch.
+const features = [
+    {
+        title: 'Channel Manager',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'channel-manager',
+        icon: Share2Icon,
+    },
+    {
+        title: 'Booking Widget',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'booking-widget',
+        icon: CodeIcon,
+    },
+    {
+        title: 'Real-Time Availability',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'real-time-availability',
+        icon: ClockIcon,
+    },
+    {
+        title: 'Trip Proposal Builder',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'trip-proposal-builder',
+        icon: FileCheckIcon,
+    },
+    {
+        title: 'Integration with Payment Gateways',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'payment-gateways',
+        icon: CreditCardIcon,
+    },
+    {
+        title: 'Booking Management',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'booking-management',
+        icon: CalendarIcon,
+    },
+    {
+        title: 'Daily Operations',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'daily-operations',
+        icon: ClipboardListIcon,
+    },
+    {
+        title: 'CRM',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'crm',
+        icon: UsersIcon,
+    },
+    {
+        title: 'Team Collaboration',
+        description: 'Placeholder — real copy TBD.',
+        slug: 'team-collaboration',
+        icon: MessageSquareIcon,
+    },
+];
 ---
 
 <section class={sectionClasses} {...rest}>
@@ -54,91 +115,44 @@ const sectionClasses = cn(
             </Fragment>
             <p
                 slot="dek"
-                class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
+                class="text-lg text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
             >
-                Six core capabilities, modeled the way real travel businesses
-                actually work — not the way booking software thinks they should.
+                Six of our core capabilities, modeled the way real travel
+                businesses actually work. The full set lives on the Features
+                page.
             </p>
         </SectionHeader>
 
         <div
             class="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[18px] mt-12 relative z-[1]"
         >
-            <FeatureCard
-                title="Real-time availability"
-                description="Inventory locked the instant a booking starts. Across every channel, at the same time. No more double-bookings, ever."
-            >
-                <ClockIcon
-                    slot="icon"
-                    class="w-[22px] h-[22px]"
-                    stroke-width="1.75"
-                    aria-hidden="true"
-                />
-            </FeatureCard>
-
-            <FeatureCard
-                title="Booking management"
-                description="Every order — direct, widget, or OTA — in one queue. Edit, refund, reassign, generate documents. Full history, full audit trail."
-            >
-                <CalendarIcon
-                    slot="icon"
-                    class="w-[22px] h-[22px]"
-                    stroke-width="1.75"
-                    aria-hidden="true"
-                />
-            </FeatureCard>
-
-            <FeatureCard
-                title="Daily operations"
-                description="Today's departures, who's driving, who's guiding, who's booked. The view your operations manager opens at 8am."
-            >
-                <ClipboardListIcon
-                    slot="icon"
-                    class="w-[22px] h-[22px]"
-                    stroke-width="1.75"
-                    aria-hidden="true"
-                />
-            </FeatureCard>
-
-            <FeatureCard
-                title="Custom proposals"
-                description="Build a quote, send a signed link, get paid. Custom group inquiries, B2B partner orders, and multi-day packages — all closed online."
-            >
-                <FileCheckIcon
-                    slot="icon"
-                    class="w-[22px] h-[22px]"
-                    stroke-width="1.75"
-                    aria-hidden="true"
-                />
-            </FeatureCard>
-
-            <FeatureCard
-                title="Customer database"
-                description="Every booking creates a customer record. Repeat guests, contact history, total spend. Stop reconstructing relationships from WhatsApp threads."
-            >
-                <UsersIcon
-                    slot="icon"
-                    class="w-[22px] h-[22px]"
-                    stroke-width="1.75"
-                    aria-hidden="true"
-                />
-            </FeatureCard>
-
-            <FeatureCard
-                title="Payments & refunds"
-                description="Stripe-powered checkout, multi-currency support, refunds with audit trail. Bank-level encryption everywhere money moves."
-            >
-                <CreditCardIcon
-                    slot="icon"
-                    class="w-[22px] h-[22px]"
-                    stroke-width="1.75"
-                    aria-hidden="true"
-                />
-            </FeatureCard>
+            {
+                /* Home shows the first 6 of 9 features; the rest live on
+                /features. Slug definitions for all 9 stay in the array
+                above so anchor targets remain visible alongside this
+                consumer. */
+                features.slice(0, 6).map((f) => {
+                    const Icon = f.icon;
+                    return (
+                        <FeatureCard
+                            title={f.title}
+                            description={f.description}
+                            href={`${Paths.FEATURES}#${f.slug}`}
+                        >
+                            <Icon
+                                slot="icon"
+                                class="w-5.5 h-5.5"
+                                stroke-width="1.75"
+                                aria-hidden="true"
+                            />
+                        </FeatureCard>
+                    );
+                })
+            }
         </div>
 
         <div class="features-cta mt-14 text-center relative z-[1]">
-            <LinkInline href={Paths.SOLUTIONS_BOOKING_ENGINE} withArrow>
+            <LinkInline href={Paths.FEATURES} withArrow>
                 See all capabilities in detail
             </LinkInline>
         </div>
@@ -149,7 +163,9 @@ const sectionClasses = cn(
     /* ============================================================
        Per-position color rotation on FeatureCards.
        Selectors target the FeatureCard wrapper (`.feature-card`)
-       inside the grid. Pattern repeats every 6 cards.
+       inside the grid. Pattern repeats every 6 cards — with 9 cards
+       in a 3-column grid, positions 7-9 cycle back to colors 1-3,
+       which reads cleanly in the 3x3 layout.
        ============================================================ */
 
     /* Corner gradient bloom — different tint per position */

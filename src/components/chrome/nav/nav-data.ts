@@ -51,6 +51,10 @@ export const navLinks: NavLinkData[] = [
         ],
     },
     {
+        label: 'Features',
+        href: Paths.FEATURES,
+    },
+    {
         label: 'Pricing',
         href: Paths.PRICING,
     },

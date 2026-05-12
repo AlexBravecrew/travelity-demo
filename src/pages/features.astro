@@ -1,0 +1,198 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+export const prerender = true;
+
+/**
+ * Features page sections. The slugs MUST match the home FeaturesSection's
+ * card hrefs (Channel Manager → /features#channel-manager, etc.) — those
+ * deep links are the entry path for users clicking from the home grid.
+ *
+ * TODO: replace placeholder copy across all 9 sections before launch.
+ * TODO: replace `/features/placeholder.svg` with real per-section screenshots
+ *       under `/public/features/<slug>.png` (or whatever filename you pick).
+ */
+const features = [
+    {
+        title: 'Channel Manager',
+        slug: 'channel-manager',
+        headline: 'Channel Manager — headline placeholder.',
+        lead: 'Lead description for Channel Manager — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Booking Widget',
+        slug: 'booking-widget',
+        headline: 'Booking Widget — headline placeholder.',
+        lead: 'Lead description for Booking Widget — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Real-Time Availability',
+        slug: 'real-time-availability',
+        headline: 'Real-Time Availability — headline placeholder.',
+        lead: 'Lead description for Real-Time Availability — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Trip Proposal Builder',
+        slug: 'trip-proposal-builder',
+        headline: 'Trip Proposal Builder — headline placeholder.',
+        lead: 'Lead description for Trip Proposal Builder — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Integration with Payment Gateways',
+        slug: 'payment-gateways',
+        headline: 'Payment Gateway Integrations — headline placeholder.',
+        lead: 'Lead description for payment gateway integrations — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Booking Management',
+        slug: 'booking-management',
+        headline: 'Booking Management — headline placeholder.',
+        lead: 'Lead description for Booking Management — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Daily Operations',
+        slug: 'daily-operations',
+        headline: 'Daily Operations — headline placeholder.',
+        lead: 'Lead description for Daily Operations — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'CRM',
+        slug: 'crm',
+        headline: 'CRM — headline placeholder.',
+        lead: 'Lead description for CRM — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+    {
+        title: 'Team Collaboration',
+        slug: 'team-collaboration',
+        headline: 'Team Collaboration — headline placeholder.',
+        lead: 'Lead description for Team Collaboration — real copy coming soon.',
+        bullets: [
+            { label: 'Placeholder bullet one.' },
+            { label: 'Placeholder bullet two.' },
+            { label: 'Placeholder bullet three.' },
+        ],
+        image: '/features/placeholder.svg',
+    },
+];
+---
+
+<MarketingLayout
+    title="Features · Travelity"
+    description="The full set of Travelity capabilities — channel management, bookings, payments, operations, and the tools your team uses every day."
+>
+    <Nav />
+
+    <main>
+        <!-- Compact top section: short title, no hero -->
+        <section class="bg-paper py-12 md:py-16">
+            <div class="container mx-auto px-6 text-center">
+                <Eyebrow withRule centered>Features</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.03em] max-w-[20ch] mx-auto mt-6 mb-5"
+                    style="font-size: clamp(32px, 4vw, 48px);"
+                >
+                    Everything Travelity does,
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal">
+                            in detail.</span
+                        >
+                    </em>
+                </h1>
+
+                <p
+                    class="text-lg text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                >
+                    Nine capabilities your travel business runs on. Each
+                    section below maps to the cards on the home page — click
+                    any card there and you'll land here.
+                </p>
+            </div>
+        </section>
+
+        <!-- 9 feature sections, alternating flip. The id on each section
+             is the anchor target for the home card's /features#<slug> link;
+             scroll-mt-[var(--nav-height)] offsets the jump so the heading
+             clears the sticky nav. -->
+        {
+            features.map((f, i) => (
+                <CapabilitySection
+                    id={f.slug}
+                    eyebrow={f.title}
+                    flip={i % 2 === 1}
+                    bullets={f.bullets}
+                    class="scroll-mt-[var(--nav-height)]"
+                >
+                    <Fragment slot="headline">{f.headline}</Fragment>
+                    <Fragment slot="lead">{f.lead}</Fragment>
+                    <Fragment slot="visual">
+                        <img
+                            src={f.image}
+                            alt={`${f.title} screenshot`}
+                            class="block w-full aspect-video rounded-xl bg-surface-alt border border-line object-cover"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </Fragment>
+                </CapabilitySection>
+            ))
+        }
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

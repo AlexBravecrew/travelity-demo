@@ -21,8 +21,17 @@ export const Paths = {
     // Conversion (Phase 7)
     BOOK_DEMO: '/book-demo',
 
+    /**
+     * External — admin app where new users start a free trial.
+     * Marked external in consumers (target=_blank + rel=noopener noreferrer).
+     */
+    START_TRIAL: 'https://admin.travelity.app',
+
     // Pricing (Phase 8)
     PRICING: '/pricing',
+
+    // Features (Phase 19 — page to be built next; cards link with #slug)
+    FEATURES: '/features',
 
     // Resources (Phase 9 — deferred until content)
     OUR_STORY: '/our-story',

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Screenshot placeholder">
+    <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="hsl(218 42% 96%)" />
+            <stop offset="100%" stop-color="hsl(194 56% 92%)" />
+        </linearGradient>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="hsl(218 30% 86%)" stroke-width="1" />
+        </pattern>
+    </defs>
+    <rect width="1280" height="720" fill="url(#bg)" />
+    <rect width="1280" height="720" fill="url(#grid)" opacity="0.4" />
+    <rect x="12" y="12" width="1256" height="696" rx="20" ry="20" fill="none" stroke="hsl(218 42% 48%)" stroke-width="2" stroke-dasharray="12 8" opacity="0.45" />
+    <g transform="translate(640 340)" text-anchor="middle">
+        <circle cx="0" cy="-40" r="48" fill="hsl(194 56% 57% / 0.15)" stroke="hsl(194 56% 57%)" stroke-width="2" />
+        <path d="M -18 -52 L 18 -52 L 24 -42 L -24 -42 Z M -22 -42 L 22 -42 L 22 -22 L -22 -22 Z" fill="hsl(194 56% 57%)" />
+        <circle cx="0" cy="-32" r="6" fill="hsl(218 42% 96%)" />
+        <text x="0" y="60" font-family="ui-monospace, 'JetBrains Mono', monospace" font-size="22" font-weight="600" letter-spacing="0.08em" fill="hsl(218 50% 38%)">SCREENSHOT PLACEHOLDER</text>
+        <text x="0" y="92" font-family="ui-monospace, 'JetBrains Mono', monospace" font-size="14" font-weight="500" letter-spacing="0.05em" fill="hsl(215 16% 47%)">replace via &lt;img src&gt;</text>
+    </g>
+</svg>
