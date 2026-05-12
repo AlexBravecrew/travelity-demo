@@ -1,0 +1,38 @@
+---
+import { MenuIcon, XIcon } from '@/icons';
+---
+
+<!-- Hamburger trigger — only visible <1024px.
+     Lives inside Nav.astro's right-side flex container; the drawer it
+     opens (data-mobile-menu-root) is rendered OUTSIDE the <nav> element
+     because the nav's backdrop-filter would otherwise trap the drawer's
+     position:fixed in the 68px nav box. nav.client.ts wires both via
+     querySelector on data-attributes — no parent/child relationship
+     needed between them. -->
+<button
+    type="button"
+    class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-md border border-line bg-transparent cursor-pointer"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu-root"
+    data-mobile-menu-trigger
+>
+    <MenuIcon
+        class="w-5 h-5 text-ink mobile-menu-icon-open"
+        aria-hidden="true"
+    />
+    <XIcon
+        class="w-5 h-5 text-ink mobile-menu-icon-close hidden"
+        aria-hidden="true"
+    />
+</button>
+
+<style>
+    /* Icon swap based on open state */
+    [data-mobile-menu-trigger][aria-expanded='true'] .mobile-menu-icon-open {
+        display: none;
+    }
+    [data-mobile-menu-trigger][aria-expanded='true'] .mobile-menu-icon-close {
+        display: block;
+    }
+</style>

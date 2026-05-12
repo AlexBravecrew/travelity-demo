@@ -199,16 +199,14 @@ function initDesktopSubrow() {
         trigger.addEventListener('mouseenter', () => scheduleOpen(label));
         trigger.addEventListener('mouseleave', () => scheduleClose());
 
+        // Click on the trigger button is intentionally a no-op. The sub-row
+        // is hover-only by product decision — clicking a parent section
+        // (e.g. "Solutions") shouldn't toggle the panel. Sub-pages are
+        // reached by hovering, then clicking a specific child link in the
+        // sub-row. preventDefault stops form-submit if the button were ever
+        // rendered inside a <form>.
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            clearTimers();
-            if (previewLabel === label) {
-                previewLabel = null;
-                setActivePanel(null);
-            } else {
-                previewLabel = label;
-                setActivePanel(label);
-            }
         });
 
         btn.addEventListener('keydown', (e) => {
@@ -297,6 +295,24 @@ function initMobileMenu() {
         } else {
             open();
         }
+    });
+
+    // Backdrop tap closes the drawer
+    const backdrop = root.querySelector<HTMLElement>(
+        '[data-mobile-menu-backdrop]',
+    );
+    backdrop?.addEventListener('click', () => close());
+
+    // Dedicated X close button inside the drawer header
+    const closeBtn = root.querySelector<HTMLButtonElement>(
+        '[data-mobile-menu-close]',
+    );
+    closeBtn?.addEventListener('click', () => close());
+
+    // Auto-close when a nav link inside the drawer is followed — same-page
+    // anchor links would otherwise leave the drawer open over the target.
+    root.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((a) => {
+        a.addEventListener('click', () => close());
     });
 
     // Escape anywhere closes mobile menu

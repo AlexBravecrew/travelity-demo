@@ -7,20 +7,10 @@ import { Paths } from '@/lib/utils/paths';
 import { ProductHero, QuickFact } from '@/components/shared/product-hero';
 import { CapabilitySection } from '@/components/shared/capability-section';
 import { CrossSell, CrossSellCard } from '@/components/shared/cross-sell';
-import { AnchorNav } from '@/components/shared/anchor-nav';
 
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
 
 import { BoxesIcon, GlobeIcon, FileCheckIcon } from '@/icons';
-
-const anchorItems = [
-    { id: 'be-products', label: 'Products & Options' },
-    { id: 'be-scheduling', label: 'Scheduling' },
-    { id: 'be-pricing', label: 'Pricing Rules' },
-    { id: 'be-bookings', label: 'Bookings & Orders' },
-    { id: 'be-ops', label: 'Daily Operations' },
-    { id: 'be-currency', label: 'Multi-currency' },
-];
 
 export const prerender = true;
 ---
@@ -58,8 +48,6 @@ export const prerender = true;
                 />
             </Fragment>
         </ProductHero>
-
-        <AnchorNav items={anchorItems} />
 
         <CapabilitySection
             id="be-products"

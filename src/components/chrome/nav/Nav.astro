@@ -1,10 +1,11 @@
 ---
 import { Button } from '@/components/ui/button';
 import { Paths } from '@/lib/utils/paths';
-import { Logo, LogoSmall } from '@/components/brand';
+import { Logo } from '@/components/brand';
 import NavLink from './NavLink.astro';
 import NavSubRow from './NavSubRow.astro';
 import MobileMenu from './MobileMenu.astro';
+import MobileMenuTrigger from './MobileMenuTrigger.astro';
 import { navLinks } from './nav-data';
 import { getActiveSection } from './nav-active';
 
@@ -34,15 +35,11 @@ const isLinkActive = (link: (typeof navLinks)[number]) => {
                 aria-label="Travelity home"
                 class="nav-logo-link inline-flex items-center"
             >
-                <Logo class="hidden md:block h-7 w-auto" label="Travelity" />
-                <LogoSmall
-                    class="block md:hidden h-7 w-auto"
-                    label="Travelity"
-                />
+                <Logo class="h-7 w-auto" label="Travelity" />
             </a>
 
-            <!-- Desktop links — hidden <1024px -->
-            <div class="hidden lg:flex gap-1">
+            <!-- Desktop links — hidden <768px (mobile only) -->
+            <div class="hidden md:flex gap-1">
                 {
                     navLinks.map((link, i) => (
                         <NavLink
@@ -54,16 +51,16 @@ const isLinkActive = (link: (typeof navLinks)[number]) => {
                 }
             </div>
 
-            <!-- Right side: CTA on desktop, hamburger on mobile -->
+            <!-- Right side: CTA on tablet+, hamburger on mobile -->
             <div class="flex items-center gap-2">
                 <Button
                     href={Paths.BOOK_DEMO}
                     size="sm"
-                    class="hidden lg:inline-flex"
+                    class="hidden md:inline-flex"
                 >
                     Book a demo
                 </Button>
-                <MobileMenu />
+                <MobileMenuTrigger />
             </div>
         </div>
     </div>
@@ -78,6 +75,11 @@ const isLinkActive = (link: (typeof navLinks)[number]) => {
     activeSection={activeSection}
     pathname={pathname}
 />
+
+<!-- Mobile drawer + backdrop. MUST be a sibling of <nav>, not a child —
+     the nav's backdrop-filter would otherwise act as a containing block
+     for the drawer's position:fixed, trapping it inside the 68px nav. -->
+<MobileMenu />
 
 <script>
     import './nav.client.ts';

@@ -1,5 +1,5 @@
 ---
-import { Logo, LogoSmall } from '@/components/brand';
+import { Logo } from '@/components/brand';
 import FooterColumn from './FooterColumn.astro';
 import { Paths } from '@/lib/utils/paths';
 ---
@@ -17,14 +17,7 @@ import { Paths } from '@/lib/utils/paths';
                         aria-label="Travelity home"
                         class="footer-logo-link inline-flex items-center"
                     >
-                        <Logo
-                            class="hidden md:block h-6 w-auto"
-                            label="Travelity"
-                        />
-                        <LogoSmall
-                            class="block md:hidden h-6 w-auto"
-                            label="Travelity"
-                        />
+                        <Logo class="h-6 w-auto" label="Travelity" />
                     </a>
                 </div>
                 <p

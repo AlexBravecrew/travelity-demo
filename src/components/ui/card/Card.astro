@@ -9,7 +9,7 @@ export interface Props extends HTMLAttributes<'div'> {
     variant?: CardVariant;
     /** Apply hover lift and shadow. Defaults to `false` for static cards. */
     interactive?: boolean;
-    /** Show a 4px gradient accent bar at the top edge (teal → blue). Useful with `featured`. */
+    /** Show a 4px gradient accent bar at the top edge. Ignored for `featured` since that variant already carries an animated gradient border. */
     topAccent?: boolean;
     /** Forwarded to underlying element. */
     class?: string;
@@ -24,13 +24,13 @@ const {
 } = Astro.props;
 
 const base =
-    'relative bg-paper rounded-[16px] ' +
+    'relative rounded-[16px] ' +
     'transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)]';
 
 const variantClasses: Record<CardVariant, string> = {
-    default: 'border border-line',
+    default: 'bg-paper border border-line',
     featured:
-        'border-[1.5px] border-[hsl(var(--travelity-teal)/0.4)] ' +
+        'card-animated-border ' +
         'shadow-[0_16px_40px_-12px_hsl(var(--travelity-teal)/0.18)]',
 };
 
@@ -46,13 +46,23 @@ const classes = cn(
     interactiveClasses,
     className,
 );
+
+// Featured variant uses an animated conic-gradient border — no separate
+// top-accent bar needed (the whole border is the accent).
+const showTopAccent = topAccent && variant !== 'featured';
 ---
 
 <div class={classes} {...rest}>
     {
-        topAccent && (
+        showTopAccent && (
             <span
-                class="absolute top-0 left-0 right-0 h-1 rounded-t-[16px] bg-gradient-to-r from-travelity-teal to-travelity-blue"
+                class={cn(
+                    'absolute h-1 rounded-t-[16px]',
+                    'bg-gradient-to-r from-travelity-teal to-travelity-blue',
+                    // Offset by border-width so the accent's 16px curve
+                    // aligns with the card's 16px outer corner.
+                    '-top-px -left-px -right-px',
+                )}
                 aria-hidden="true"
             />
         )
@@ -61,12 +71,71 @@ const classes = cn(
 </div>
 
 <style>
+    /* Animated conic-gradient border for the featured variant.
+       Dual-background trick:
+         - linear-gradient(paper, paper) padding-box fills the inside
+         - conic-gradient(...) border-box paints the border area
+         - border: 1.5px solid transparent reveals the conic gradient
+       @property registers the angle as an animatable type — without it,
+       CSS can't interpolate <angle> values and the gradient would jump. */
+    @property --card-gradient-angle {
+        syntax: '<angle>';
+        initial-value: 0deg;
+        inherits: false;
+    }
+
+    /* Animated gradient border via gradient-on-parent + inset-pseudo-cover.
+       Per CSS painting order spec:
+         1. element's own background
+         2. negative z-index descendants
+         3. in-flow content
+         ...
+       So a pseudo with z-index:-1 paints ABOVE the element's bg, not below.
+       That meant a previous attempt (gradient pseudo behind, paper bg on
+       parent) failed — the pseudo overpainted the white bg.
+       Inverting: the card's OWN background is the conic-gradient. The
+       pseudo with inset:1.5px + z-index:-1 paints a white overlay that
+       covers the gradient INSIDE the 1.5px ring — leaving only the ring
+       visible at the card's edges. */
+    .card-animated-border {
+        --card-gradient-angle: 0deg;
+        isolation: isolate;
+        background: conic-gradient(
+            from var(--card-gradient-angle, 0deg),
+            hsl(var(--travelity-teal)),
+            hsl(var(--travelity-blue)),
+            hsl(var(--travelity-teal-deep)),
+            hsl(var(--travelity-teal))
+        );
+        animation: card-gradient-spin 10s linear infinite;
+    }
+
+    .card-animated-border::before {
+        content: '';
+        position: absolute;
+        inset: 1.5px;
+        z-index: -1;
+        /* 16px (card outer radius) - 1.5px (overlay inset) = inner radius
+           so the white interior follows the card's inner curve cleanly. */
+        border-radius: 14.5px;
+        background: hsl(var(--paper));
+    }
+
+    @keyframes card-gradient-spin {
+        to {
+            --card-gradient-angle: 360deg;
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         div {
             transition: none !important;
         }
         div:hover {
             transform: none !important;
+        }
+        .card-animated-border {
+            animation: none !important;
         }
     }
 </style>

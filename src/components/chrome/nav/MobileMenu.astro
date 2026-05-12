@@ -1,37 +1,56 @@
 ---
-import { MenuIcon, XIcon, ChevronDownIcon } from '@/icons';
+import { XIcon, ChevronDownIcon } from '@/icons';
+import { Logo } from '@/components/brand';
+import { Button } from '@/components/ui/button';
+import { Paths } from '@/lib/utils/paths';
 import { navLinks } from './nav-data';
 ---
 
-<!-- Hamburger trigger — only visible <1024px -->
-<button
-    type="button"
-    class="lg:hidden inline-flex flex-col items-center justify-center w-10 h-10 rounded-md border border-line bg-transparent cursor-pointer"
-    aria-label="Open menu"
-    aria-expanded="false"
-    aria-controls="mobile-menu-root"
-    data-mobile-menu-trigger
->
-    <MenuIcon
-        class="w-5 h-5 text-ink mobile-menu-icon-open"
-        aria-hidden="true"
-    />
-    <XIcon
-        class="w-5 h-5 text-ink mobile-menu-icon-close hidden"
-        aria-hidden="true"
-    />
-</button>
-
-<!-- Slide-down panel — positioned fixed, anchored under the 68px nav bar -->
+<!-- Slide-from-right drawer.
+     IMPORTANT: this component MUST render OUTSIDE the <nav> element. The
+     nav has `backdrop-filter: blur(...)` which makes it a containing
+     block for `position: fixed` descendants — placing the drawer inside
+     the nav would clip the fixed-positioning to the 68px nav box.
+     The trigger button lives inline in Nav.astro (see MobileMenuTrigger
+     usage), querySelector-based JS in nav.client.ts wires the two
+     together via data-attributes. -->
 <div
     id="mobile-menu-root"
-    class="mobile-menu-root lg:hidden"
+    class="mobile-menu-root md:hidden"
     data-mobile-menu-root
     aria-hidden="true"
 >
-    <div class="mobile-menu-panel">
-        <nav class="px-6 py-4">
-            <ul class="space-y-1 list-none p-0 m-0">
+    <div
+        class="mobile-menu-backdrop"
+        data-mobile-menu-backdrop
+        aria-hidden="true"
+    >
+    </div>
+
+    <div
+        class="mobile-menu-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+    >
+        <!-- Drawer header: logo + close -->
+        <div
+            class="flex items-center justify-between px-5 py-4 border-b border-line"
+        >
+            <Logo class="h-7 w-auto" label="Travelity" />
+            <button
+                type="button"
+                class="inline-flex items-center justify-center w-10 h-10 rounded-md border border-line bg-transparent cursor-pointer"
+                aria-label="Close menu"
+                data-mobile-menu-close
+            >
+                <XIcon class="w-5 h-5 text-ink" aria-hidden="true" />
+            </button>
+        </div>
+
+        <!-- Nav items + accordion subsections -->
+        <nav class="px-4 py-2 flex-1 overflow-y-auto">
+            <ul class="list-none p-0 m-0">
                 {
                     navLinks.map((link, i) => {
                         const isAccordion = !!link.items?.length;
@@ -42,7 +61,7 @@ import { navLinks } from './nav-data';
                             >
                                 <button
                                     type="button"
-                                    class="w-full flex items-center justify-between py-4 font-body text-[16px] font-medium text-ink"
+                                    class="w-full flex items-center justify-between px-2 py-4 font-body text-[16px] font-medium text-ink cursor-pointer"
                                     aria-expanded="false"
                                     aria-controls={`mobile-section-${i}`}
                                     data-mobile-section-trigger
@@ -57,12 +76,12 @@ import { navLinks } from './nav-data';
                                     id={`mobile-section-${i}`}
                                     class="mobile-section-body"
                                 >
-                                    <ul class="list-none p-0 m-0 pb-4 space-y-1">
+                                    <ul class="list-none p-0 m-0 pb-3 space-y-0.5">
                                         {link.items!.map((item) => (
                                             <li>
                                                 <a
                                                     href={item.href}
-                                                    class="block px-3 py-2 rounded-md font-body text-[14px] text-ink hover:bg-surface-alt"
+                                                    class="block px-3 py-2 rounded-md font-body text-[14px] text-ink no-underline hover:bg-surface-alt"
                                                 >
                                                     <span class="block font-medium">
                                                         {item.label}
@@ -80,7 +99,7 @@ import { navLinks } from './nav-data';
                             <li class="border-b border-line last:border-0">
                                 <a
                                     href={link.href}
-                                    class="block py-4 font-body text-[16px] font-medium text-ink"
+                                    class="block px-2 py-4 font-body text-[16px] font-medium text-ink no-underline"
                                 >
                                     {link.label}
                                 </a>
@@ -90,45 +109,61 @@ import { navLinks } from './nav-data';
                 }
             </ul>
         </nav>
+
+        <!-- Drawer footer: primary CTA so the menu always offers an action -->
+        <div class="px-5 py-4 border-t border-line">
+            <Button href={Paths.BOOK_DEMO} size="md" class="w-full">
+                Book a demo
+            </Button>
+        </div>
     </div>
 </div>
 
 <style>
-    /* Trigger icon swap based on open state */
-    [data-mobile-menu-trigger][aria-expanded='true'] .mobile-menu-icon-open {
-        display: none;
-    }
-    [data-mobile-menu-trigger][aria-expanded='true'] .mobile-menu-icon-close {
-        display: block;
-    }
-
-    /* Slide-down panel
-       - Anchored to top under the 68px nav bar
-       - Closed: clipped to height 0, opacity 0
-       - Open: full height, opacity 1
-    */
+    /* Root container — full-viewport overlay. Pointer-events disabled
+       when closed so the page below is interactive; enabled when open
+       so the backdrop catches clicks. */
     .mobile-menu-root {
         position: fixed;
-        top: 68px;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         z-index: 90;
-        background: hsl(var(--paper));
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-4px);
-        transition:
-            opacity 200ms ease-out,
-            transform 200ms ease-out,
-            visibility 200ms;
-        overflow-y: auto;
+        pointer-events: none;
+    }
+    .mobile-menu-root.open {
+        pointer-events: auto;
     }
 
-    .mobile-menu-root.open {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
+    /* Backdrop scrim. Fades in 40% black behind the drawer. */
+    .mobile-menu-backdrop {
+        position: absolute;
+        inset: 0;
+        background: hsl(var(--ink) / 0);
+        transition: background 240ms ease-out;
+        pointer-events: none;
+    }
+    .mobile-menu-root.open .mobile-menu-backdrop {
+        background: hsl(var(--ink) / 0.4);
+        pointer-events: auto;
+    }
+
+    /* Drawer panel. Slides in from off-screen right. Constrained to a
+       reasonable max-width on tablet; full-width-minus-some on phone. */
+    .mobile-menu-panel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 85%;
+        max-width: 380px;
+        background: hsl(var(--paper));
+        box-shadow: -16px 0 32px -8px hsl(var(--ink) / 0.18);
+        transform: translateX(100%);
+        transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+    }
+    .mobile-menu-root.open .mobile-menu-panel {
+        transform: translateX(0);
     }
 
     /* Accordion section body — closed by default */
@@ -138,17 +173,21 @@ import { navLinks } from './nav-data';
         transition: max-height 240ms ease-out;
     }
     [data-mobile-section].open .mobile-section-body {
-        max-height: 600px; /* generous; collapses by content height */
+        max-height: 600px;
     }
     [data-mobile-section].open .mobile-section-chevron {
         transform: rotate(180deg);
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .mobile-menu-root,
+        .mobile-menu-backdrop,
+        .mobile-menu-panel,
         .mobile-section-body,
         .mobile-section-chevron {
             transition: none !important;
+            transform: none !important;
+        }
+        .mobile-menu-root.open .mobile-menu-panel {
             transform: none !important;
         }
     }
