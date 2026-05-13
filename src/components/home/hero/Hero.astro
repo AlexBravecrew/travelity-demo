@@ -23,7 +23,18 @@ const { class: className, ...rest } = Astro.props;
     )}
     {...rest}
 >
-    <div class="container mx-auto px-6">
+    <!-- Warm afternoon-window bloom behind the video. Subtle (opacity
+         ~0.22 with heavy blur), sits in the upper-right quadrant — adds
+         ~15% warmth to the above-the-fold without competing with the
+         cool palette dominant elsewhere on the page. -->
+    <span
+        aria-hidden="true"
+        class="hero-warm-bloom pointer-events-none absolute"
+        style="top: -120px; right: -120px; width: 540px; height: 540px; background: radial-gradient(circle, hsl(var(--travelity-sunset) / 0.55), hsl(var(--travelity-amber) / 0.25) 50%, transparent 75%); filter: blur(90px); opacity: 0.55; z-index: 0;"
+    >
+    </span>
+
+    <div class="container mx-auto px-6 relative z-[1]">
         <div
             class="hero-content relative z-2 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-18 items-center min-h-135 lg:min-h-150"
         >
@@ -118,7 +129,7 @@ const { class: className, ...rest } = Astro.props;
             </div>
 
             <!-- Visual column -->
-            <BookDemoVideo videoId="HEFEvMcKxjw" />
+            <BookDemoVideo videoId="LZfT8xLdzIQ" />
         </div>
     </div>
 </section>

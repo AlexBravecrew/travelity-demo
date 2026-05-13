@@ -79,7 +79,7 @@ const steps: Step[] = [
         </SectionHeader>
 
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-x-8 lg:gap-y-12 mt-6"
+            class="golive-steps grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-x-8 lg:gap-y-12 mt-6"
         >
             {
                 steps.map((step) => (
@@ -89,7 +89,7 @@ const steps: Step[] = [
                     >
                         <step.Icon
                             slot="icon"
-                            class="w-6 h-6"
+                            class="w-7 h-7"
                             stroke-width="1.75"
                             aria-hidden="true"
                         />
@@ -99,3 +99,121 @@ const steps: Step[] = [
         </div>
     </div>
 </section>
+
+<style>
+    /* Warm-accent icons on steps 1 (Setup — sunset welcome) and 4 (Ongoing
+       updates — amber, fits the SparklesIcon's "celebratory" feel). Steps
+       2 + 3 keep their default teal from GoLiveStep. The icon-color
+       contrast values are bumped darker (45–48% lightness) than the bg
+       (60–65%) so the strokes stay readable on a tinted background. */
+    .golive-steps :global(.golive-step:nth-child(1) .golive-step-icon) {
+        background: hsl(var(--travelity-sunset) / 0.16);
+        color: hsl(14 65% 48%);
+    }
+    .golive-steps :global(.golive-step:nth-child(4) .golive-step-icon) {
+        background: hsl(var(--travelity-amber) / 0.2);
+        color: hsl(32 70% 42%);
+    }
+
+    /* ----------------------------------------------------------------
+       Per-step icon animations. Each targets the SVG inside the icon
+       container so ONLY the icon moves, the square background stays
+       still. transform-origin is set explicitly where the rotation
+       point matters (gear from center, cap from bottom).
+       ---------------------------------------------------------------- */
+
+    /* Step 1: gear rotates one full turn, then pauses, then again. */
+    @keyframes golive-gear-rotate {
+        0%,
+        15% {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotate(360deg);
+        }
+        65%,
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .golive-steps
+        :global(.golive-step:nth-child(1) .golive-step-icon svg) {
+        animation: golive-gear-rotate 7s var(--ease-default) infinite;
+        transform-origin: 50% 50%;
+    }
+
+    /* Step 2: cap wiggles right then left, pivot at the bottom edge so
+       it reads like a head tipping side to side. */
+    @keyframes golive-cap-wiggle {
+        0%,
+        100% {
+            transform: rotate(0deg);
+        }
+        20% {
+            transform: rotate(9deg);
+        }
+        40% {
+            transform: rotate(0deg);
+        }
+        60% {
+            transform: rotate(-9deg);
+        }
+        80% {
+            transform: rotate(0deg);
+        }
+    }
+    .golive-steps
+        :global(.golive-step:nth-child(2) .golive-step-icon svg) {
+        animation: golive-cap-wiggle 4.8s var(--ease-default) infinite;
+        transform-origin: 50% 85%;
+    }
+
+    /* Step 3: headphones do a continuous full flip — short hold upright,
+       then 360° rotation on the X axis with no pause at the upside-down
+       point so the motion reads as one fluid revolution. */
+    @keyframes golive-headphones-flip {
+        0%,
+        15% {
+            transform: rotateX(0deg);
+        }
+        100% {
+            transform: rotateX(360deg);
+        }
+    }
+    .golive-steps
+        :global(.golive-step:nth-child(3) .golive-step-icon svg) {
+        animation: golive-headphones-flip 2.5s var(--ease-default) infinite;
+        transform-origin: 50% 50%;
+        backface-visibility: visible;
+    }
+
+    /* Step 4: sparkles "shine" — scale up + warm amber drop-shadow glow,
+       then back to rest. The icon color is already amber so the glow
+       reads as a deeper, more saturated version of itself. */
+    @keyframes golive-sparkles-shine {
+        0%,
+        100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 0 transparent);
+        }
+        50% {
+            transform: scale(1.18);
+            filter: drop-shadow(
+                0 0 10px hsl(var(--travelity-amber) / 0.95)
+            );
+        }
+    }
+    .golive-steps
+        :global(.golive-step:nth-child(4) .golive-step-icon svg) {
+        animation: golive-sparkles-shine 4s ease-in infinite;
+        transform-origin: 50% 50%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .golive-steps :global(.golive-step .golive-step-icon svg) {
+            animation: none !important;
+            transform: none !important;
+            filter: none !important;
+        }
+    }
+</style>
