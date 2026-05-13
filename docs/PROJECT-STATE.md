@@ -2,13 +2,13 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 17 — mobile drawer rebuild, tablet breakpoint, animated featured card border (full doc sync).
+> **Last updated:** Phase 19 — new /features page, home FeaturesSection trimmed to 6 of 9 cards, Start Free Trial points at admin.travelity.app site-wide.
 
 ---
 
 ## TL;DR — What this project is
 
-Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform serving travel businesses (tour operators, transfer providers, accommodation hosts, independent guides). Site lives at `travelity.app`. Built across 11 phases; structurally complete.
+Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform serving travel businesses (Tour Operators, Transfer Providers, Travel Agencies, Independent Guides). Site lives at `travelity.app`. Built across 11 phases plus post-build iteration through Phase 19; structurally complete.
 
 **Status:** every page exists, every link resolves, every form works. Pre-launch tasks remaining are content/operations, not engineering. See [§9 Pre-launch checklist](#9-pre-launch-checklist).
 
@@ -21,7 +21,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Framework      | Astro 6 (file-based routing, static-by-default with hybrid mode for Actions)                                                  |
 | Styling        | Tailwind v4 (CSS-first via `@theme` in `src/styles/global.css`)                                                               |
 | Type system    | TypeScript 5.x strict                                                                                                         |
-| Islands        | React 19 (only when state genuinely needed — currently 2: `ContactForm` and `CalendlyWidget`)                                 |
+| Islands        | React 19 (only when state genuinely needed — currently 1: `ContactForm`. `CalendlyWidget` migrated to `.astro` in post-Phase-18 cleanup)  |
 | Server runtime | `@astrojs/node` adapter (mode: standalone). Swap-friendly to Vercel/Netlify/Cloudflare.                                       |
 | Forms          | React Hook Form + zod (shared schemas with server-side Astro Actions)                                                         |
 | Icons          | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Both reference the same icon set; the bindings differ. |
@@ -31,36 +31,35 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 
 ---
 
-## 2. Site shape — 23 prerendered pages + 1 server endpoint
+## 2. Site shape — 20 prerendered pages + 1 server endpoint
 
-| Path                             | Phase | Notes                                                                                     |
-| -------------------------------- | ----- | ----------------------------------------------------------------------------------------- |
-| `/`                              | 3a-3d | Home: Hero → Channels → Features → Parallax → Pricing → GoLive → ClosingCTA               |
-| `/solutions/booking-engine`      | 5     | The flagship Solutions page. 6 capability sections.                                       |
-| `/solutions/widget`              | 5     | 3 capabilities                                                                            |
-| `/solutions/integrations`        | 5     | OTA integrations. 3 capabilities.                                                         |
-| `/solutions/proposals`           | 5     | 3 capabilities                                                                            |
-| `/solutions/reporting`           | 5     | 3 capabilities                                                                            |
-| `/solutions/security`            | 5     | 3 capabilities                                                                            |
-| `/audiences/tour-operators`      | 6     | Pain → Solution → Pillars → Workflow → PlanRec → CrossSell → Close                        |
-| `/audiences/transfer-providers`  | 6     | Same shape, different copy                                                                |
-| `/audiences/accommodation-hosts` | 6     | Same shape                                                                                |
-| `/audiences/independent-guides`  | 6     | Same shape                                                                                |
-| `/pricing`                       | 8     | Hero → 3 plan cards → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close |
-| `/book-demo`                     | 7,16  | Calendly inline widget + YouTube walkthrough video in hero (Phase 16)                     |
-| `/thank-you`                     | 7     | Static fallback for non-JS form submission                                                |
-| `/legal/privacy`                 | 9     | AI-drafted GDPR-aware privacy policy                                                      |
-| `/legal/terms`                   | 9     | AI-drafted Terms of Service                                                               |
-| `/legal/dpa`                     | 9     | AI-drafted Data Processing Agreement                                                      |
-| `/legal/cookies`                 | 9     | AI-drafted Cookies Policy                                                                 |
-| `/our-story`                     | 10    | AI-drafted founder narrative                                                              |
-| `/faq`                           | 10    | 18 Q&As across 4 categories                                                               |
-| `/guides`                        | 10    | 9 placeholder guide cards (hrefs are `#`)                                                 |
-| `/help-center`                   | 10    | Visual search bar (non-functional) + 3 hub tiles                                          |
-| `/contact`                       | 11    | React form island, 4 fields, posts to `contact` Astro Action                              |
-| Server: `/_actions/*`            | 7, 11 | Astro Action endpoints for both forms                                                     |
+| Path                        | Phase   | Notes                                                                                       |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
+| `/`                         | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Parallax → Pricing → GoLive → ClosingCTA |
+| `/solutions/booking-engine` | 5       | The flagship Solutions page. 6 capability sections.                                         |
+| `/solutions/widget`         | 5       | 3 capabilities                                                                              |
+| `/solutions/integrations`   | 5       | OTA integrations. 3 capabilities.                                                           |
+| `/solutions/proposals`      | 5       | 3 capabilities                                                                              |
+| `/solutions/reporting`      | 5       | 3 capabilities                                                                              |
+| `/solutions/security`       | 5       | 3 capabilities                                                                              |
+| `/features`                 | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
+| `/pricing`                  | 8       | Hero → 3 plan cards → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close   |
+| `/book-demo`                | 7,16,18 | Single two-column section: left = headline + lead + 4 CoverageItems; right = Calendly inline widget (native v1 embed, 700px fixed height). Post-Phase-18 cleanup. |
+| `/thank-you`                | 7       | Static post-booking destination                                                             |
+| `/legal/privacy`            | 9       | AI-drafted GDPR-aware privacy policy                                                        |
+| `/legal/terms`              | 9       | AI-drafted Terms of Service                                                                 |
+| `/legal/dpa`                | 9       | AI-drafted Data Processing Agreement                                                        |
+| `/legal/cookies`            | 9       | AI-drafted Cookies Policy                                                                   |
+| `/our-story`                | 10      | AI-drafted founder narrative                                                                |
+| `/faq`                      | 10      | 18 Q&As across 4 categories                                                                 |
+| `/guides`                   | 10      | 9 placeholder guide cards (hrefs are `#`)                                                   |
+| `/help-center`              | 10      | Visual search bar (non-functional) + 3 hub tiles                                            |
+| `/contact`                  | 11      | React form island, 4 fields, posts to `contact` Astro Action                                |
+| Server: `/_actions/*`       | 7, 11   | Astro Action endpoints for the contact form                                                 |
 
-**Intentionally 404:** `/help`, `/privacy`, `/terms`, `/dpa`, `/cookies` (renamed during phases 9-10; old paths retired). Set up redirects before going live if any external campaigns or search-engine indexes pointed at the old URLs.
+**Retired in Phase 18:** `/audiences/tour-operators`, `/audiences/transfer-providers`, `/audiences/accommodation-hosts`, `/audiences/independent-guides`. The four audience pages and their dedicated shared components (`pain-grid`, `solution-map`, `feature-pillars`, `workflow`, `plan-rec`) were deleted. Audience routing lives now only in the home Hero dek (italic teal phrase listing the four types).
+
+**Intentionally 404:** `/help`, `/privacy`, `/terms`, `/dpa`, `/cookies`, and the four `/audiences/*` paths. Set up redirects before going live if any external campaigns or search-engine indexes pointed at the old URLs.
 
 ---
 
@@ -90,56 +89,53 @@ src/
 │   │   └── footer/                  # 5/2/1-col responsive, dark ink
 │   │
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
-│   │   ├── hero/                    # Hero + HeroVisual + BookingFlowCard + AudienceChips
+│   │   ├── hero/                    # Hero only — HeroVisual/BookingFlowCard/AudienceChips deleted Phase 18 (video on right now)
 │   │   ├── channels-section/        # Orbit diagram: hub + 5 nodes + flowing dashed pulses (Phase 15)
-│   │   ├── features-section/        # 6-card grid with per-position color rotation
+│   │   ├── features-section/        # FeatureCard requires href; renders first 6 of 9 entries (Phase 19)
 │   │   ├── parallax-break/          # Scroll-driven photo break
 │   │   ├── pricing-section/         # 3 plan cards (reused on /pricing)
 │   │   ├── golive-section/          # 4-col onboarding
-│   │   └── closing-cta-section/     # Final conversion strip
+│   │   └── closing-cta-section/     # Final conversion strip (secondaryCtaExternal prop, Phase 19)
 │   │
 │   ├── shared/                      # Cross-page components
-│   │   ├── product-hero/            # Used by Solutions AND Audience pages (Phase 4); ctasAlign prop Phase 16
-│   │   ├── capability-section/      # 2-col with `flip` prop (Phase 4)
+│   │   ├── product-hero/            # Used by Solutions pages (Phase 4); ctasAlign prop Phase 16
+│   │   ├── capability-section/      # 2-col with `flip` prop — reused on Solutions and /features (Phase 4)
 │   │   ├── cross-sell/              # 3-card "explore" strip (Phase 4)
 │   │   ├── social-proof/            # Testimonial cards (Phase 4)
-│   │   ├── pain-grid/               # Audience problems (Phase 6)
-│   │   ├── solution-map/            # Pain→arrow→fix rows (Phase 6)
-│   │   ├── feature-pillars/         # Vertical capability list with optional spotlight (Phase 6)
-│   │   ├── workflow/                # 4-col timeline stepper (Phase 6)
-│   │   ├── plan-rec/                # Recommended-plan callout (Phase 6)
-│   │   ├── coverage-list/           # Book Demo "what we'll cover" (Phase 7)
+│   │   ├── coverage-list/           # /book-demo "what we'll cover" (Phase 7)
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
 │   │   ├── legal-page-layout/       # Shared chrome for 4 legal pages (Phase 9)
 │   │   ├── guide-card/              # Article preview card (Phase 10)
 │   │   └── help-tile/               # Help center hub tile (Phase 10)
+│   │   # NOTE: pain-grid, solution-map, feature-pillars, workflow, plan-rec
+│   │   # were audience-only and deleted with the audience cluster in Phase 18.
 │   │
 │   ├── decorative/                  # Bespoke SVG components
-│   │   ├── mountain-scene/          # HeroVisual scene mock
 │   │   └── ota-logos/               # GygLogo + ViatorLogo + KlookLogo (Phase 15)
+│   │   # NOTE: mountain-scene deleted Phase 18 with HeroVisual.
 │   │
-│   ├── book-demo/                   # /book-demo page-specific React island + video (Phase 16)
-│   │   ├── CalendlyWidget.tsx       # InlineWidget + event_scheduled → CRM sync → redirect
-│   │   └── BookDemoVideo.astro      # YouTube walkthrough iframe (nocookie + lazy)
+│   ├── book-demo/                   # /book-demo page-specific (Phase 16, simplified post-18)
+│   │   └── CalendlyWidget.astro     # Native v1 inline embed at 700px; postMessage → /thank-you redirect
 │   │
 │   └── forms/                       # React form islands
-│       └── contact/                 # 4-field contact form (only form left after Phase 16)
+│       └── contact/                 # 4-field contact form (the only React island left)
 │
 ├── pages/
 │   ├── index.astro                  # /
 │   ├── solutions/                   # 6 Solutions pages
-│   ├── audiences/                   # 4 Audience pages
 │   ├── legal/                       # 4 Legal pages
 │   ├── _internal/                   # Underscore-prefixed: showcase + phase-4-preview (not built)
 │   ├── book-demo/index.astro
 │   ├── contact.astro
+│   ├── features.astro               # Phase 19 — 9 anchored CapabilitySections + placeholder screenshots
 │   ├── pricing.astro
 │   ├── faq.astro
 │   ├── guides.astro
 │   ├── help-center.astro
 │   ├── our-story.astro
 │   └── thank-you.astro
+│   # NOTE: audiences/ subfolder deleted Phase 18 (4 pages retired).
 │
 ├── actions/
 │   └── index.ts                     # contact Astro Action (bookDemo removed Phase 16 — Calendly handles)
@@ -220,7 +216,7 @@ const { class: className, ...rest } = Astro.props;
 
 ### 4.5 Reduced-motion
 
-Every animation, hover-lift, and transition has a `@media (prefers-reduced-motion: reduce)` override that disables it. Verified for: BookingFlowCard's 3-step animation, ChannelHub's pulse, ParallaxBreak's scroll-driven translate, all card hover lifts, audience chip hover transforms, FAQ icon rotations.
+Every animation, hover-lift, and transition has a `@media (prefers-reduced-motion: reduce)` override that disables it. Verified for: ChannelHub's pulse, ParallaxBreak's scroll-driven translate, all card hover lifts, FAQ icon rotations, the mobile drawer slide + backdrop fade, the featured PricingPlan's animated conic-gradient border.
 
 ### 4.6 Reusable URL constants
 
@@ -232,13 +228,13 @@ export const Paths = {
     SOLUTIONS_BOOKING_ENGINE: '/solutions/booking-engine',
     SOLUTIONS_WIDGET: '/solutions/widget',
     // ... etc
-    AUDIENCE_TOUR_OPERATORS: '/audiences/tour-operators',
-    // ... etc
+    BOOK_DEMO: '/book-demo',
+    START_TRIAL: 'https://admin.travelity.app', // external (Phase 19)
+    PRICING: '/pricing',
+    FEATURES: '/features', // Phase 19
     LEGAL_PRIVACY: '/legal/privacy',
     LEGAL_TERMS: '/legal/terms',
     // ... etc
-    PRICING: '/pricing',
-    BOOK_DEMO: '/book-demo',
     CONTACT: '/contact',
     THANK_YOU: '/thank-you',
     FAQ: '/faq',
@@ -249,7 +245,7 @@ export const Paths = {
 } as const;
 ```
 
-Naming convention: namespaced prefixes (`SOLUTIONS_*`, `AUDIENCE_*`, `LEGAL_*`) for grouped routes; flat names for one-offs (`PRICING`, `CONTACT`).
+Naming convention: namespaced prefixes (`SOLUTIONS_*`, `LEGAL_*`) for grouped routes; flat names for one-offs (`PRICING`, `CONTACT`, `FEATURES`). External destinations carry a `// external` marker comment and consumers pass `external={true}` to `Button` / `LinkInline` (see §8.3 of `rules-astro.md`). The `AUDIENCE_*` constants were removed in Phase 18 with the audience cluster.
 
 ### 4.7 Folder/file naming
 
@@ -283,11 +279,11 @@ export const server = {
 };
 ```
 
-Current handler logs to console + simulates 600ms latency. **Real email service wiring is a pre-launch task.** Calendly bookings are CRM-synced via a POST inside `CalendlyWidget.tsx` (separate concern, separate TODO).
+Current handler logs to console + simulates 600ms latency. **Real email service wiring is a pre-launch task.** Calendly bookings no longer go through any backend (CRM sync was removed in the post-Phase-18 cleanup); the widget's `event_scheduled` listener just redirects to `/thank-you`.
 
 ### 4.10 Hydration directives
 
-React islands use `client:load` for forms (immediate hydration; the form is the page's primary CTA). No island uses `client:idle`, `client:visible`, or `client:media` yet — if a future island can defer, document the choice.
+`ContactForm` uses `client:load` (immediate hydration; the form is the contact page's primary CTA). It is the **only** React island in the site after `CalendlyWidget` was migrated to `.astro` in the post-Phase-18 cleanup. No island uses `client:idle`, `client:visible`, or `client:media` yet — if a future island can defer, document the choice.
 
 ---
 
@@ -325,7 +321,7 @@ All three render serif italic teal but the application differs:
 
 1. **Inline solid teal** (Hero, ClosingCTA): nested `<em><span>` markup — `<em class="not-italic"><span class="italic font-medium text-travelity-teal">…</span></em>`. Bespoke per consumer.
 2. **Scoped solid teal** (SectionHeader): `:global(em)` rule inside SectionHeader's scoped style. Automatic for any consumer with `<em>` in the headline slot. Used by Channels, Features, GoLive, etc.
-3. **Gradient text-fill** (ProductHero, PlanRec): blue→teal linear-gradient with `background-clip: text`. Applied via scoped `:global(em)` on the headline class. Richer treatment for Solutions/Audience pages.
+3. **Gradient text-fill** (ProductHero): blue→teal linear-gradient with `background-clip: text`. Applied via scoped `:global(em)` on the headline class. Richer treatment for Solutions-page headlines. (PlanRec, which also used this pattern, was deleted with the audiences cluster in Phase 18.)
 
 The duality is intentional but unresolved. **Open: consolidation review** if a fourth variant emerges.
 
@@ -362,9 +358,13 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 - Error renders an alert above the submit button
 - Field errors render with red borders, `aria-invalid`, `aria-describedby`
 
-### 6.2 Calendly — shipped (Phase 16)
+### 6.2 Calendly — native v1 inline embed (Phase 16, simplified post-18)
 
-`/book-demo` now uses `react-calendly`'s `<InlineWidget>` instead of a form. `CalendlyWidget.tsx` listens for the `event_scheduled` postMessage, POSTs the event + invitee URIs to a CRM sync endpoint (currently v1's `my.travelity.app/api/v1/cem/request-demo`), logs failures, then redirects to `/thank-you` unconditionally. The pre-Phase-16 BookDemoForm + bookDemoSchema + bookDemo Astro Action were deleted.
+`/book-demo` embeds Calendly directly with their **simple inline pattern** (mirrors v1's working setup): `<div class="calendly-inline-widget" data-url={url} style="min-width:320px;height:700px;">` + the `widget.css` link + `widget.js` async script. **No `react-calendly` wrapper** — the React package was tried and dropped in the post-Phase-18 cleanup; its `<InlineWidget>` couldn't pass `resize: true` (causing some dropdowns to clip), and switching to `resize: true` via the advanced JS API turned out to break Calendly's internal dropdown positioning. The fixed 700px height with **internal iframe scrolling** is the deliberate fix — Calendly's dropdowns position relative to the iframe viewport, so an internally-scrolling iframe keeps them on-screen.
+
+A small inline `<script>` listens for `message` events with `origin === 'https://calendly.com'` and `data.event === 'calendly.event_scheduled'`, then redirects to `/thank-you`. No CRM sync (the v1 `my.travelity.app/api/v1/cem/request-demo` POST was removed post-Phase-18 — `CalendlyWidget` is now purely view + redirect). A Google Ads conversion TODO comment is preserved for when GTM is wired.
+
+`PUBLIC_CALENDLY_URL` env var still overrides the default `calendly.com/travelity-sales/30min?text_color=…&primary_color=…` URL.
 
 ### 6.3 Real email service — pending
 
@@ -421,10 +421,11 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Must-haves (engineering)
 
 - [ ] **Wire real email service** to the `contact` Astro Action. Resend / SendGrid / Postmark or CRM/ticketing. Subject routing (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
-- [ ] **Swap Calendly CRM-sync endpoint** in `CalendlyWidget.tsx` when v2 backend ships. TODO marker in code at the exact call site. May need CORS allowlist on the new endpoint for the deploy origin.
-- [ ] **301 redirects** from old URLs: `/help` → `/help-center`, `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`. Only needed if external campaigns indexed the old paths.
+- [ ] **Wire Google Ads conversion** in `CalendlyWidget.astro`'s `event_scheduled` handler when GTM is bootstrapped. TODO comment at the call site documents the v1 conversion ID.
+- [ ] **301 redirects** from old URLs: `/help` → `/help-center`, `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, and the four retired `/audiences/*` paths (probably redirect to `/` or `/features`). Only needed if external campaigns indexed those paths.
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
+- [x] **Resolve Start-Free-Trial destination** — Phase 19. All four Start Free Trial CTAs now point at `Paths.START_TRIAL = https://admin.travelity.app` (external, opens in new tab).
 
 ### Must-haves (content / legal)
 
@@ -440,7 +441,8 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Should-haves (content)
 
 - [ ] **Real product screenshots** for the 5 simpler Solutions pages. Drop assets in `/public/`, swap `[Screenshot: …]` placeholder divs in CapabilitySection visual slots.
-- [ ] **Real travel photo** for HeroVisual. Component already takes `photoSrc` — pass when ready, MountainScene falls back automatically if unset.
+- [ ] **Real screenshots for `/features`** (Phase 19). All 9 sections currently point at the shared `/public/features/placeholder.svg`. Drop per-section images in `/public/features/` and update each `<img src>` in `src/pages/features.astro`.
+- [ ] **Real headline / lead / bullet copy for the 9 `/features` sections.** Top-of-file TODO comment tracks this. Placeholder strings ship today.
 - [x] **Real OTA logos** in ChannelDiagram — done in Phase 15. `GygLogo`, `ViatorLogo`, `KlookLogo` ship as Astro components under `src/components/decorative/ota-logos/`.
 - [ ] **Real testimonials** in SocialProof. Currently 3 placeholder cards.
 - [ ] **9 guide articles** for `/guides`. Currently all card hrefs are `#`.
@@ -455,9 +457,36 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. Phase narratives (13–17)
+## 10. Phase narratives (13–19)
 
 Brief context for each post-build phase. Newer phases on top.
+
+### Phase 19 — `/features` page + Start Free Trial → admin.travelity.app
+
+- **New page**: `src/pages/features.astro`. Compact top section (Eyebrow + italic-em h1 + 1-line dek) followed by 9 `CapabilitySection`s alternating flip (sections 2/4/6/8 flipped). Each section's `id` matches the home FeaturesSection card slugs (`channel-manager` → `team-collaboration`) and carries `scroll-mt-[var(--nav-height)]` so home-deep-links land below the sticky 68px nav. `ClosingCTASection` at the bottom with defaults.
+- **Home FeaturesSection trimmed to 6 of 9**: `features.slice(0, 6)` in the render so only the first six cards appear on `/`. The full nine entries stay in the array as a record (slug definitions co-located with the home consumer). Dek copy updated "Nine core capabilities..." → "Six of our core capabilities... The full set lives on the Features page."
+- **Placeholder image**: `public/features/placeholder.svg` (1280×720). Shared by all 9 sections via `<img src="/features/placeholder.svg">`. User swaps per-section paths as real screenshots arrive.
+- **Nav additions**: "Features" flat link added between Solutions and Pricing in `nav-data.ts`. "Start Free Trial" outline button added before "Book a demo" in `Nav.astro` (desktop) and `MobileMenu.astro` (mobile drawer, stacked above Book a demo). Both desktop + mobile use the same button.
+- **Start Free Trial site-wide → `https://admin.travelity.app`**: new `Paths.START_TRIAL` constant. All four Start Free Trial CTAs (Nav, MobileMenu, Hero, ProductHero, ClosingCTASection) point at it with `external={true}` (target=_blank + rel=noopener noreferrer). Three pending `// TODO: split when signup page exists` comments resolved.
+- **`ClosingCTASection` API**: added `primaryCtaExternal?: boolean` and `secondaryCtaExternal?: boolean` props (secondary defaults to `true` to match the new default external href).
+- **FeatureCard.astro** now requires `href`. Renders Card → `<a class="block no-underline p-7">` so the entire card interior is the click target; `.feature-card` class stays on the Card so the `:nth-child` color rotation still works.
+- New: `Share2Icon` in the icon barrel (Channel Manager). New: `Paths.FEATURES` and `Paths.START_TRIAL`.
+
+### Post-Phase-18 cleanup — book-demo merge, Calendly native embed, Resources nav drop
+
+Three loose-end edits committed together as `9c8bbe6`:
+
+- **`/book-demo` merged into one section**: previously had ProductHero + "What we'll cover" + "#schedule" anchored CalendlyWidget across three sections. Now a single two-column section — left column has the combined eyebrow + headline + lead + 4 CoverageItems (overridden to `mx-0 max-w-none` so the list left-aligns), right column has the Calendly widget directly. Removed: `BookDemoVideo` (no longer used on this page), the `#schedule` anchor, the redundant "Pick a time" CTA, the scroll-mt offset.
+- **`react-calendly` removed**: `CalendlyWidget.tsx` deleted. Replaced with `CalendlyWidget.astro` using Calendly's **simple inline embed** pattern (`<div class="calendly-inline-widget" data-url>` + widget.js auto-discovery) at the same fixed 700px height v1 uses — chosen specifically because internal iframe scroll keeps Calendly's internal dropdowns on-screen (the bug we hit when trying the JS API with `resize: true`). `react-calendly` removed from `package.json`. Site is down to **1 React island** (only `ContactForm` left). CRM-sync POST also removed (per product direction).
+- **Resources dropdown removed from nav**: top-level Resources entry deleted from `nav-data.ts`. Both desktop nav and mobile drawer lose it automatically (single source). Guides / FAQ / Help Center / Our Story remain reachable via the Footer's Resources column.
+
+### Phase 18 — home hero + retire audiences + layout density pass
+
+- **Home hero redesigned**: dropped the `BookingFlowCard` + `HeroVisual` (gradient sky / mountain mock) entirely. Right column is now `BookDemoVideo` (the YouTube walkthrough). Left column: eyebrow + headline that wraps after "business" (`<br>`) + larger dek ("Bookings, channels, OTA integrations…") + a separate "Built for: Tour Operators | Transfer Providers | Travel Agencies | Independent Guides" line styled bold teal with `|` separators. The pill-chip `AudienceChips` component deleted.
+- **Audiences cluster retired**: 4 audience pages + 5 audience-only shared components (`pain-grid`, `solution-map`, `feature-pillars`, `workflow`, `plan-rec`), `MountainScene`, `BookingFlowCard`, `HeroVisual`, `AudienceChips`, the `AUDIENCE_*` paths, and the Audiences `FooterColumn` (footer grid `5→4` cols). Roughly −2050 lines.
+- **Container max-width: 1280px**. Tailwind v4 `container` overridden via `@utility container { margin-inline: auto; max-width: 1280px; }` in `global.css` — replaces the v4 default which grew to 1536px at the `2xl` breakpoint.
+- **Section padding consolidated**: every section across every page is now `py-12 md:py-16` (48/64px). Retires the prior three-tier system (`py-16 md:py-24`, `py-24`, `py-16 md:py-20`). Home `Hero` keeps its own `pt-8 pb-4` because it sits directly under the nav and has its own `min-h`. Hero's inner-grid `py-8` removed (was duplicating the wrapper padding). ChannelsSection's asymmetric `pt-16 pb-24 md:pt-20 md:pb-28` collapsed to the canonical tier.
+- **Rules doc additions**: §4.4 *Native Tailwind sizing* — prefer scale utilities (incl. v4 dynamic spacing — `min-h-135` for 540px etc.) over arbitrary-value brackets. Carve-outs: ch-units, off-scale design values, exotic tracking. §13 *Code quality baseline* — SOLID, clean code, semantic-HTML accessibility (old §13 → §14).
 
 ### Phase 17 — mobile drawer, tablet breakpoint, animated featured border
 

@@ -25,12 +25,12 @@ There is no fifth layer. Don't invent one.
 | Adapter     | `@astrojs/node` (mode: `standalone`). Swap-friendly to Vercel/Netlify/Cloudflare.                                 |
 | Styling     | Tailwind v4 (CSS-first via `@theme` in `src/styles/global.css`). **No `tailwind.config.js`.**                     |
 | Type system | TypeScript 5.x strict                                                                                             |
-| Islands     | React 19 — only when state is genuinely needed (currently 2: `ContactForm`, `CalendlyWidget`)                     |
+| Islands     | React 19 — only when state is genuinely needed (currently 1: `ContactForm`. `CalendlyWidget` migrated to `.astro` post-Phase-18.) |
 | Forms       | React Hook Form + zod 4 (shared schemas with server-side Astro Actions)                                           |
 | Icons       | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Same icon set, different runtime bindings. |
 | Node        | 22+                                                                                                               |
 
-**What is NOT used.** TanStack Query. React Router. Axios. Redux/Zustand/Jotai. CSS-in-JS. Astro Content Collections (the legal/marketing content lives directly in `.astro` pages — Phase 9 chose this over a CC abstraction). shadcn/ui (Phase 0 considered, dropped — primitives we needed were small enough to hand-write).
+**What is NOT used.** TanStack Query. React Router. Axios. Redux/Zustand/Jotai. CSS-in-JS. Astro Content Collections (the legal/marketing content lives directly in `.astro` pages — Phase 9 chose this over a CC abstraction). shadcn/ui (Phase 0 considered, dropped — primitives we needed were small enough to hand-write). **`react-calendly`** (post-Phase-18 — its `<InlineWidget>` couldn't pass `resize: true`; the team-selection dropdown clipped; we switched to Calendly's official simple inline embed pattern with widget.js auto-discovery, matching v1's working setup).
 
 If you need to reach for one of those, stop and ask. The discipline of refusing them shaped most of the rest of the codebase.
 
@@ -42,51 +42,50 @@ If you need to reach for one of those, stop and ask. The discipline of refusing 
 
 ```
 src/
-├── actions/index.ts           # Astro Actions (currently `contact` only; bookDemo removed Phase 16)
+├── actions/index.ts           # Astro Actions (currently `contact` only)
 ├── components/
-│   ├── book-demo/             # /book-demo page-specific (Phase 16)
-│   │   ├── CalendlyWidget.tsx
-│   │   └── BookDemoVideo.astro
+│   ├── book-demo/             # /book-demo page-specific
+│   │   └── CalendlyWidget.astro  # native v1 inline embed, 700px fixed (post-Phase-18)
 │   ├── chrome/                # site-wide chrome
 │   │   ├── nav/               # Nav + NavLink + NavSubRow + MobileMenuTrigger + MobileMenu
 │   │   └── footer/
 │   ├── home/                  # home-page sections only
-│   │   ├── hero/
+│   │   ├── hero/              # Hero only (post-Phase-18 — HeroVisual / BookingFlowCard / AudienceChips deleted)
 │   │   ├── channels-section/
-│   │   ├── features-section/
+│   │   ├── features-section/  # FeatureCard requires href; renders slice(0, 6) of 9 (Phase 19)
 │   │   ├── parallax-break/
 │   │   ├── pricing-section/
 │   │   ├── golive-section/
-│   │   └── closing-cta-section/
+│   │   └── closing-cta-section/  # primaryCtaExternal / secondaryCtaExternal props (Phase 19)
 │   ├── shared/                # cross-page composable components
-│   │   ├── product-hero/      # shared by Solutions and Audience pages
-│   │   ├── capability-section/
+│   │   ├── product-hero/      # Solutions pages (Audience pages retired Phase 18)
+│   │   ├── capability-section/   # reused on Solutions + /features (Phase 19)
 │   │   ├── cross-sell/
 │   │   ├── social-proof/
-│   │   ├── pain-grid/         # audience-specific
-│   │   ├── solution-map/
-│   │   ├── feature-pillars/
-│   │   ├── workflow/
-│   │   ├── plan-rec/
 │   │   ├── coverage-list/
 │   │   ├── comparison-table/
 │   │   ├── faq-accordion/
 │   │   ├── legal-page-layout/
 │   │   ├── guide-card/
 │   │   └── help-tile/
+│   │   # NOTE: pain-grid, solution-map, feature-pillars, workflow, plan-rec
+│   │   # were audience-only; deleted with the audience cluster in Phase 18.
 │   ├── ui/                    # atoms (Button, Eyebrow, Tag, Card, etc.)
-│   ├── decorative/            # bespoke SVG (mountain-scene + ota-logos)
+│   ├── decorative/            # bespoke SVG (mountain-scene deleted Phase 18 — only ota-logos/ now)
+│   │   └── ota-logos/
 │   └── forms/                 # React form islands
-│       └── contact/           # (book-demo removed Phase 16)
+│       └── contact/           # the only React island left
 ├── icons/index.ts             # the icon barrel (single source of truth)
 ├── layouts/MarketingLayout.astro
 ├── lib/utils/                 # cn(), Paths, externalAttrs
 ├── pages/                     # file-based routes
 │   ├── _internal/             # underscore prefix → excluded from build
-│   ├── audiences/
+│   ├── features.astro         # Phase 19 — 9 anchored CapabilitySections
 │   ├── solutions/
 │   └── legal/
-└── styles/global.css          # @theme tokens + base resets + --nav-height + smooth-scroll
+│   # NOTE: audiences/ subfolder deleted Phase 18 (4 pages retired).
+├── public/features/           # placeholder.svg + future per-section screenshots
+└── styles/global.css          # @theme tokens + container @utility (1280px) + --nav-height + smooth-scroll
 ```
 
 ### 2.2 Naming
@@ -361,7 +360,7 @@ The italic-em phrase is the project's editorial signature. Three coexisting patt
 
 2. **SectionHeader scoped `:global(em)`** — used wherever a `SectionHeader` consumes an `<em>` inside the headline slot. The styling lives once in `SectionHeader.astro`'s scoped `<style>` block and reaches every consumer's `<em>`.
 
-3. **ProductHero / PlanRec gradient text-fill** — used on Solutions, Audience, and PlanRec headlines. `<em>` styled via `:global(em)` inside the parent's scoped `<style>`, with a teal-to-blue `linear-gradient` clipped to text. Distinct from the solid-teal pattern; reserved for product-page headlines that want a richer feel.
+3. **ProductHero gradient text-fill** — used on Solutions-page headlines. `<em>` styled via `:global(em)` inside the parent's scoped `<style>`, with a teal-to-blue `linear-gradient` clipped to text. Distinct from the solid-teal pattern; reserved for product-page headlines that want a richer feel. (PlanRec, which also used this pattern, was deleted with the audiences cluster in Phase 18.)
 
 ### 6.4 Animation timings (locked)
 
@@ -413,7 +412,7 @@ subject: z.enum(SUBJECTS, { errorMap: () => ({ message: '…' }) });
 
 All actions live in `src/actions/index.ts` on a single `server` object. Each uses `defineAction({ accept: 'json', input: zodSchema, handler })`. Don't split actions across multiple files — there's one consumer (`astro:actions`) and the bundle re-exports based on this file's exports.
 
-Currently only `contact` exists (Phase 16 removed `bookDemo` when /book-demo switched to Calendly). The handler `console.log`s + simulates latency. Real email destination is a pre-launch swap (PROJECT-STATE.md §9). Note: Calendly bookings flow through `CalendlyWidget.tsx`'s `event_scheduled` handler, not through an Astro Action — different pattern, separate TODO.
+Currently only `contact` exists (Phase 16 removed `bookDemo` when /book-demo switched to Calendly). The handler `console.log`s + simulates latency. Real email destination is a pre-launch swap (PROJECT-STATE.md §9). Note: Calendly bookings flow through `CalendlyWidget.astro`'s inline `postMessage` handler, not through an Astro Action — different pattern, view-only since the CRM sync was removed post-Phase-18.
 
 ---
 
@@ -467,15 +466,15 @@ These patterns shaped multiple phases. Don't deviate without a decision:
 
 1. **Card composition over inheritance.** `Card` is unopinionated about padding; consumers (`PricingPlan`, `FeatureCard`) bring their own `p-7`. `interactive` adds hover-lift. The `featured` variant now ships an **animated conic-gradient border** via the `.card-animated-border` class — card's own bg is the gradient, an inset pseudo paints the white interior (Phase 17 — see comment block in `Card.astro` for the painting-order rationale). `topAccent` prop still exists but is ignored on featured (the border IS the accent). New "card-like" patterns extend Card via composition, not by adding variants.
 
-2. **ClosingCTASection reuse.** Most marketing pages end with `<ClosingCTASection />` with default copy. The Phase 6.5 override surface (`eyebrow`, `description`, `primaryCtaLabel/Href`, `secondaryCtaLabel/Href`, named `headline` slot) is available but unused — pages can opt in when per-page tone is needed.
+2. **ClosingCTASection reuse.** Most marketing pages end with `<ClosingCTASection />` with default copy. The override surface (`eyebrow`, `description`, `primaryCtaLabel/Href`, `secondaryCtaLabel/Href`, `primaryCtaExternal`, `secondaryCtaExternal`, named `headline` slot) is available; pages opt in when per-page tone is needed. Default `secondaryCtaHref` is `Paths.START_TRIAL` (external, opens in a new tab, Phase 19).
 
-3. **PlanRec primary CTA → `/pricing`** (not `/book-demo`). Audience pages route their PlanRec to pricing because it's the next discovery step. Demo bookings happen via the explicit demo CTAs.
+3. **Decorative SVG conventions.** Bespoke `hsl()` values are fine inside `src/components/decorative/`. The wrapper `<div>` is `aria-hidden="true"`. SVG root has `viewBox` and `preserveAspectRatio` matched to the layout shape. Partner brand SVGs (`ota-logos/`) keep their brand hex literals as a documented exemption — they're not Travelity's palette.
 
-4. **Decorative SVG conventions.** Bespoke `hsl()` values are fine inside `src/components/decorative/`. The wrapper `<div>` is `aria-hidden="true"`. SVG root has `viewBox` and `preserveAspectRatio` matched to the layout shape. Partner brand SVGs (`ota-logos/`) keep their brand hex literals as a documented exemption — they're not Travelity's palette.
+4. **The home and Nav consume a single `nav-data.ts`.** Updating the desktop nav also updates the mobile drawer. Add new top-level links by editing the array, not by editing `Nav.astro` markup.
 
-5. **The home and Nav consume a single `nav-data.ts`.** Updating the desktop nav also updates the mobile drawer. Add new top-level links by editing the array, not by editing `Nav.astro` markup.
+5. **Calendly is not a form.** `/book-demo` uses Calendly's **simple inline embed** pattern (`<div class="calendly-inline-widget" data-url="…" style="height:700px">` + `widget.js` async script), not a React Hook Form pattern. The booking is confirmed inside Calendly's iframe; our code only listens for `calendly.event_scheduled` `postMessage` (origin-checked) and redirects to `/thank-you`. **No `react-calendly`** — it was tried and dropped post-Phase-18; see §1 "What is NOT used" for the reasoning. The fixed 700px height with internal iframe scroll is deliberate — keeps Calendly's internal dropdowns on-screen.
 
-6. **Calendly is not a form.** `/book-demo` uses `react-calendly`'s `<InlineWidget>` (Phase 16), not a React Hook Form pattern. The booking is confirmed inside Calendly's iframe; our code only listens for `event_scheduled`, POSTs to CRM-sync, and redirects. CORS failures on the sync log but do not block the user flow.
+6. **Clickable cards link the whole interior.** When a `Card` needs to navigate, wrap its body in `<a class="block no-underline p-7 h-full">` *inside* the Card (Card keeps its `.feature-card` class so any positional CSS keeps working). Pattern set by `home/features-section/FeatureCard.astro` in Phase 19.
 
 ---
 
