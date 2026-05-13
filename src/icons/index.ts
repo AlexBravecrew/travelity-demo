@@ -26,9 +26,6 @@ export { Users as UsersIcon } from '@lucide/astro'; // CRM
 export { CreditCard as CreditCardIcon } from '@lucide/astro'; // Payment gateways
 export { Share2 as Share2Icon } from '@lucide/astro'; // Channel manager (Phase 19)
 
-// Pricing (Phase 3c)
-export { Minus as MinusIcon } from '@lucide/astro'; // excluded features in pricing
-
 // GoLive section (Phase 3d)
 export { Settings as SettingsIcon } from '@lucide/astro'; // 1. Setup assistance
 export { GraduationCap as GraduationCapIcon } from '@lucide/astro'; // 2. Personalized training

@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils/cn';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckIcon, MinusIcon } from '@/icons';
+import { CheckIcon, XIcon } from '@/icons';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface PlanFeature {
@@ -141,8 +141,8 @@ const {
                         )}
                     >
                         {feature.muted ? (
-                            <MinusIcon
-                                class="w-3.5 h-3.5 mt-1 flex-shrink-0 text-ink-soft"
+                            <XIcon
+                                class="w-3.5 h-3.5 mt-1 flex-shrink-0 text-destructive"
                                 stroke-width="2.5"
                                 aria-hidden="true"
                             />

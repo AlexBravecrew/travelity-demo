@@ -28,6 +28,7 @@ There is no fifth layer. Don't invent one.
 | Islands     | React 19 — only when state is genuinely needed (currently 1: `ContactForm`. `CalendlyWidget` migrated to `.astro` post-Phase-18.) |
 | Forms       | React Hook Form + zod 4 (shared schemas with server-side Astro Actions)                                           |
 | Icons       | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Same icon set, different runtime bindings. |
+| Analytics   | GA4 + Google Ads via `gtag.js` running inside a Web Worker via `@astrojs/partytown` (Phase 23). CookieYes is the certified CMP for IAB TCF + banner UI; Consent Mode v2 gates everything default-denied. See PROJECT-STATE.md §4.11. |
 | Node        | 22+                                                                                                               |
 
 **What is NOT used.** TanStack Query. React Router. Axios. Redux/Zustand/Jotai. CSS-in-JS. Astro Content Collections (the legal/marketing content lives directly in `.astro` pages — Phase 9 chose this over a CC abstraction). shadcn/ui (Phase 0 considered, dropped — primitives we needed were small enough to hand-write). **`react-calendly`** (post-Phase-18 — its `<InlineWidget>` couldn't pass `resize: true`; the team-selection dropdown clipped; we switched to Calendly's official simple inline embed pattern with widget.js auto-discovery, matching v1's working setup).
@@ -44,47 +45,50 @@ If you need to reach for one of those, stop and ask. The discipline of refusing 
 src/
 ├── actions/index.ts           # Astro Actions (currently `contact` only)
 ├── components/
-│   ├── book-demo/             # /book-demo page-specific
-│   │   └── CalendlyWidget.astro  # native v1 inline embed, 700px fixed (post-Phase-18)
+│   ├── book-demo/             # /book-demo page-specific (conversion-wired Phase 23)
+│   │   └── CalendlyWidget.astro  # native v1 inline embed at 700px; postMessage → gtag conversion + /thank-you
 │   ├── chrome/                # site-wide chrome
 │   │   ├── nav/               # Nav + NavLink + NavSubRow + MobileMenuTrigger + MobileMenu
-│   │   └── footer/
+│   │   ├── analytics/         # Phase 23 — GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2
+│   │   └── footer/            # 4-col responsive (Phase 22 dropped Solutions col)
 │   ├── home/                  # home-page sections only
 │   │   ├── hero/              # Hero only (post-Phase-18 — HeroVisual / BookingFlowCard / AudienceChips deleted)
 │   │   ├── channels-section/
 │   │   ├── features-section/  # FeatureCard requires href; renders slice(0, 6) of 9 (Phase 19)
 │   │   ├── parallax-break/
-│   │   ├── pricing-section/
+│   │   ├── pricing-section/   # Phase 21 hover-swap active card (CSS-only via :has()); excluded-feature icon = red X (Phase 23)
 │   │   ├── golive-section/
 │   │   └── closing-cta-section/  # primaryCtaExternal / secondaryCtaExternal props (Phase 19)
 │   ├── shared/                # cross-page composable components
-│   │   ├── product-hero/      # Solutions pages (Audience pages retired Phase 18)
-│   │   ├── capability-section/   # reused on Solutions + /features (Phase 19)
-│   │   ├── cross-sell/
-│   │   ├── social-proof/
+│   │   ├── capability-section/   # reused on /solutions + /features
 │   │   ├── coverage-list/
-│   │   ├── comparison-table/
+│   │   ├── comparison-table/  # Phase 23 — excluded cells now red X
 │   │   ├── faq-accordion/
 │   │   ├── legal-page-layout/
 │   │   ├── guide-card/
 │   │   └── help-tile/
-│   │   # NOTE: pain-grid, solution-map, feature-pillars, workflow, plan-rec
-│   │   # were audience-only; deleted with the audience cluster in Phase 18.
+│   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
+│   │   # plan-rec deleted with the audience cluster.
+│   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
+│   │   # the Solutions cluster.
 │   ├── ui/                    # atoms (Button, Eyebrow, Tag, Card, etc.)
 │   ├── decorative/            # bespoke SVG (mountain-scene deleted Phase 18 — only ota-logos/ now)
 │   │   └── ota-logos/
 │   └── forms/                 # React form islands
 │       └── contact/           # the only React island left
 ├── icons/index.ts             # the icon barrel (single source of truth)
-├── layouts/MarketingLayout.astro
+├── layouts/MarketingLayout.astro  # renders <Analytics /> in <head>
 ├── lib/utils/                 # cn(), Paths, externalAttrs
 ├── pages/                     # file-based routes
 │   ├── _internal/             # underscore prefix → excluded from build
 │   ├── features.astro         # Phase 19 — 9 anchored CapabilitySections
-│   ├── solutions/
+│   ├── solutions.astro        # Phase 22 — 3 outcome sections; replaces retired 6-page cluster
 │   └── legal/
-│   # NOTE: audiences/ subfolder deleted Phase 18 (4 pages retired).
-├── public/features/           # placeholder.svg + future per-section screenshots
+│   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
+│   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
+├── public/
+│   ├── features/              # placeholder.svg + future per-section screenshots
+│   └── solutions/             # placeholder.svg + future per-section screenshots
 └── styles/global.css          # @theme tokens + container @utility (1280px) + --nav-height + smooth-scroll
 ```
 
@@ -98,7 +102,7 @@ src/
 ### 2.3 Subfolder suffix conventions
 
 - `home/<name>-section/` — page sections of the home page (e.g. `pricing-section/`).
-- `shared/<bare-name>/` — cross-page components (e.g. `product-hero/`).
+- `shared/<bare-name>/` — cross-page components (e.g. `capability-section/`).
 - `ui/<bare-name>/` — atoms (e.g. `button/`).
 
 ### 2.4 Barrel imports
@@ -154,7 +158,7 @@ Standard slot names used across the codebase:
 
 - `headline` — h1/h2 content with possible `<em>` italic-em (see §6.3)
 - `dek` — the descriptive paragraph below a headline
-- `aside` — right-column secondary content (used by ProductHero)
+- `aside` — right-column secondary content. (Historically used by `ProductHero` which was retired in Phase 22 — slot name still available if a future component needs the convention.)
 - `ctas` — slot the consumer fills with `<Button>` instances; if omitted, the host component may render defaults
 - `icon` — a single icon component, used inside any tile/card with an icon block
 - `visual` — a screenshot/illustration slot, used by CapabilitySection
@@ -360,7 +364,7 @@ The italic-em phrase is the project's editorial signature. Three coexisting patt
 
 2. **SectionHeader scoped `:global(em)`** — used wherever a `SectionHeader` consumes an `<em>` inside the headline slot. The styling lives once in `SectionHeader.astro`'s scoped `<style>` block and reaches every consumer's `<em>`.
 
-3. **ProductHero gradient text-fill** — used on Solutions-page headlines. `<em>` styled via `:global(em)` inside the parent's scoped `<style>`, with a teal-to-blue `linear-gradient` clipped to text. Distinct from the solid-teal pattern; reserved for product-page headlines that want a richer feel. (PlanRec, which also used this pattern, was deleted with the audiences cluster in Phase 18.)
+3. **Gradient text-fill** — historically used on Solutions-page headlines (ProductHero) and audience PlanRec. `<em>` styled via `:global(em)` inside the parent's scoped `<style>`, with a teal-to-blue `linear-gradient` clipped to text. Both consumers were retired (PlanRec in Phase 18 with the audiences cluster; ProductHero in Phase 22 with the Solutions cluster). Pattern documented here as a precedent — if a future product-page headline wants the richer feel, reach for this variant rather than inventing a fourth.
 
 ### 6.4 Animation timings (locked)
 

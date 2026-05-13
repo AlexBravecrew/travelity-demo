@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 19 — new /features page, home FeaturesSection trimmed to 6 of 9 cards, Start Free Trial points at admin.travelity.app site-wide.
+> **Last updated:** Phase 23 — analytics integration (GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2). Earlier in this batch: Phase 21 pricing hover-swap and Phase 22 Solutions cluster retirement.
 
 ---
 
@@ -21,7 +21,8 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Framework      | Astro 6 (file-based routing, static-by-default with hybrid mode for Actions)                                                  |
 | Styling        | Tailwind v4 (CSS-first via `@theme` in `src/styles/global.css`)                                                               |
 | Type system    | TypeScript 5.x strict                                                                                                         |
-| Islands        | React 19 (only when state genuinely needed — currently 1: `ContactForm`. `CalendlyWidget` migrated to `.astro` in post-Phase-18 cleanup)  |
+| Islands        | React 19 (only when state genuinely needed — currently 1: `ContactForm`. `CalendlyWidget` migrated to `.astro` in post-Phase-18 cleanup) |
+| Analytics      | GA4 + Google Ads via `gtag.js`, loaded inside a Web Worker via `@astrojs/partytown` (Phase 23). CookieYes is the consent management platform (certified CMP, IAB TCF); Consent Mode v2 default-denied wired into the bridge. |
 | Server runtime | `@astrojs/node` adapter (mode: standalone). Swap-friendly to Vercel/Netlify/Cloudflare.                                       |
 | Forms          | React Hook Form + zod (shared schemas with server-side Astro Actions)                                                         |
 | Icons          | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Both reference the same icon set; the bindings differ. |
@@ -31,20 +32,15 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 
 ---
 
-## 2. Site shape — 20 prerendered pages + 1 server endpoint
+## 2. Site shape — 15 prerendered pages + 1 server endpoint
 
-| Path                        | Phase   | Notes                                                                                       |
-| --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
-| `/`                         | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Parallax → Pricing → GoLive → ClosingCTA |
-| `/solutions/booking-engine` | 5       | The flagship Solutions page. 6 capability sections.                                         |
-| `/solutions/widget`         | 5       | 3 capabilities                                                                              |
-| `/solutions/integrations`   | 5       | OTA integrations. 3 capabilities.                                                           |
-| `/solutions/proposals`      | 5       | 3 capabilities                                                                              |
-| `/solutions/reporting`      | 5       | 3 capabilities                                                                              |
-| `/solutions/security`       | 5       | 3 capabilities                                                                              |
-| `/features`                 | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
-| `/pricing`                  | 8       | Hero → 3 plan cards → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close   |
-| `/book-demo`                | 7,16,18 | Single two-column section: left = headline + lead + 4 CoverageItems; right = Calendly inline widget (native v1 embed, 700px fixed height). Post-Phase-18 cleanup. |
+| Path           | Phase   | Notes                                                                                       |
+| -------------- | ------- | ------------------------------------------------------------------------------------------- |
+| `/`            | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Parallax → Pricing (hover-swap active card) → GoLive → ClosingCTA |
+| `/solutions`   | 22      | Compact top title + 3 CapabilitySections (Increase Sales, Prevent Overbookings and Revenue Loss, Manage All Bookings in One Place) + ClosingCTA. Replaces the Phase-5 six-page cluster. |
+| `/features`    | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
+| `/pricing`     | 8, 21   | Page hero → 3 plan cards (hover-swap active card, Phase 21; section header suppressed via `hideHeader` to avoid duplicate title) → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close |
+| `/book-demo`   | 7,16,18 | Single two-column section: left = headline + lead + 4 CoverageItems; right = Calendly inline widget (native v1 embed, 700px fixed height). Post-Phase-18 cleanup. Conversion fires Google Ads conversion event on `event_scheduled` (Phase 23). |
 | `/thank-you`                | 7       | Static post-booking destination                                                             |
 | `/legal/privacy`            | 9       | AI-drafted GDPR-aware privacy policy                                                        |
 | `/legal/terms`              | 9       | AI-drafted Terms of Service                                                                 |
@@ -59,7 +55,9 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 
 **Retired in Phase 18:** `/audiences/tour-operators`, `/audiences/transfer-providers`, `/audiences/accommodation-hosts`, `/audiences/independent-guides`. The four audience pages and their dedicated shared components (`pain-grid`, `solution-map`, `feature-pillars`, `workflow`, `plan-rec`) were deleted. Audience routing lives now only in the home Hero dek (italic teal phrase listing the four types).
 
-**Intentionally 404:** `/help`, `/privacy`, `/terms`, `/dpa`, `/cookies`, and the four `/audiences/*` paths. Set up redirects before going live if any external campaigns or search-engine indexes pointed at the old URLs.
+**Retired in Phase 22:** `/solutions/booking-engine`, `/solutions/widget`, `/solutions/integrations`, `/solutions/proposals`, `/solutions/reporting`, `/solutions/security`. The six-page Solutions cluster collapsed into a single outcome-oriented `/solutions` page. `ProductHero`, `CrossSell`, `SocialProof` shared components were deleted with the cluster (no remaining consumers).
+
+**Intentionally 404:** `/help`, `/privacy`, `/terms`, `/dpa`, `/cookies`, the four `/audiences/*` paths, and the six `/solutions/<sub>` paths. Set up redirects before going live if external campaigns indexed any of those.
 
 ---
 
@@ -86,56 +84,57 @@ src/
 │   │   │   ├── nav-data.ts          # Source of truth for nav structure
 │   │   │   ├── nav-active.ts        # getActiveSection(pathname, links) (Phase 14)
 │   │   │   └── nav.client.ts        # Hover-swap, scroll handlers, mobile drawer + backdrop/close wiring
-│   │   └── footer/                  # 5/2/1-col responsive, dark ink
+│   │   ├── analytics/               # GA4 + Google Ads via Partytown + Consent Mode v2 (Phase 23)
+│   │   └── footer/                  # 4-col responsive (Phase 22 dropped Solutions col), dark ink
 │   │
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
 │   │   ├── hero/                    # Hero only — HeroVisual/BookingFlowCard/AudienceChips deleted Phase 18 (video on right now)
 │   │   ├── channels-section/        # Orbit diagram: hub + 5 nodes + flowing dashed pulses (Phase 15)
 │   │   ├── features-section/        # FeatureCard requires href; renders first 6 of 9 entries (Phase 19)
 │   │   ├── parallax-break/          # Scroll-driven photo break
-│   │   ├── pricing-section/         # 3 plan cards (reused on /pricing)
+│   │   ├── pricing-section/         # 3 plan cards (Phase 21 hover-swap active card; reused on /pricing with hideHeader)
 │   │   ├── golive-section/          # 4-col onboarding
-│   │   └── closing-cta-section/     # Final conversion strip (secondaryCtaExternal prop, Phase 19)
+│   │   └── closing-cta-section/     # Final conversion strip (primary/secondaryCtaExternal props, Phase 19)
 │   │
 │   ├── shared/                      # Cross-page components
-│   │   ├── product-hero/            # Used by Solutions pages (Phase 4); ctasAlign prop Phase 16
-│   │   ├── capability-section/      # 2-col with `flip` prop — reused on Solutions and /features (Phase 4)
-│   │   ├── cross-sell/              # 3-card "explore" strip (Phase 4)
-│   │   ├── social-proof/            # Testimonial cards (Phase 4)
+│   │   ├── capability-section/      # 2-col with `flip` prop — reused on /solutions and /features (Phase 4)
 │   │   ├── coverage-list/           # /book-demo "what we'll cover" (Phase 7)
-│   │   ├── comparison-table/        # Pricing feature comparison (Phase 8)
+│   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
 │   │   ├── legal-page-layout/       # Shared chrome for 4 legal pages (Phase 9)
 │   │   ├── guide-card/              # Article preview card (Phase 10)
 │   │   └── help-tile/               # Help center hub tile (Phase 10)
-│   │   # NOTE: pain-grid, solution-map, feature-pillars, workflow, plan-rec
-│   │   # were audience-only and deleted with the audience cluster in Phase 18.
+│   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
+│   │   # plan-rec deleted with the audience cluster.
+│   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
+│   │   # the Solutions cluster.
 │   │
 │   ├── decorative/                  # Bespoke SVG components
 │   │   └── ota-logos/               # GygLogo + ViatorLogo + KlookLogo (Phase 15)
 │   │   # NOTE: mountain-scene deleted Phase 18 with HeroVisual.
 │   │
-│   ├── book-demo/                   # /book-demo page-specific (Phase 16, simplified post-18)
-│   │   └── CalendlyWidget.astro     # Native v1 inline embed at 700px; postMessage → /thank-you redirect
+│   ├── book-demo/                   # /book-demo page-specific (Phase 16, simplified post-18, conversion-wired Phase 23)
+│   │   └── CalendlyWidget.astro     # Native v1 inline embed at 700px; postMessage → gtag conversion + /thank-you redirect
 │   │
 │   └── forms/                       # React form islands
 │       └── contact/                 # 4-field contact form (the only React island left)
 │
 ├── pages/
 │   ├── index.astro                  # /
-│   ├── solutions/                   # 6 Solutions pages
+│   ├── solutions.astro              # Phase 22 — 3 outcome sections; replaces the retired 6-page cluster
+│   ├── features.astro               # Phase 19 — 9 anchored CapabilitySections + placeholder screenshots
 │   ├── legal/                       # 4 Legal pages
-│   ├── _internal/                   # Underscore-prefixed: showcase + phase-4-preview (not built)
+│   ├── _internal/                   # Underscore-prefixed: showcase (not built)
 │   ├── book-demo/index.astro
 │   ├── contact.astro
-│   ├── features.astro               # Phase 19 — 9 anchored CapabilitySections + placeholder screenshots
 │   ├── pricing.astro
 │   ├── faq.astro
 │   ├── guides.astro
 │   ├── help-center.astro
 │   ├── our-story.astro
 │   └── thank-you.astro
-│   # NOTE: audiences/ subfolder deleted Phase 18 (4 pages retired).
+│   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
+│   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
 │
 ├── actions/
 │   └── index.ts                     # contact Astro Action (bookDemo removed Phase 16 — Calendly handles)
@@ -225,9 +224,7 @@ All internal URLs come from `src/lib/utils/paths.ts`:
 ```ts
 export const Paths = {
     HOME: '/',
-    SOLUTIONS_BOOKING_ENGINE: '/solutions/booking-engine',
-    SOLUTIONS_WIDGET: '/solutions/widget',
-    // ... etc
+    SOLUTIONS: '/solutions', // collapsed cluster, Phase 22
     BOOK_DEMO: '/book-demo',
     START_TRIAL: 'https://admin.travelity.app', // external (Phase 19)
     PRICING: '/pricing',
@@ -245,7 +242,7 @@ export const Paths = {
 } as const;
 ```
 
-Naming convention: namespaced prefixes (`SOLUTIONS_*`, `LEGAL_*`) for grouped routes; flat names for one-offs (`PRICING`, `CONTACT`, `FEATURES`). External destinations carry a `// external` marker comment and consumers pass `external={true}` to `Button` / `LinkInline` (see §8.3 of `rules-astro.md`). The `AUDIENCE_*` constants were removed in Phase 18 with the audience cluster.
+Naming convention: namespaced prefixes (`LEGAL_*`) for grouped routes; flat names for one-offs (`PRICING`, `CONTACT`, `FEATURES`, `SOLUTIONS`). External destinations carry a `// external` marker comment and consumers pass `external={true}` to `Button` / `LinkInline` (see §8.3 of `rules-astro.md`). The `AUDIENCE_*` and `SOLUTIONS_*` namespaced constants were removed in Phase 18 / Phase 22 respectively as their clusters collapsed.
 
 ### 4.7 Folder/file naming
 
@@ -279,11 +276,35 @@ export const server = {
 };
 ```
 
-Current handler logs to console + simulates 600ms latency. **Real email service wiring is a pre-launch task.** Calendly bookings no longer go through any backend (CRM sync was removed in the post-Phase-18 cleanup); the widget's `event_scheduled` listener just redirects to `/thank-you`.
+Current handler logs to console + simulates 600ms latency. **Real email service wiring is a pre-launch task.** Calendly bookings no longer go through any backend (CRM sync was removed in the post-Phase-18 cleanup); the widget's `event_scheduled` listener fires a `gtag('event', 'conversion', …)` call (Phase 23 — Google Ads conversion `AW-…/o6zNCP7t0fYaEOO1yZhA`, with `value: 0, currency: 'EUR'`) gated on `event_callback` + 1s timeout, then redirects to `/thank-you`.
 
 ### 4.10 Hydration directives
 
 `ContactForm` uses `client:load` (immediate hydration; the form is the contact page's primary CTA). It is the **only** React island in the site after `CalendlyWidget` was migrated to `.astro` in the post-Phase-18 cleanup. No island uses `client:idle`, `client:visible`, or `client:media` yet — if a future island can defer, document the choice.
+
+### 4.11 Analytics (Phase 23)
+
+`src/components/chrome/analytics/Analytics.astro` injects the analytics chain into `<head>` on every prerendered page in production. Five script blocks in deterministic order:
+
+1. **Consent Mode v2 default = `denied`** (inline main thread) — `gtag('consent', 'default', { ad_storage, analytics_storage, ad_user_data, ad_personalization: 'denied', wait_for_update: 500 })`. Establishes the baseline before any Google script runs.
+2. **CookieYes script** (sync main thread, before gtag.js) — Google-certified CMP integrated with IAB TCF. Required since Jan 2024 for personalized Google Ads in EEA/UK/CH. Banner UI + category config live in the CookieYes dashboard.
+3. **gtag.js** loaded inside the **Partytown Web Worker** via `type="text/partytown"` — moves ~28KB of Google JS off the main thread.
+4. **gtag config** (main thread, Partytown-forwarded) — `gtag('config', GA4_ID)` + `gtag('config', ADS_ID)`.
+5. **CookieYes → Consent Mode v2 bridge** (inline main thread) — listens for `cookieyes_consent_update` and maps `accepted` array to `gtag('consent', 'update', { ... })`.
+
+Partytown integration is configured in `astro.config.mjs` with `forward: ['dataLayer.push', 'gtag']` so call sites in any component (e.g. `CalendlyWidget.astro`'s conversion event) can use `window.gtag(...)` normally on the main thread; Partytown bridges to the worker transparently.
+
+**Dev guard**: the component returns `null` when `import.meta.env.DEV === true`. No analytics scripts inject during `astro dev` — prod GA4/Ads never see dev sessions.
+
+**Env vars** (build-time inlined; v1 prod IDs are fallbacks):
+- `PUBLIC_GA4_ID` (default `G-4SDEHMDC2F`)
+- `PUBLIC_GOOGLE_ADS_ID` (default `AW-17231403747`)
+- `PUBLIC_GOOGLE_ADS_CONVERSION_LABEL` (default `o6zNCP7t0fYaEOO1yZhA`)
+- `PUBLIC_COOKIEYES_CLIENT_ID` (default `a13b12d7f7983235806273d7`)
+
+**Footer "Cookie preferences" button** uses CookieYes's standard `class="cky-banner-element"` to re-open its preferences modal — no custom wiring needed.
+
+**Possible CookieYes / Partytown conflict**: if CookieYes auto-blocker mode is enabled in the dashboard, it may rewrite the partytown-typed script's `type` attribute on consent grant, defeating the worker offload. Consent gating still works (Consent Mode v2 is the source of truth) — only the performance benefit is lost. Disable auto-blocker in CookieYes if you want the worker to stick.
 
 ---
 
@@ -321,7 +342,7 @@ All three render serif italic teal but the application differs:
 
 1. **Inline solid teal** (Hero, ClosingCTA): nested `<em><span>` markup — `<em class="not-italic"><span class="italic font-medium text-travelity-teal">…</span></em>`. Bespoke per consumer.
 2. **Scoped solid teal** (SectionHeader): `:global(em)` rule inside SectionHeader's scoped style. Automatic for any consumer with `<em>` in the headline slot. Used by Channels, Features, GoLive, etc.
-3. **Gradient text-fill** (ProductHero): blue→teal linear-gradient with `background-clip: text`. Applied via scoped `:global(em)` on the headline class. Richer treatment for Solutions-page headlines. (PlanRec, which also used this pattern, was deleted with the audiences cluster in Phase 18.)
+3. **Gradient text-fill** — historically on ProductHero (Solutions) and PlanRec (audiences): blue→teal linear-gradient with `background-clip: text`, applied via scoped `:global(em)` on the headline class. Both consumers retired (PlanRec Phase 18, ProductHero Phase 22). Pattern documented as a precedent — reach for it if a future product page needs the richer feel.
 
 The duality is intentional but unresolved. **Open: consolidation review** if a fourth variant emerges.
 
@@ -362,9 +383,9 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 
 `/book-demo` embeds Calendly directly with their **simple inline pattern** (mirrors v1's working setup): `<div class="calendly-inline-widget" data-url={url} style="min-width:320px;height:700px;">` + the `widget.css` link + `widget.js` async script. **No `react-calendly` wrapper** — the React package was tried and dropped in the post-Phase-18 cleanup; its `<InlineWidget>` couldn't pass `resize: true` (causing some dropdowns to clip), and switching to `resize: true` via the advanced JS API turned out to break Calendly's internal dropdown positioning. The fixed 700px height with **internal iframe scrolling** is the deliberate fix — Calendly's dropdowns position relative to the iframe viewport, so an internally-scrolling iframe keeps them on-screen.
 
-A small inline `<script>` listens for `message` events with `origin === 'https://calendly.com'` and `data.event === 'calendly.event_scheduled'`, then redirects to `/thank-you`. No CRM sync (the v1 `my.travelity.app/api/v1/cem/request-demo` POST was removed post-Phase-18 — `CalendlyWidget` is now purely view + redirect). A Google Ads conversion TODO comment is preserved for when GTM is wired.
+A small inline `<script>` listens for `message` events with `origin === 'https://calendly.com'` and `data.event === 'calendly.event_scheduled'`. On a confirmed booking it fires the **Google Ads conversion** event (Phase 23) via `window.gtag('event', 'conversion', { send_to: AW-…/o6zNCP7t0fYaEOO1yZhA, value: 0, currency: 'EUR', event_callback })`, then redirects to `/thank-you` either when `event_callback` fires or after a 1s timeout fallback (covers ad-blocker / gtag-unavailable). A re-entry guard prevents double-navigation. No CRM sync (the v1 `my.travelity.app/api/v1/cem/request-demo` POST was removed post-Phase-18).
 
-`PUBLIC_CALENDLY_URL` env var still overrides the default `calendly.com/travelity-sales/30min?text_color=…&primary_color=…` URL.
+`PUBLIC_CALENDLY_URL` env var still overrides the default `calendly.com/travelity-sales/30min?text_color=…&primary_color=…` URL. The Google Ads conversion target is built from `PUBLIC_GOOGLE_ADS_ID` + `PUBLIC_GOOGLE_ADS_CONVERSION_LABEL` at build time via Astro's `define:vars`.
 
 ### 6.3 Real email service — pending
 
@@ -421,11 +442,13 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Must-haves (engineering)
 
 - [ ] **Wire real email service** to the `contact` Astro Action. Resend / SendGrid / Postmark or CRM/ticketing. Subject routing (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
-- [ ] **Wire Google Ads conversion** in `CalendlyWidget.astro`'s `event_scheduled` handler when GTM is bootstrapped. TODO comment at the call site documents the v1 conversion ID.
-- [ ] **301 redirects** from old URLs: `/help` → `/help-center`, `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, and the four retired `/audiences/*` paths (probably redirect to `/` or `/features`). Only needed if external campaigns indexed those paths.
+- [ ] **301 redirects** from old URLs: `/help` → `/help-center`, `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
+- [ ] **Add prod + preview domains to CookieYes whitelist** (Phase 23). Production `travelity.app` is already configured. For Netlify deploy previews or staging, add the relevant domain pattern in CookieYes dashboard → Organizations & Sites; otherwise the banner refuses to render. `localhost:3000` was added for local prod-preview testing.
+- [ ] **Update privacy/cookies legal copy** to name GA4, Google Ads, and CookieYes by name (Phase 23 deferred this — see §6.2). GDPR specificity requires naming the data processors.
 - [x] **Resolve Start-Free-Trial destination** — Phase 19. All four Start Free Trial CTAs now point at `Paths.START_TRIAL = https://admin.travelity.app` (external, opens in new tab).
+- [x] **Wire Google Ads conversion on Calendly bookings** — Phase 23. `CalendlyWidget.astro` fires `gtag('event', 'conversion', …)` with `value`/`currency`, gated redirect via `event_callback` + 1s timeout fallback.
 
 ### Must-haves (content / legal)
 
@@ -444,7 +467,6 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 - [ ] **Real screenshots for `/features`** (Phase 19). All 9 sections currently point at the shared `/public/features/placeholder.svg`. Drop per-section images in `/public/features/` and update each `<img src>` in `src/pages/features.astro`.
 - [ ] **Real headline / lead / bullet copy for the 9 `/features` sections.** Top-of-file TODO comment tracks this. Placeholder strings ship today.
 - [x] **Real OTA logos** in ChannelDiagram — done in Phase 15. `GygLogo`, `ViatorLogo`, `KlookLogo` ship as Astro components under `src/components/decorative/ota-logos/`.
-- [ ] **Real testimonials** in SocialProof. Currently 3 placeholder cards.
 - [ ] **9 guide articles** for `/guides`. Currently all card hrefs are `#`.
 
 ### Nice-to-haves
@@ -457,9 +479,38 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. Phase narratives (13–19)
+## 10. Phase narratives (13–23)
 
-Brief context for each post-build phase. Newer phases on top.
+Brief context for each post-build phase. Newer phases on top. **Phase 20 is not listed — an orange-accent test was prototyped and reverted before commit.**
+
+### Phase 23 — Analytics integration (GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2)
+
+- **`src/components/chrome/analytics/Analytics.astro`** wires GA4 + Google Ads into every prerendered page via a 5-step `<head>` injection. Same GA4/Ads/CookieYes IDs as v1 (`G-4SDEHMDC2F`, `AW-17231403747`, CookieYes client `a13b12d7f7983235806273d7`). All ID strings are env-var-driven (`PUBLIC_GA4_ID`, `PUBLIC_GOOGLE_ADS_ID`, `PUBLIC_GOOGLE_ADS_CONVERSION_LABEL`, `PUBLIC_COOKIEYES_CLIENT_ID`) with v1-prod fallbacks. See §4.11 for the full chain.
+- **Consent Mode v2 default-denied** baseline established BEFORE any Google script — v1 had no consent-mode signals, so Google Ads in EEA/UK/CH was being limited to non-personalized ads (since Jan 2024). Bridge listener maps CookieYes's `cookieyes_consent_update` event to `gtag('consent', 'update', { ... })`.
+- **Partytown integration** added via `@astrojs/partytown@^2.1.7` with `forward: ['dataLayer.push', 'gtag']`. gtag.js (~28KB) runs in a Web Worker; call sites use `window.gtag(...)` normally on the main thread.
+- **Dev guard**: Analytics returns `null` when `import.meta.env.DEV === true`. No analytics scripts inject during `astro dev`. Same gate covers CookieYes.
+- **Dev server port** changed from Astro default `4321` → `3000` so `npm run dev` and `npx serve dist` share the same URL (one CookieYes whitelist entry covers both).
+- **Calendly conversion** wired in `CalendlyWidget.astro`: replaces the prior `// TODO(analytics)` comment with a real `gtag('event', 'conversion', …)` call carrying `value: 0, currency: 'EUR'`. Navigation gated on `event_callback` + 1s timeout fallback + re-entry guard — fixes v1's racy redirect that could drop conversions.
+- **Footer "Cookie preferences" button** uses CookieYes's standard `class="cky-banner-element"` to re-open the preferences modal.
+- **Pricing card excluded-feature icon** changed from `MinusIcon` (gray) → red X (`XIcon` + `text-destructive`). Same change applied to `ComparisonTable.astro` (both card-list and mobile-stacked layouts). `MinusIcon` removed from `src/icons/index.ts` as orphaned.
+- **Note on CookieYes auto-blocker vs Partytown**: if auto-blocker mode is enabled in the CookieYes dashboard, it may rewrite `type="text/partytown"` on consent grant, defeating the worker offload. Consent gating still works (Consent Mode v2 is the source of truth). Disable auto-blocker in the dashboard if the worker offload matters.
+
+### Phase 22 — Retire 6-page Solutions cluster, ship single `/solutions` page
+
+- **Solutions cluster deleted**: `/solutions/booking-engine`, `/widget`, `/integrations`, `/proposals`, `/reporting`, `/security` (6 pages). Replaced with one outcome-oriented page at `/solutions` (`src/pages/solutions.astro`) containing 3 CapabilitySections: **Increase Sales**, **Prevent Overbookings and Revenue Loss**, **Manage All Bookings in One Place**. Compact top title + ClosingCTASection. Placeholder copy + shared `/public/solutions/placeholder.svg`; user replaces per-section as real screenshots arrive.
+- **Orphaned shared components retired** (no remaining consumers after the cluster deletion): `product-hero/`, `cross-sell/`, `social-proof/`. Same discipline as Phase 18's audience-component sweep.
+- **`/_internal/phase-4-preview.astro`** deleted — it was a testbed for the three components above.
+- **Nav**: Solutions becomes a flat link `{ label: 'Solutions', href: Paths.SOLUTIONS }`. No dropdown, no sub-row on `/solutions`.
+- **Footer**: Solutions column removed. Grid `[2fr_1fr_1fr_1fr]` → `[2fr_1fr_1fr]` (brand + Resources + Company).
+- **Paths**: 6 `SOLUTIONS_*` constants removed, single `SOLUTIONS: '/solutions'` added.
+- Net diff: −1795 lines, +153 lines.
+
+### Phase 21 — Pricing hover-swap active card + suppress duplicate `/pricing` title
+
+- **`/pricing` duplicate title fix**: the page hero already shows "Plans for every size of operation." — `PricingSection.astro` was then rendering the same headline via its inner `SectionHeader`. Added an opt-out `hideHeader?: boolean` prop; `pricing.astro` passes it (`<PricingSection hideHeader />`). Home behavior unchanged (header still shows).
+- **Hover-swap pricing cards**: previously the middle card was statically "featured" (gradient ring + elevation). Now: middle card is the active card **by default** (no hover); on hover of any other card, that card becomes active and the middle de-activates; on mouseleave, middle re-activates. Pure CSS via `:has()`: `.pricing-cards:not(:has(.pricing-plan:hover)) .pricing-plan:nth-child(2)` + `.pricing-cards .pricing-plan:hover` both apply the same active styles (conic-gradient bg, animated angle, transparent border, teal shadow, `lg`-breakpoint `translateY(-12px) scale(1.02)`).
+- **Style block is `is:global`** — Astro's `:global()` wrapper inside `:has()` failed to match (middle card lost both elevation and ring entirely). `.pricing-cards` is unique to this section so unscoping is safe.
+- **PricingPlan simplified**: dropped the `featured` prop and all its effects (Card variant switch, static `lg:-translate-y-3 lg:scale-[1.02]`, internal teal accents on name and check icons). Internal content stays uniform; only outside styling changes on hover. Badge renders whenever `badgeLabel` is set; "Most popular" stays pinned to the middle card as a static plan label.
 
 ### Phase 19 — `/features` page + Start Free Trial → admin.travelity.app
 
