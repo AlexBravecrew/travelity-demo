@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@astrojs/netlify": "^7.0.8",
+        "@astrojs/partytown": "^2.1.7",
         "@astrojs/react": "^5.0.4",
         "@hookform/resolvers": "^5.2.2",
         "@lucide/astro": "^1.14.0",

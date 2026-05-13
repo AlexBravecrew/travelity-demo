@@ -16,6 +16,16 @@ const DEFAULT_CALENDLY_URL =
     'https://calendly.com/travelity-sales/30min?text_color=3a4d7d&primary_color=55b5cf';
 
 const calendlyUrl = import.meta.env.PUBLIC_CALENDLY_URL || DEFAULT_CALENDLY_URL;
+
+/**
+ * Google Ads conversion target — `AW-XXX/LABEL` — built from env vars
+ * with v1 production fallbacks. Inlined into the postMessage handler
+ * via Astro's `define:vars` so the value lands in the static HTML at
+ * build time.
+ */
+const adsConversionTarget = `${
+    import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-17231403747'
+}/${import.meta.env.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL || 'o6zNCP7t0fYaEOO1yZhA'}`;
 ---
 
 <div class={cn('calendly-widget-container', className)} {...rest}>
@@ -45,16 +55,53 @@ const calendlyUrl = import.meta.env.PUBLIC_CALENDLY_URL || DEFAULT_CALENDLY_URL;
     src="https://assets.calendly.com/assets/external/widget.js"
     async></script>
 
-<script>
-    window.addEventListener('message', (e: MessageEvent) => {
+<script is:inline define:vars={{ adsConversionTarget }}>
+    /**
+     * Calendly booking → Google Ads conversion + /thank-you redirect.
+     *
+     * Improvements over v1:
+     *   - postMessage origin check (v1 didn't have it).
+     *   - Conversion fires with `value`/`currency` so Google Ads can
+     *     compute ROAS (v1 sent neither).
+     *   - Navigation is gated on `event_callback` (v1's was an empty
+     *     noop, causing a race where the ping might not flush).
+     *   - 1s timeout fallback covers ad-blocker / gtag-unavailable
+     *     scenarios so the user is never stuck on the booking page.
+     *   - Re-entry guard prevents double-navigation if both
+     *     event_callback and the timeout fire.
+     *
+     * Consent gating: `window.gtag` is the Partytown-forwarded queue
+     * pusher set up in Analytics.astro. If Consent Mode v2 has
+     * `ad_storage: denied`, Google records a cookieless modeled
+     * conversion — call still fires, event_callback still runs.
+     */
+    window.addEventListener('message', (e) => {
         if (e.origin !== 'https://calendly.com') return;
-        const data = e.data as { event?: string } | undefined;
-        if (data?.event === 'calendly.event_scheduled') {
-            // TODO(analytics): fire Google Ads conversion when GTM is wired.
-            // v1 fires AW-17231403747/o6zNCP7t0fYaEOO1yZhA here. We can't
-            // call gtag() because GTM isn't bootstrapped yet — see the
-            // analytics phase for the wire-up. Until then this is a no-op.
+        const data = e.data;
+        if (!data || data.event !== 'calendly.event_scheduled') return;
+
+        let navigated = false;
+        const navigate = () => {
+            if (navigated) return;
+            navigated = true;
             window.location.href = '/thank-you';
+        };
+
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'conversion', {
+                send_to: adsConversionTarget,
+                value: 0,
+                currency: 'EUR',
+                event_callback: navigate,
+            });
+            // Fallback: if gtag never reaches event_callback (ad
+            // blocker, network failure, Partytown init pending),
+            // navigate after 1s so the user isn't stuck.
+            setTimeout(navigate, 1000);
+        } else {
+            // Analytics isn't loaded (dev build, or first-paint race) —
+            // navigate immediately, no conversion to fire.
+            navigate();
         }
     });
 </script>

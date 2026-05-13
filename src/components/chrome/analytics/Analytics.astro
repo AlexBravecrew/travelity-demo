@@ -1,0 +1,125 @@
+---
+/**
+ * Analytics (Phase 23) — GA4 + Google Ads via gtag.js (run in a Web
+ * Worker via @astrojs/partytown), plus CookieYes as the consent
+ * management platform (CMP) for EU/UK/Switzerland regulatory cover.
+ *
+ * Why CookieYes specifically: since Jan 2024, Google requires a
+ * certified CMP integrated with IAB TCF to serve personalized ads
+ * in EEA/UK/CH. CookieYes is on Google's certified list. A custom
+ * banner can satisfy GDPR + CCPA but Google Ads in those regions
+ * would degrade to limited/non-personalized only. CookieYes also
+ * handles the banner UI + consent audit log out of the box.
+ *
+ * Loading sequence (rendered into <head> in order):
+ *   1. Main-thread inline script — dataLayer + gtag stub +
+ *      `gtag('consent', 'default', { ... 'denied' })`. Establishes
+ *      a denied baseline before any tags fire.
+ *   2. CookieYes script (sync) — banner UI + IAB TCF signals.
+ *      Loads before gtag.js so CookieYes's auto-blocker can gate
+ *      Google scripts until consent is granted.
+ *   3. Partytown-worker async script — gtag.js loader.
+ *   4. Main-thread inline script — `gtag('js')` + `gtag('config')`
+ *      for GA4 + Ads. Partytown forwards these to the worker via
+ *      its `forward: ['gtag', 'dataLayer.push']` config.
+ *   5. Main-thread inline script — listener for CookieYes's
+ *      `cookieyes_consent_update` CustomEvent. Maps CookieYes
+ *      categories (analytics, advertisement) to Consent Mode v2
+ *      signals and calls `gtag('consent', 'update', ...)`.
+ *
+ * Dev guard: renders nothing in `astro dev` so local browsing
+ * never hits the production GA4 property or Ads account.
+ *
+ * Env vars (build-time inlined via `import.meta.env.PUBLIC_*`):
+ *   PUBLIC_GA4_ID                          (fallback: G-4SDEHMDC2F)
+ *   PUBLIC_GOOGLE_ADS_ID                   (fallback: AW-17231403747)
+ *   PUBLIC_GOOGLE_ADS_CONVERSION_LABEL     (fallback: o6zNCP7t0fYaEOO1yZhA)
+ *   PUBLIC_COOKIEYES_CLIENT_ID             (fallback: v1's a13b12d7f7983235806273d7)
+ *
+ * Re-open the CookieYes preferences modal from anywhere by adding
+ * `class="cky-banner-element"` to a button (see Footer.astro).
+ */
+
+const isDev = import.meta.env.DEV;
+
+const GA4_ID = import.meta.env.PUBLIC_GA4_ID || 'G-4SDEHMDC2F';
+const ADS_ID = import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-17231403747';
+const COOKIEYES_CLIENT_ID =
+    import.meta.env.PUBLIC_COOKIEYES_CLIENT_ID ||
+    'a13b12d7f7983235806273d7';
+---
+
+{
+    !isDev && (
+        <Fragment>
+            {/* 1. Consent Mode v2 default — must run before any Google
+                  script. Inline, main thread; Partytown forwards
+                  subsequent gtag calls to the worker. */}
+            <script
+                is:inline
+                set:html={`
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    window.gtag = gtag;
+                    gtag('consent', 'default', {
+                      ad_storage: 'denied',
+                      analytics_storage: 'denied',
+                      ad_user_data: 'denied',
+                      ad_personalization: 'denied',
+                      wait_for_update: 500
+                    });
+                    gtag('js', new Date());
+                `}
+            />
+
+            {/* 2. CookieYes — sync, must load before gtag.js so its
+                  auto-blocker can gate Google scripts until consent. */}
+            <script
+                is:inline
+                id="cookieyes"
+                type="text/javascript"
+                src={`https://cdn-cookieyes.com/client_data/${COOKIEYES_CLIENT_ID}/script.js`}
+            />
+
+            {/* 3. gtag.js loader — runs in Partytown worker. */}
+            <script
+                is:inline
+                type="text/partytown"
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
+            />
+
+            {/* 4. gtag config — main thread, forwarded to worker. */}
+            <script
+                is:inline
+                set:html={`
+                    gtag('config', '${GA4_ID}');
+                    gtag('config', '${ADS_ID}');
+                `}
+            />
+
+            {/* 5. CookieYes → Consent Mode v2 bridge.
+                  CookieYes fires `cookieyes_consent_update` on every
+                  consent change with `e.detail.accepted` and
+                  `e.detail.rejected` arrays of category slugs. We map
+                  the two non-essential categories we use (analytics +
+                  advertisement) to the four Consent Mode v2 signals. */}
+            <script
+                is:inline
+                set:html={`
+                    window.addEventListener('cookieyes_consent_update', function(e) {
+                      var accepted = (e.detail && e.detail.accepted) || [];
+                      var ad = accepted.indexOf('advertisement') !== -1 ? 'granted' : 'denied';
+                      var analytics = accepted.indexOf('analytics') !== -1 ? 'granted' : 'denied';
+                      gtag('consent', 'update', {
+                        ad_storage: ad,
+                        ad_user_data: ad,
+                        ad_personalization: ad,
+                        analytics_storage: analytics
+                      });
+                    });
+                `}
+            />
+        </Fragment>
+    )
+}

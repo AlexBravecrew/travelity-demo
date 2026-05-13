@@ -1,4 +1,6 @@
 ---
+import { Analytics } from '@/components/chrome/analytics';
+
 interface Props {
     title: string;
     description?: string;
@@ -72,6 +74,11 @@ const fullCanonical =
                 }
             })();
         </script>
+
+        <!-- Analytics — GA4 + Google Ads via Partytown Web Worker, gated
+             by Consent Mode v2. Renders nothing in `astro dev`. See
+             component for the 4-step load sequence. -->
+        <Analytics />
     </head>
     <body>
         <a href="#main" class="skip-link">Skip to content</a>
