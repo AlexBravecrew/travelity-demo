@@ -1,0 +1,100 @@
+---
+import { cn } from '@/lib/utils/cn';
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * Section 1 (Increase Sales) — a small "new booking" toast that rises
+ * into view inside the middle photo of OutcomeCollage. The host's
+ * `data-in` attribute gates both the entrance transition and the
+ * hover-bob keyframe so the element doesn't render in motion before
+ * scroll arrives.
+ */
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+    class={cn(
+        'booking-toast absolute',
+        'flex items-center gap-3 rounded-xl bg-paper/95 backdrop-blur-sm',
+        'px-4 py-3 border border-line',
+        'opacity-0 will-change-transform',
+        className,
+    )}
+    style="box-shadow: 0 16px 32px -8px hsl(var(--ink) / 0.18); transform: translateY(16px) scale(0.96);"
+    {...rest}
+>
+    <!-- Green pulse dot -->
+    <span class="relative flex h-2.5 w-2.5 flex-shrink-0">
+        <span
+            class="absolute inset-0 rounded-full bg-success/40 booking-toast-ping"
+            aria-hidden="true"></span>
+        <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-success"
+        ></span>
+    </span>
+
+    <div class="flex flex-col leading-tight">
+        <span
+            class="font-mono text-[10px] uppercase tracking-[0.10em] text-ink-soft"
+            >New booking</span
+        >
+        <span class="text-[14px] font-semibold text-ink">
+            +1 booking <span class="text-ink-soft">·</span>
+            <span class="text-travelity-teal">Viator</span>
+        </span>
+    </div>
+</div>
+
+<style>
+    .booking-toast {
+        transition:
+            opacity 700ms var(--ease-spring) 480ms,
+            transform 700ms var(--ease-spring) 480ms;
+    }
+
+    [data-in='true'] .booking-toast {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        animation: booking-toast-bob 6s ease-in-out 1400ms infinite;
+    }
+
+    @keyframes booking-toast-bob {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-6px);
+        }
+    }
+
+    .booking-toast-ping {
+        animation: booking-toast-ping 2s var(--ease-out) infinite;
+    }
+
+    @keyframes booking-toast-ping {
+        0% {
+            transform: scale(1);
+            opacity: 0.6;
+        }
+        100% {
+            transform: scale(2.4);
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .booking-toast {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+        }
+        .booking-toast-ping {
+            animation: none !important;
+        }
+    }
+</style>

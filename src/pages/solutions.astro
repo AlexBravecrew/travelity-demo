@@ -3,59 +3,63 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
 import { Eyebrow } from '@/components/ui/eyebrow';
-import { CapabilitySection } from '@/components/shared/capability-section';
+import {
+    AmbientBackground,
+    OutcomeCollage,
+    BookingToast,
+    LockChip,
+    QueueStack,
+} from '@/components/solutions';
+import type { CollageImage } from '@/components/solutions';
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
 
 export const prerender = true;
 
 /**
- * Solutions page sections — the three customer-facing outcomes Travelity
- * delivers. Replaces the Phase 5 six-page cluster (booking-engine, widget,
- * integrations, proposals, reporting, security) with one focused page.
+ * Solutions page — scrapbook-style outcome sections (giant title above a
+ * 3-photo collage above body text) over the atmospheric blob/particle/
+ * streak layer. Deliberately NOT a two-column text/image grid — that
+ * layout is reserved for /features.
  *
- * TODO: replace temporary copy with real marketing-approved text.
- * TODO: drop per-section screenshots into `/public/solutions/` and update
- *       each `image:` path below.
+ * TODO: replace the placeholder images with real travel photographs.
+ *       Drop assets under `/public/solutions/<slug>/<n>.jpg` and update
+ *       each `images:` entry below. The component's CSS duotone filter
+ *       tints whatever you drop in on-palette automatically.
  */
-const solutions = [
+
+interface Outcome {
+    slug: string;
+    body: string;
+    images: CollageImage[];
+}
+
+const outcomes: Outcome[] = [
     {
-        title: 'Increase Sales',
         slug: 'increase-sales',
-        headline: 'Sell more, on more channels, with less work.',
-        lead: 'Reach buyers wherever they search. Direct site, OTA partners, embedded widget on partner sites — same inventory, no duplicate setup, no double-bookings.',
-        bullets: [
-            { label: 'Direct sales via your own widget on any site.' },
-            { label: 'OTA reach — GetYourGuide, Viator, Klook out of the box.' },
-            { label: 'Custom trip proposals that close themselves online.' },
-            { label: 'Upsells and add-ons at the point of booking.' },
+        body: 'Reach buyers wherever they search. Direct site, OTA partners, embedded widget on partner sites — same inventory, one setup, every channel, no duplicate work, and no double-bookings.',
+        images: [
+            { src: '/solutions/placeholder.svg', alt: 'Direct site bookings' },
+            { src: '/solutions/placeholder.svg', alt: 'OTA partner channels' },
+            { src: '/solutions/placeholder.svg', alt: 'Embedded booking widget' },
         ],
-        image: '/solutions/placeholder.svg',
     },
     {
-        title: 'Prevent Overbookings and Revenue Loss',
         slug: 'prevent-overbookings',
-        headline: 'The same seat. Every channel. Never double-sold.',
-        lead: 'Inventory locks the instant a booking starts — across every channel, simultaneously. No more reconciling spreadsheets at midnight. No more refunding angry customers on Saturday morning.',
-        bullets: [
-            { label: 'Real-time availability shared across every channel.' },
-            { label: 'Concurrent-booking conflict prevention at the database level.' },
-            { label: 'Cancellation policies enforced automatically.' },
-            { label: 'Audit trail on every inventory change.' },
+        body: "Inventory locks the instant a booking starts — across every channel, simultaneously. No more reconciling spreadsheets at midnight. No more refunding angry customers on a Saturday morning.",
+        images: [
+            { src: '/solutions/placeholder.svg', alt: 'Real-time availability' },
+            { src: '/solutions/placeholder.svg', alt: 'Inventory lock in action' },
+            { src: '/solutions/placeholder.svg', alt: 'Channel sync audit log' },
         ],
-        image: '/solutions/placeholder.svg',
     },
     {
-        title: 'Manage All Bookings in One Place',
         slug: 'manage-all-bookings',
-        headline: 'One queue. Every order. Direct, widget, OTA, partner.',
-        lead: "Whether it came through your widget, GetYourGuide, an inbound email, or a sales rep — it's in the same place. Edit, refund, reassign, generate documents. No spreadsheet juggling.",
-        bullets: [
-            { label: 'Unified booking queue regardless of channel.' },
-            { label: 'Full edit, refund, and reassign capability with audit logs.' },
-            { label: 'Customer records auto-built from every booking.' },
-            { label: 'Documents (tickets, vouchers, invoices) generated on demand.' },
+        body: "Whether it came through your widget, GetYourGuide, an inbound email, or a sales rep — it lands in the same queue. Edit, refund, reassign, generate documents. No spreadsheet juggling.",
+        images: [
+            { src: '/solutions/placeholder.svg', alt: 'Unified booking inbox' },
+            { src: '/solutions/placeholder.svg', alt: 'Customer record builder' },
+            { src: '/solutions/placeholder.svg', alt: 'On-demand documents' },
         ],
-        image: '/solutions/placeholder.svg',
     },
 ];
 ---
@@ -66,15 +70,18 @@ const solutions = [
 >
     <Nav />
 
-    <main>
-        <!-- Compact top section: short title, no full hero -->
-        <section class="bg-paper py-12 md:py-16">
+    <main class="relative overflow-hidden bg-paper isolate">
+        <!-- Atmospheric blobs + particles + streaks behind everything -->
+        <AmbientBackground />
+
+        <!-- Compact top intro -->
+        <section class="relative py-16 md:py-24">
             <div class="container mx-auto px-6 text-center">
                 <Eyebrow withRule centered>Solutions</Eyebrow>
 
                 <h1
-                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.03em] max-w-[22ch] mx-auto mt-6 mb-5"
-                    style="font-size: clamp(32px, 4vw, 48px);"
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.03em] max-w-[24ch] mx-auto mt-6 mb-5"
+                    style="font-size: clamp(34px, 4.4vw, 52px);"
                 >
                     What Travelity actually
                     <em class="not-italic">
@@ -85,7 +92,7 @@ const solutions = [
                 </h1>
 
                 <p
-                    class="text-lg text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                    class="text-lg md:text-xl text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
                 >
                     Three outcomes you can measure: more bookings, no
                     double-sells, and one place to run the whole operation.
@@ -93,33 +100,49 @@ const solutions = [
             </div>
         </section>
 
-        <!-- 3 outcome sections, alternating flip. id matches slug so the
-             section can be linked from elsewhere in the future (e.g. a
-             home-page "Solutions" CTA → /solutions#increase-sales).
-             scroll-mt offsets the anchor jump under the sticky nav. -->
-        {
-            solutions.map((s, i) => (
-                <CapabilitySection
-                    id={s.slug}
-                    eyebrow={s.title}
-                    flip={i % 2 === 1}
-                    bullets={s.bullets}
-                    class="scroll-mt-[var(--nav-height)]"
-                >
-                    <Fragment slot="headline">{s.headline}</Fragment>
-                    <Fragment slot="lead">{s.lead}</Fragment>
-                    <Fragment slot="visual">
-                        <img
-                            src={s.image}
-                            alt={`${s.title} screenshot`}
-                            class="block w-full aspect-video rounded-xl bg-surface-alt border border-line object-cover"
-                            loading="lazy"
-                            decoding="async"
-                        />
-                    </Fragment>
-                </CapabilitySection>
-            ))
-        }
+        <!-- Outcome 1 — Increase Sales -->
+        <OutcomeCollage
+            id={outcomes[0]!.slug}
+            images={outcomes[0]!.images}
+        >
+            <Fragment slot="title">
+                <em>Increase</em> Sales.
+            </Fragment>
+            <Fragment slot="body">{outcomes[0]!.body}</Fragment>
+            <Fragment slot="accent">
+                <BookingToast class="top-4 right-4 md:top-5 md:right-5" />
+            </Fragment>
+        </OutcomeCollage>
+
+        <!-- Outcome 2 — Prevent Overbookings -->
+        <OutcomeCollage
+            id={outcomes[1]!.slug}
+            images={outcomes[1]!.images}
+        >
+            <Fragment slot="title">
+                <em>Prevent</em> Overbookings <br class="hidden md:inline" />
+                and Revenue Loss.
+            </Fragment>
+            <Fragment slot="body">{outcomes[1]!.body}</Fragment>
+            <Fragment slot="accent">
+                <LockChip class="bottom-4 left-4 md:bottom-5 md:left-5" />
+            </Fragment>
+        </OutcomeCollage>
+
+        <!-- Outcome 3 — Manage All Bookings -->
+        <OutcomeCollage
+            id={outcomes[2]!.slug}
+            images={outcomes[2]!.images}
+        >
+            <Fragment slot="title">
+                <em>Manage</em> All Bookings <br class="hidden md:inline" />
+                in One Place.
+            </Fragment>
+            <Fragment slot="body">{outcomes[2]!.body}</Fragment>
+            <Fragment slot="accent">
+                <QueueStack class="top-4 right-4 md:top-5 md:right-5" />
+            </Fragment>
+        </OutcomeCollage>
 
         <ClosingCTASection />
     </main>

@@ -13,6 +13,13 @@
     --travelity-blue-deep: 218 50% 38%; /* #324A7A */
     --travelity-teal-deep: 194 40% 40%; /* #3D8094 */
 
+    /* Warm atmospheric tones — used only as gradient/glare stops, never flat
+       fills. Currently consumed by the Solutions page ambient blob layer;
+       earmarked for site-wide CTA halos / highlight pills in a follow-up. */
+    --travelity-sunset: 14 75% 60%; /* coral/sunset — primary warm */
+    --travelity-amber: 32 80% 65%; /* golden amber — highlight */
+    --travelity-dawn: 350 55% 75%; /* soft rose — atmosphere */
+
     /* Surfaces */
     --paper: 0 0% 100%; /* #FFFFFF */
     --surface: 0 0% 100%; /* alias for paper */
@@ -196,5 +203,30 @@ body {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   Ambient drift — slow orbit applied to atmospheric blobs on
+   the Solutions page so the background never feels frozen, even
+   when the user isn't scrolling. ±18px range over 60s.
+   Scroll-driven parallax (rAF) stacks on top of this via CSS
+   `translate` composing with the inline transform — the blob's
+   inline transform is set to the parallax offset; this keyframe
+   nudges `--drift-x/y` which the blob composes via `translate`.
+   ============================================================ */
+@keyframes ambient-drift {
+    0%,
+    100% {
+        translate: 0 0;
+    }
+    25% {
+        translate: 14px -10px;
+    }
+    50% {
+        translate: -6px 18px;
+    }
+    75% {
+        translate: -16px -4px;
     }
 }

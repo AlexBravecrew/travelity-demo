@@ -1,0 +1,87 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { LockIcon } from '@/icons';
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * Section 2 (Prevent Overbookings) — a "LOCKED · Seat 07" chip that
+ * stamps in with a spring scale + tilt as the section enters view.
+ *
+ * Travel touch: the "07" reads as a seat number; the LOCKED label uses
+ * mono uppercase so it visually maps to a status pill rather than a
+ * decorative chip.
+ */
+
+export interface Props extends HTMLAttributes<'div'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+    class={cn(
+        'lock-chip absolute',
+        'flex items-center gap-3 rounded-xl bg-paper px-4 py-3',
+        'border border-travelity-teal/30',
+        'opacity-0 will-change-transform',
+        className,
+    )}
+    style="box-shadow: 0 16px 32px -10px hsl(var(--travelity-teal) / 0.35); transform: scale(0.6) rotate(-8deg);"
+    {...rest}
+>
+    <span
+        class="lock-chip-icon flex items-center justify-center h-9 w-9 rounded-lg bg-travelity-teal text-paper flex-shrink-0"
+    >
+        <LockIcon class="w-4 h-4" stroke-width="2.5" aria-hidden="true" />
+    </span>
+
+    <div class="flex flex-col leading-tight">
+        <span
+            class="font-mono text-[10px] uppercase tracking-[0.10em] text-travelity-teal-deep font-semibold"
+        >
+            Locked
+        </span>
+        <span class="text-[14px] font-semibold text-ink">
+            Seat <span class="font-mono text-ink-muted">07</span>
+        </span>
+    </div>
+</div>
+
+<style>
+    .lock-chip {
+        transition:
+            opacity 600ms var(--ease-out) 480ms,
+            transform 700ms var(--ease-spring) 480ms;
+    }
+
+    [data-in='true'] .lock-chip {
+        opacity: 1;
+        transform: scale(1) rotate(-3deg);
+    }
+
+    [data-in='true'] .lock-chip-icon {
+        animation: lock-chip-pulse 4s ease-in-out 1600ms infinite;
+    }
+
+    @keyframes lock-chip-pulse {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 hsl(var(--travelity-teal) / 0.5);
+        }
+        50% {
+            box-shadow: 0 0 0 8px hsl(var(--travelity-teal) / 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .lock-chip {
+            opacity: 1 !important;
+            transform: rotate(-3deg) !important;
+            animation: none !important;
+        }
+        .lock-chip-icon {
+            animation: none !important;
+        }
+    }
+</style>
