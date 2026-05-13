@@ -20,6 +20,7 @@ const SCROLL_THRESHOLD_PX = 4;
 function init() {
     initScrollHandlers();
     initDesktopSubrow();
+    initFeaturesScrollSpy();
     initMobileMenu();
 }
 
@@ -192,21 +193,24 @@ function initDesktopSubrow() {
     triggers.forEach((trigger) => {
         const label = trigger.dataset.sectionLabel;
         if (!label) return;
-        const btn =
-            trigger.querySelector<HTMLButtonElement>('[data-nav-trigger]');
+        const btn = trigger.querySelector<HTMLElement>('[data-nav-trigger]');
         if (!btn) return;
 
         trigger.addEventListener('mouseenter', () => scheduleOpen(label));
         trigger.addEventListener('mouseleave', () => scheduleClose());
 
-        // Click on the trigger button is intentionally a no-op. The sub-row
-        // is hover-only by product decision — clicking a parent section
-        // (e.g. "Solutions") shouldn't toggle the panel. Sub-pages are
-        // reached by hovering, then clicking a specific child link in the
-        // sub-row. preventDefault stops form-submit if the button were ever
-        // rendered inside a <form>.
+        // Click handling:
+        // - <button> trigger (pure dropdown): suppress click. The sub-row
+        //   is hover-only by product decision; clicking a parent section
+        //   without a page (e.g. an old "Solutions" dropdown) shouldn't
+        //   toggle the panel.
+        // - <a> trigger (hybrid — Phase 24, Features): allow the click to
+        //   navigate to the parent page. Sub-items remain reachable via
+        //   hover → click on the sub-row child.
         btn.addEventListener('click', (e) => {
-            e.preventDefault();
+            if (btn.tagName === 'BUTTON') {
+                e.preventDefault();
+            }
         });
 
         btn.addEventListener('keydown', (e) => {
@@ -254,6 +258,98 @@ function initDesktopSubrow() {
             setActivePanel(null);
         }
     });
+}
+
+// --- Features sub-row scroll-spy (Phase 24) ------------------------
+//
+// On /features, the sub-row is pinned and shows all 9 sections as
+// anchored shortcuts. This function highlights whichever sub-row item
+// corresponds to the section currently in view as the user scrolls.
+//
+// Uses IntersectionObserver with a "trigger band" near the top of the
+// viewport (rootMargin shrinks the viewport to roughly the upper third).
+// The section that crosses that band — its top edge nearest the top of
+// the viewport — is marked active. When multiple sections are visible
+// at once (large screens, short sections) the topmost wins.
+
+function initFeaturesScrollSpy() {
+    // Only run on /features. Path comparison is loose because Astro can
+    // serve `/features` or `/features/` depending on adapter config.
+    if (!/^\/features\/?$/.test(window.location.pathname)) return;
+
+    const linkByHash = new Map<string, HTMLAnchorElement>();
+    document
+        .querySelectorAll<HTMLAnchorElement>('[data-subrow-section] a[href*="#"]')
+        .forEach((link) => {
+            const hash = link.getAttribute('href')?.split('#')[1];
+            if (hash) linkByHash.set(hash, link);
+        });
+    if (linkByHash.size === 0) return;
+
+    const sections = Array.from(linkByHash.keys())
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const activeIds = new Set<string>();
+    let lastReportedId: string | null = null;
+
+    function setActive(id: string | null) {
+        linkByHash.forEach((link, linkHash) => {
+            const isActive = linkHash === id;
+            link.dataset.subrowLinkActive = isActive ? 'true' : 'false';
+            if (isActive) {
+                // `location` semantics: current position within page, distinct
+                // from `page` (which the SSR uses for exact pathname matches).
+                link.setAttribute('aria-current', 'location');
+            } else if (link.getAttribute('aria-current') === 'location') {
+                link.removeAttribute('aria-current');
+            }
+        });
+    }
+
+    function pickTopmostAndReport() {
+        if (activeIds.size === 0) return;
+        let topmostId: string | null = null;
+        let topmostTop = Number.POSITIVE_INFINITY;
+        activeIds.forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const top = el.getBoundingClientRect().top;
+            if (top < topmostTop) {
+                topmostTop = top;
+                topmostId = id;
+            }
+        });
+        if (topmostId && topmostId !== lastReportedId) {
+            lastReportedId = topmostId;
+            setActive(topmostId);
+        }
+    }
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                const id = entry.target.id;
+                if (entry.isIntersecting) {
+                    activeIds.add(id);
+                } else {
+                    activeIds.delete(id);
+                }
+            });
+            pickTopmostAndReport();
+        },
+        {
+            // Shrink the viewport from top (just below the nav) and from the
+            // bottom (so only the upper portion of the screen counts as the
+            // "reading band"). Result: a section is "intersecting" when its
+            // top edge is in roughly the upper third of the visible area.
+            rootMargin: '-15% 0px -55% 0px',
+            threshold: 0,
+        },
+    );
+
+    sections.forEach((s) => observer.observe(s));
 }
 
 // --- Mobile menu --------------------------------------------------

@@ -38,23 +38,51 @@ const chevronClasses = cn(
 ---
 
 {
+    /* Three render modes:
+       - Hybrid (href + items): anchor trigger — click navigates to
+         link.href, hover opens the sub-row. Phase 24 (Features).
+       - Pure dropdown (items only): button trigger — click is a no-op
+         (suppressed in nav.client.ts), hover-only.
+       - Flat link (href only): plain anchor, no sub-row. */
+}
+{
     isDropdown ? (
         <div
             class="nav-item relative"
             data-nav-item
             data-section-label={link.label}
         >
-            <button
-                type="button"
-                class={linkClasses}
-                aria-haspopup="true"
-                aria-expanded="false"
-                aria-controls={subrowId}
-                data-nav-trigger
-            >
-                {link.label}
-                <ChevronDownIcon class={chevronClasses} aria-hidden="true" />
-            </button>
+            {link.href ? (
+                <a
+                    href={link.href}
+                    class={linkClasses}
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls={subrowId}
+                    data-nav-trigger
+                >
+                    {link.label}
+                    <ChevronDownIcon
+                        class={chevronClasses}
+                        aria-hidden="true"
+                    />
+                </a>
+            ) : (
+                <button
+                    type="button"
+                    class={linkClasses}
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls={subrowId}
+                    data-nav-trigger
+                >
+                    {link.label}
+                    <ChevronDownIcon
+                        class={chevronClasses}
+                        aria-hidden="true"
+                    />
+                </button>
+            )}
         </div>
     ) : (
         <a href={link.href} class={linkClasses}>
