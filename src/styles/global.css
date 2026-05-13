@@ -206,27 +206,3 @@ body {
     }
 }
 
-/* ============================================================
-   Ambient drift — slow orbit applied to atmospheric blobs on
-   the Solutions page so the background never feels frozen, even
-   when the user isn't scrolling. ±18px range over 60s.
-   Scroll-driven parallax (rAF) stacks on top of this via CSS
-   `translate` composing with the inline transform — the blob's
-   inline transform is set to the parallax offset; this keyframe
-   nudges `--drift-x/y` which the blob composes via `translate`.
-   ============================================================ */
-@keyframes ambient-drift {
-    0%,
-    100% {
-        translate: 0 0;
-    }
-    25% {
-        translate: 14px -10px;
-    }
-    50% {
-        translate: -6px 18px;
-    }
-    75% {
-        translate: -16px -4px;
-    }
-}

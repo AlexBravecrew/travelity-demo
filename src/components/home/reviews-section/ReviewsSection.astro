@@ -83,72 +83,14 @@ const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
 
 <section
     class={cn(
-        'reviews-section relative overflow-hidden isolate',
+        'reviews-section relative overflow-hidden',
         'py-16 md:py-20 lg:py-24',
         className,
     )}
     style="background: linear-gradient(180deg, hsl(218 50% 14%) 0%, hsl(194 38% 22%) 50%, hsl(218 50% 14%) 100%);"
     {...rest}
 >
-    <!-- Atmospheric warm blobs over the dark band -->
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none"
-        style="top: -120px; left: 8%; width: 520px; height: 520px; background: radial-gradient(circle, hsl(var(--travelity-sunset) / 0.55), transparent 70%); filter: blur(90px); opacity: 0.45;"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none"
-        style="bottom: -100px; right: 12%; width: 480px; height: 480px; background: radial-gradient(circle, hsl(var(--travelity-amber) / 0.45), transparent 70%); filter: blur(90px); opacity: 0.4;"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none"
-        style="top: 30%; right: -120px; width: 380px; height: 380px; background: radial-gradient(circle, hsl(var(--travelity-dawn) / 0.5), transparent 70%); filter: blur(80px); opacity: 0.4;"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none"
-        style="top: 50%; left: -100px; width: 360px; height: 360px; background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.4), transparent 70%); filter: blur(80px); opacity: 0.35;"
-    >
-    </span>
-
-    <!-- Warm dust particles -->
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none rounded-full"
-        style="top: 18%; left: 14%; width: 5px; height: 5px; background: hsl(var(--travelity-amber)); filter: blur(2px); box-shadow: 0 0 18px hsl(var(--travelity-amber) / 0.9);"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none rounded-full"
-        style="top: 32%; right: 22%; width: 4px; height: 4px; background: hsl(var(--travelity-sunset)); filter: blur(2px); box-shadow: 0 0 14px hsl(var(--travelity-sunset) / 0.9);"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none rounded-full"
-        style="top: 68%; left: 28%; width: 6px; height: 6px; background: hsl(var(--travelity-dawn)); filter: blur(3px); box-shadow: 0 0 20px hsl(var(--travelity-dawn) / 0.85);"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none rounded-full"
-        style="top: 80%; right: 34%; width: 4px; height: 4px; background: hsl(var(--travelity-amber)); filter: blur(2px); box-shadow: 0 0 14px hsl(var(--travelity-amber) / 0.9);"
-    >
-    </span>
-    <span
-        aria-hidden="true"
-        class="absolute pointer-events-none rounded-full"
-        style="top: 14%; right: 38%; width: 3px; height: 3px; background: hsl(var(--travelity-dawn)); filter: blur(1.5px); box-shadow: 0 0 12px hsl(var(--travelity-dawn) / 0.9);"
-    >
-    </span>
-
-    <div class="container mx-auto px-6 relative z-[1]">
+    <div class="container mx-auto px-6 relative">
         <div
             class="review-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6 lg:gap-5"
             data-review-grid

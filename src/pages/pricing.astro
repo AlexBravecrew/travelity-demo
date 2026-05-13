@@ -10,7 +10,6 @@ import {
     ComparisonTable,
     type ComparisonGroup,
 } from '@/components/shared/comparison-table';
-import { FaqAccordion, FaqItem } from '@/components/shared/faq-accordion';
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
 
 export const prerender = true;
@@ -144,82 +143,6 @@ const comparisonGroups: ComparisonGroup[] = [
                         featuredIndex={1}
                     />
                 </div>
-            </div>
-        </section>
-
-        <!-- FAQ -->
-        <section class="bg-surface-alt py-12 md:py-16">
-            <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="Pricing FAQ"
-                    eyebrowWithRule
-                    align="center"
-                >
-                    <Fragment slot="headline">Common questions.</Fragment>
-                </SectionHeader>
-
-                <FaqAccordion class="mt-2">
-                    <FaqItem question="Do I need a credit card to start?">
-                        No. The Free plan is genuinely free — no card required.
-                        The 30-day Plus trial also doesn't ask for a card. We
-                        only collect payment when you actively choose a paid
-                        plan.
-                    </FaqItem>
-
-                    <FaqItem question="Can I switch plans later?">
-                        Yes, at any time. Upgrades take effect immediately.
-                        Downgrades take effect at the end of your current
-                        billing period — your data and access stay the same;
-                        only the plan limits change.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="What counts as a 'booking' on the Free plan?"
-                    >
-                        Any confirmed booking that consumes inventory. Quotes,
-                        proposals, and cancelled orders don't count toward the
-                        limit. We show your usage in the dashboard so there are
-                        no surprises.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Are OTA commissions included in your pricing?"
-                    >
-                        No — OTA commissions are charged by the OTAs themselves
-                        (GetYourGuide, Viator, Klook), and those are separate
-                        from your Travelity subscription. Travelity itself takes
-                        no commission on bookings, ever.
-                    </FaqItem>
-
-                    <FaqItem question="What payment methods do you accept?">
-                        Credit cards (via Stripe) and SEPA direct debit for EU
-                        customers. Annual plans can be paid by bank transfer —
-                        contact us for details.
-                    </FaqItem>
-
-                    <FaqItem question="Can I get a refund?">
-                        Monthly plans are non-refundable but you can cancel any
-                        time. Annual plans are refundable on a pro-rata basis
-                        within the first 30 days. After that, you keep access
-                        until the end of the term.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Do you offer discounts for non-profits or educational organizations?"
-                    >
-                        Yes. Reach out via the demo form and let us know your
-                        situation — we typically offer 20–30% off for verified
-                        non-profits and educational institutions.
-                    </FaqItem>
-
-                    <FaqItem question="What happens to my data if I cancel?">
-                        You can export everything (bookings, customers,
-                        products) as CSV at any time, including after
-                        cancellation. We keep your data for 90 days
-                        post-cancellation in case you change your mind, then
-                        permanently delete it.
-                    </FaqItem>
-                </FaqAccordion>
             </div>
         </section>
 

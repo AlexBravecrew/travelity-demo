@@ -4,7 +4,6 @@ import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import {
-    AmbientBackground,
     OutcomeCollage,
     BookingToast,
     LockChip,
@@ -17,9 +16,8 @@ export const prerender = true;
 
 /**
  * Solutions page — scrapbook-style outcome sections (giant title above a
- * 3-photo collage above body text) over the atmospheric blob/particle/
- * streak layer. Deliberately NOT a two-column text/image grid — that
- * layout is reserved for /features.
+ * 3-photo collage above body text). Deliberately NOT a two-column
+ * text/image grid — that layout is reserved for /features.
  *
  * TODO: replace the placeholder images with real travel photographs.
  *       Drop assets under `/public/solutions/<slug>/<n>.jpg` and update
@@ -70,10 +68,7 @@ const outcomes: Outcome[] = [
 >
     <Nav />
 
-    <main class="relative overflow-hidden bg-paper isolate">
-        <!-- Atmospheric blobs + particles + streaks behind everything -->
-        <AmbientBackground />
-
+    <main class="bg-paper">
         <!-- Compact top intro -->
         <section class="relative py-16 md:py-24">
             <div class="container mx-auto px-6 text-center">
