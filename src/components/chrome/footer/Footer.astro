@@ -7,7 +7,7 @@ import { Paths } from '@/lib/utils/paths';
 <footer class="bg-ink text-[hsl(0_0%_90%)] pt-16 pb-8 relative">
     <div class="container mx-auto px-6">
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-8 lg:gap-10 mb-12"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] gap-8 lg:gap-10 mb-12"
         >
             <!-- Brand column -->
             <div>
@@ -26,27 +26,6 @@ import { Paths } from '@/lib/utils/paths';
                     The booking platform travel businesses run on.
                 </p>
             </div>
-
-            <FooterColumn
-                title="Solutions"
-                links={[
-                    {
-                        label: 'Booking Engine',
-                        href: Paths.SOLUTIONS_BOOKING_ENGINE,
-                    },
-                    { label: 'Booking Widget', href: Paths.SOLUTIONS_WIDGET },
-                    {
-                        label: 'OTA Integrations',
-                        href: Paths.SOLUTIONS_INTEGRATIONS,
-                    },
-                    { label: 'Proposals', href: Paths.SOLUTIONS_PROPOSALS },
-                    {
-                        label: 'Reporting & BI',
-                        href: Paths.SOLUTIONS_REPORTING,
-                    },
-                    { label: 'Security', href: Paths.SOLUTIONS_SECURITY },
-                ]}
-            />
 
             <FooterColumn
                 title="Resources"

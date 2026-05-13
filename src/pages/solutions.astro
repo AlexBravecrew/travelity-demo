@@ -1,0 +1,128 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { CapabilitySection } from '@/components/shared/capability-section';
+import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+export const prerender = true;
+
+/**
+ * Solutions page sections — the three customer-facing outcomes Travelity
+ * delivers. Replaces the Phase 5 six-page cluster (booking-engine, widget,
+ * integrations, proposals, reporting, security) with one focused page.
+ *
+ * TODO: replace temporary copy with real marketing-approved text.
+ * TODO: drop per-section screenshots into `/public/solutions/` and update
+ *       each `image:` path below.
+ */
+const solutions = [
+    {
+        title: 'Increase Sales',
+        slug: 'increase-sales',
+        headline: 'Sell more, on more channels, with less work.',
+        lead: 'Reach buyers wherever they search. Direct site, OTA partners, embedded widget on partner sites — same inventory, no duplicate setup, no double-bookings.',
+        bullets: [
+            { label: 'Direct sales via your own widget on any site.' },
+            { label: 'OTA reach — GetYourGuide, Viator, Klook out of the box.' },
+            { label: 'Custom trip proposals that close themselves online.' },
+            { label: 'Upsells and add-ons at the point of booking.' },
+        ],
+        image: '/solutions/placeholder.svg',
+    },
+    {
+        title: 'Prevent Overbookings and Revenue Loss',
+        slug: 'prevent-overbookings',
+        headline: 'The same seat. Every channel. Never double-sold.',
+        lead: 'Inventory locks the instant a booking starts — across every channel, simultaneously. No more reconciling spreadsheets at midnight. No more refunding angry customers on Saturday morning.',
+        bullets: [
+            { label: 'Real-time availability shared across every channel.' },
+            { label: 'Concurrent-booking conflict prevention at the database level.' },
+            { label: 'Cancellation policies enforced automatically.' },
+            { label: 'Audit trail on every inventory change.' },
+        ],
+        image: '/solutions/placeholder.svg',
+    },
+    {
+        title: 'Manage All Bookings in One Place',
+        slug: 'manage-all-bookings',
+        headline: 'One queue. Every order. Direct, widget, OTA, partner.',
+        lead: "Whether it came through your widget, GetYourGuide, an inbound email, or a sales rep — it's in the same place. Edit, refund, reassign, generate documents. No spreadsheet juggling.",
+        bullets: [
+            { label: 'Unified booking queue regardless of channel.' },
+            { label: 'Full edit, refund, and reassign capability with audit logs.' },
+            { label: 'Customer records auto-built from every booking.' },
+            { label: 'Documents (tickets, vouchers, invoices) generated on demand.' },
+        ],
+        image: '/solutions/placeholder.svg',
+    },
+];
+---
+
+<MarketingLayout
+    title="Solutions · Travelity"
+    description="How Travelity helps travel operators sell more, prevent overbookings, and manage every booking in one place."
+>
+    <Nav />
+
+    <main>
+        <!-- Compact top section: short title, no full hero -->
+        <section class="bg-paper py-12 md:py-16">
+            <div class="container mx-auto px-6 text-center">
+                <Eyebrow withRule centered>Solutions</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.03em] max-w-[22ch] mx-auto mt-6 mb-5"
+                    style="font-size: clamp(32px, 4vw, 48px);"
+                >
+                    What Travelity actually
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal">
+                            does for your business.</span
+                        >
+                    </em>
+                </h1>
+
+                <p
+                    class="text-lg text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                >
+                    Three outcomes you can measure: more bookings, no
+                    double-sells, and one place to run the whole operation.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3 outcome sections, alternating flip. id matches slug so the
+             section can be linked from elsewhere in the future (e.g. a
+             home-page "Solutions" CTA → /solutions#increase-sales).
+             scroll-mt offsets the anchor jump under the sticky nav. -->
+        {
+            solutions.map((s, i) => (
+                <CapabilitySection
+                    id={s.slug}
+                    eyebrow={s.title}
+                    flip={i % 2 === 1}
+                    bullets={s.bullets}
+                    class="scroll-mt-[var(--nav-height)]"
+                >
+                    <Fragment slot="headline">{s.headline}</Fragment>
+                    <Fragment slot="lead">{s.lead}</Fragment>
+                    <Fragment slot="visual">
+                        <img
+                            src={s.image}
+                            alt={`${s.title} screenshot`}
+                            class="block w-full aspect-video rounded-xl bg-surface-alt border border-line object-cover"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </Fragment>
+                </CapabilitySection>
+            ))
+        }
+
+        <ClosingCTASection />
+    </main>
+
+    <Footer />
+</MarketingLayout>

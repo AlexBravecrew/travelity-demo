@@ -10,13 +10,8 @@
 export const Paths = {
     HOME: '/',
 
-    // Solutions cluster (Phase 5)
-    SOLUTIONS_BOOKING_ENGINE: '/solutions/booking-engine',
-    SOLUTIONS_WIDGET: '/solutions/widget',
-    SOLUTIONS_INTEGRATIONS: '/solutions/integrations',
-    SOLUTIONS_PROPOSALS: '/solutions/proposals',
-    SOLUTIONS_REPORTING: '/solutions/reporting',
-    SOLUTIONS_SECURITY: '/solutions/security',
+    // Solutions (Phase 5 cluster retired Phase 21; now a single page)
+    SOLUTIONS: '/solutions',
 
     // Conversion (Phase 7)
     BOOK_DEMO: '/book-demo',

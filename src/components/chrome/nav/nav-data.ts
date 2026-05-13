@@ -17,38 +17,7 @@ export interface NavLinkData {
 export const navLinks: NavLinkData[] = [
     {
         label: 'Solutions',
-        items: [
-            {
-                label: 'Booking Engine',
-                description: 'Catalog, scheduling, pricing, orders.',
-                href: Paths.SOLUTIONS_BOOKING_ENGINE,
-            },
-            {
-                label: 'Booking Widget',
-                description: 'Embed Travelity in your own site.',
-                href: Paths.SOLUTIONS_WIDGET,
-            },
-            {
-                label: 'OTA Integrations',
-                description: 'GetYourGuide, Viator, Klook.',
-                href: Paths.SOLUTIONS_INTEGRATIONS,
-            },
-            {
-                label: 'Proposals',
-                description: 'Custom quotes that close themselves.',
-                href: Paths.SOLUTIONS_PROPOSALS,
-            },
-            {
-                label: 'Reporting & BI',
-                description: 'Seven reports, plus your BI tools.',
-                href: Paths.SOLUTIONS_REPORTING,
-            },
-            {
-                label: 'Security',
-                description: 'Built for businesses with IT teams.',
-                href: Paths.SOLUTIONS_SECURITY,
-            },
-        ],
+        href: Paths.SOLUTIONS,
     },
     {
         label: 'Features',
