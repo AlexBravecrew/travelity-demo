@@ -25,7 +25,11 @@ export interface Props extends HTMLAttributes<'div'> {
     ctaVariant?: 'primary' | 'outline';
     includesLabel: string;
     features: PlanFeature[];
-    featured?: boolean;
+    /**
+     * Optional pill label rendered above the card edge (e.g. "Most popular").
+     * Rendered when present, independent of active/hover state — it's a
+     * fact about the plan, not a hover indicator.
+     */
     badgeLabel?: string;
     class?: string;
 }
@@ -42,25 +46,29 @@ const {
     ctaVariant = 'outline',
     includesLabel,
     features,
-    featured = false,
     badgeLabel,
     class: className,
     ...rest
 } = Astro.props;
 ---
 
+{
+    /*
+     * Phase 21: cards no longer have a static `featured` variant. The
+     * gradient border + elevation now live in PricingSection's scoped
+     * CSS and shift to whichever card is hovered (middle by default).
+     * Internal content stays uniform across cards so the hover-swap
+     * only changes the outside, not the inside.
+     */
+}
 <Card
-    variant={featured ? 'featured' : 'default'}
+    variant="default"
     interactive
-    class={cn(
-        'pricing-plan flex flex-col',
-        featured && 'lg:-translate-y-3 lg:scale-[1.02] hover:lg:-translate-y-4',
-        className,
-    )}
+    class={cn('pricing-plan flex flex-col', className)}
     {...rest}
 >
     {
-        featured && badgeLabel && (
+        badgeLabel && (
             <span class="pricing-plan-badge absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-[5px] rounded-full whitespace-nowrap bg-travelity-teal text-white font-mono text-[10px] font-semibold uppercase tracking-[0.10em] shadow-[0_4px_12px_-2px_hsl(var(--travelity-teal)/0.4)]">
                 {badgeLabel}
             </span>
@@ -70,10 +78,7 @@ const {
     <div class="px-7 pt-8 pb-7 flex flex-col flex-1">
         <!-- Header: name + tagline -->
         <div
-            class={cn(
-                'font-display text-[14px] font-semibold uppercase tracking-[0.04em] mb-1.5',
-                featured ? 'text-travelity-teal' : 'text-ink-muted',
-            )}
+            class="font-display text-[14px] font-semibold uppercase tracking-[0.04em] mb-1.5 text-ink-muted"
         >
             {name}
         </div>
@@ -143,12 +148,7 @@ const {
                             />
                         ) : (
                             <CheckIcon
-                                class={cn(
-                                    'w-3.5 h-3.5 mt-1 flex-shrink-0',
-                                    featured
-                                        ? 'text-travelity-teal'
-                                        : 'text-success',
-                                )}
+                                class="w-3.5 h-3.5 mt-1 flex-shrink-0 text-success"
                                 stroke-width="2.5"
                                 aria-hidden="true"
                             />
@@ -176,14 +176,3 @@ const {
         </ul>
     </div>
 </Card>
-
-<style>
-    @media (prefers-reduced-motion: reduce) {
-        .pricing-plan {
-            transform: none !important;
-        }
-        .pricing-plan:hover {
-            transform: none !important;
-        }
-    }
-</style>

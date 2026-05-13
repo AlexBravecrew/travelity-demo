@@ -6,10 +6,15 @@ import PricingPlan, { type PlanFeature } from './PricingPlan.astro';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends HTMLAttributes<'section'> {
+    /**
+     * Skip the inner SectionHeader (eyebrow + h2 + dek). Used on `/pricing`
+     * where the page hero already shows the same title.
+     */
+    hideHeader?: boolean;
     class?: string;
 }
 
-const { class: className, ...rest } = Astro.props;
+const { hideHeader = false, class: className, ...rest } = Astro.props;
 
 interface Plan {
     name: string;
@@ -21,7 +26,6 @@ interface Plan {
     ctaVariant: 'primary' | 'outline';
     includesLabel: string;
     features: PlanFeature[];
-    featured?: boolean;
     badgeLabel?: string;
 }
 
@@ -65,7 +69,6 @@ const plans: Plan[] = [
             { label: 'Plus feature six' },
             { label: 'Plus feature seven' },
         ],
-        featured: true,
         badgeLabel: 'Most popular',
     },
     {
@@ -96,19 +99,23 @@ const plans: Plan[] = [
     {...rest}
 >
     <div class="container mx-auto px-6">
-        <SectionHeader eyebrow="Pricing" eyebrowWithRule align="center">
-            <Fragment slot="headline">
-                Plans for every <em>size of operation.</em>
-            </Fragment>
-            <p
-                slot="dek"
-                class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
-            >
-                From solo guides on the Free plan to multi-product operators on
-                Ultimate. Same booking engine, same channel reach — different
-                limits, different support tiers.
-            </p>
-        </SectionHeader>
+        {
+            !hideHeader && (
+                <SectionHeader eyebrow="Pricing" eyebrowWithRule align="center">
+                    <Fragment slot="headline">
+                        Plans for every <em>size of operation.</em>
+                    </Fragment>
+                    <p
+                        slot="dek"
+                        class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
+                    >
+                        From solo guides on the Free plan to multi-product
+                        operators on Ultimate. Same booking engine, same channel
+                        reach — different limits, different support tiers.
+                    </p>
+                </SectionHeader>
+            )
+        }
 
         <div
             class="pricing-cards grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-4 max-w-[1100px] mx-auto items-stretch"
@@ -125,7 +132,6 @@ const plans: Plan[] = [
                         ctaVariant={plan.ctaVariant}
                         includesLabel={plan.includesLabel}
                         features={plan.features}
-                        featured={plan.featured}
                         badgeLabel={plan.badgeLabel}
                     />
                 ))
@@ -133,3 +139,83 @@ const plans: Plan[] = [
         </div>
     </div>
 </section>
+
+<style is:global>
+    /*
+     * Active-card hover swap (Phase 21).
+     *
+     * Default state: the middle (2nd) card is "active" — gradient conic
+     * border + elevation + teal shadow. When any card is hovered, that
+     * card becomes active and the middle de-activates (unless the middle
+     * itself is the hovered one). Uses CSS `:has()` — modern-browser
+     * baseline (Chrome/Edge 105+, Safari 15.4+, Firefox 121+).
+     *
+     * Style block is `is:global` because the active selector chain
+     * combines `:has()` + a child class that lives in another component's
+     * scope (`.pricing-plan` is added by PricingPlan.astro / Card.astro).
+     * Astro's `:global()` wrapper interacted poorly with `:has()` here —
+     * unscoping the whole block is simpler and the `.pricing-cards` class
+     * is unique to this section, so style leakage isn't a concern.
+     *
+     * The conic-gradient background + 1.5px inset pseudo cover the same
+     * pattern Card.astro's `featured` variant uses. The `@property` and
+     * `@keyframes card-gradient-spin` declared in Card.astro are at-rules
+     * (global by spec), so this block can reuse them without re-declaration.
+     */
+
+    .pricing-cards .pricing-plan {
+        transition:
+            transform 240ms cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 240ms cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 240ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Active state: middle card by default, OR any hovered card. */
+    .pricing-cards:not(:has(.pricing-plan:hover)) .pricing-plan:nth-child(2),
+    .pricing-cards .pricing-plan:hover {
+        --card-gradient-angle: 0deg;
+        isolation: isolate;
+        background: conic-gradient(
+            from var(--card-gradient-angle, 0deg),
+            hsl(var(--travelity-teal)),
+            hsl(var(--travelity-blue)),
+            hsl(var(--travelity-teal-deep)),
+            hsl(var(--travelity-teal))
+        );
+        animation: card-gradient-spin 10s linear infinite;
+        border-color: transparent;
+        box-shadow: 0 16px 40px -12px hsl(var(--travelity-teal) / 0.18);
+    }
+
+    @media (min-width: 1024px) {
+        .pricing-cards:not(:has(.pricing-plan:hover))
+            .pricing-plan:nth-child(2),
+        .pricing-cards .pricing-plan:hover {
+            transform: translateY(-12px) scale(1.02);
+        }
+    }
+
+    /* Paper-colored interior overlay — completes the gradient-ring look. */
+    .pricing-cards:not(:has(.pricing-plan:hover))
+        .pricing-plan:nth-child(2)::before,
+    .pricing-cards .pricing-plan:hover::before {
+        content: '';
+        position: absolute;
+        inset: 1.5px;
+        z-index: -1;
+        border-radius: 14.5px;
+        background: hsl(var(--paper));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .pricing-cards .pricing-plan {
+            transition: none !important;
+        }
+        .pricing-cards:not(:has(.pricing-plan:hover))
+            .pricing-plan:nth-child(2),
+        .pricing-cards .pricing-plan:hover {
+            animation: none !important;
+            transform: none !important;
+        }
+    }
+</style>
