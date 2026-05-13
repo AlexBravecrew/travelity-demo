@@ -1,0 +1,253 @@
+---
+import { cn } from '@/lib/utils/cn';
+import ReviewCard from './ReviewCard.astro';
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * Home "social proof" band — replaces the retired ParallaxBreak mountain
+ * scene. A dark teal→navy gradient panel separates this band from the
+ * surrounding white sections without using literal photography; warm
+ * atmospheric blobs + dust particles sit over the dark bg.
+ *
+ * 5 polaroid-style ReviewCards in one row on desktop (5 cols), 3 on
+ * tablet, 2 on small phones, 1 on tiny screens. No section header — the
+ * cards carry the message via their review overlay.
+ *
+ * Active-card model:
+ *   - At rest: card 1 is the "active" one (straight, lifted, review on).
+ *   - Hover any card → that card becomes active; first card returns to
+ *     tilted resting state. Exactly one card active at any time.
+ *   - Driven by a small inline <script> at the bottom of this file that
+ *     toggles `data-active="true|false"` on each card. We tried a pure
+ *     CSS cascade with `:has(:hover)` first; Astro's scoped-CSS handling
+ *     of `:has()` combined with the specificity boost it adds made the
+ *     correct rule lose to the first-child default. The JS approach is
+ *     simpler to reason about and has the same one-shot intent.
+ */
+
+export interface Props extends HTMLAttributes<'section'> {
+    class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+
+interface Review {
+    imageSrc: string;
+    imageAlt: string;
+    quote: string;
+    name: string;
+    byline: string;
+}
+
+const reviews: Review[] = [
+    {
+        imageSrc: '/solutions/placeholder.svg',
+        imageAlt: 'Maria — tour operator in Lisbon',
+        quote: 'Replaced our spreadsheet hell. Onboarded in four days.',
+        name: 'Maria L.',
+        byline: 'Tour operator · Lisbon',
+    },
+    {
+        imageSrc: '/solutions/placeholder.svg',
+        imageAlt: 'Jonas — adventure guide in Reykjavik',
+        quote: 'Zero double-bookings in six months. Finally.',
+        name: 'Jonas K.',
+        byline: 'Adventure guide · Reykjavik',
+    },
+    {
+        imageSrc: '/solutions/placeholder.svg',
+        imageAlt: 'Sofia — travel agency in Buenos Aires',
+        quote: 'The proposal builder closes deals while we sleep.',
+        name: 'Sofia P.',
+        byline: 'Travel agency · Buenos Aires',
+    },
+    {
+        imageSrc: '/solutions/placeholder.svg',
+        imageAlt: 'Marco — transfer provider in Naples',
+        quote: 'Channel manager paid for itself in one weekend.',
+        name: 'Marco T.',
+        byline: 'Transfer provider · Naples',
+    },
+    {
+        imageSrc: '/solutions/placeholder.svg',
+        imageAlt: 'Pavel — independent guide in Prague',
+        quote: 'Migrated nine thousand bookings in one afternoon.',
+        name: 'Pavel S.',
+        byline: 'Independent guide · Prague',
+    },
+];
+
+const tilts = ['-2.4deg', '1.8deg', '-1.4deg', '2.2deg', '-2deg'];
+const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
+---
+
+<section
+    class={cn(
+        'reviews-section relative overflow-hidden isolate',
+        'py-16 md:py-20 lg:py-24',
+        className,
+    )}
+    style="background: linear-gradient(180deg, hsl(218 50% 14%) 0%, hsl(194 38% 22%) 50%, hsl(218 50% 14%) 100%);"
+    {...rest}
+>
+    <!-- Atmospheric warm blobs over the dark band -->
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none"
+        style="top: -120px; left: 8%; width: 520px; height: 520px; background: radial-gradient(circle, hsl(var(--travelity-sunset) / 0.55), transparent 70%); filter: blur(90px); opacity: 0.45;"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none"
+        style="bottom: -100px; right: 12%; width: 480px; height: 480px; background: radial-gradient(circle, hsl(var(--travelity-amber) / 0.45), transparent 70%); filter: blur(90px); opacity: 0.4;"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none"
+        style="top: 30%; right: -120px; width: 380px; height: 380px; background: radial-gradient(circle, hsl(var(--travelity-dawn) / 0.5), transparent 70%); filter: blur(80px); opacity: 0.4;"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none"
+        style="top: 50%; left: -100px; width: 360px; height: 360px; background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.4), transparent 70%); filter: blur(80px); opacity: 0.35;"
+    >
+    </span>
+
+    <!-- Warm dust particles -->
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none rounded-full"
+        style="top: 18%; left: 14%; width: 5px; height: 5px; background: hsl(var(--travelity-amber)); filter: blur(2px); box-shadow: 0 0 18px hsl(var(--travelity-amber) / 0.9);"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none rounded-full"
+        style="top: 32%; right: 22%; width: 4px; height: 4px; background: hsl(var(--travelity-sunset)); filter: blur(2px); box-shadow: 0 0 14px hsl(var(--travelity-sunset) / 0.9);"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none rounded-full"
+        style="top: 68%; left: 28%; width: 6px; height: 6px; background: hsl(var(--travelity-dawn)); filter: blur(3px); box-shadow: 0 0 20px hsl(var(--travelity-dawn) / 0.85);"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none rounded-full"
+        style="top: 80%; right: 34%; width: 4px; height: 4px; background: hsl(var(--travelity-amber)); filter: blur(2px); box-shadow: 0 0 14px hsl(var(--travelity-amber) / 0.9);"
+    >
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute pointer-events-none rounded-full"
+        style="top: 14%; right: 38%; width: 3px; height: 3px; background: hsl(var(--travelity-dawn)); filter: blur(1.5px); box-shadow: 0 0 12px hsl(var(--travelity-dawn) / 0.9);"
+    >
+    </span>
+
+    <div class="container mx-auto px-6 relative z-[1]">
+        <div
+            class="review-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6 lg:gap-5"
+            data-review-grid
+        >
+            {
+                reviews.map((r, i) => (
+                    <ReviewCard
+                        imageSrc={r.imageSrc}
+                        imageAlt={r.imageAlt}
+                        quote={r.quote}
+                        name={r.name}
+                        byline={r.byline}
+                        tilt={tilts[i % tilts.length]}
+                        yOffset={yOffsets[i % yOffsets.length]}
+                        data-review-card
+                        data-active={i === 0 ? 'true' : 'false'}
+                    />
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Pre-JS resting fallback — before the inline script runs (which
+       happens on DOMContentLoaded), every card sits at its tilt + Y
+       offset so there's no flash of un-positioned content. After that
+       point all visual state is written inline by the script. */
+    .review-grid :global(.review-card .review-card-frame) {
+        transform: translateY(var(--y, 0)) rotate(var(--tilt, 0deg));
+        will-change: transform;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .review-grid :global(.review-card .review-card-frame) {
+            transform: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+
+<script is:inline>
+    // Active-card management — exactly one .review-card has
+    // data-active="true" at any time. First card is active by default;
+    // hover any card → it becomes active; cursor leaves grid → first
+    // card resumes as active.
+    //
+    // We write inline styles directly (transform / opacity / z-index)
+    // so the visual state can't be undone by any CSS specificity
+    // surprise. The data-active attribute is also kept in sync for
+    // any future CSS hooks.
+    (function () {
+        function init() {
+            var grid = document.querySelector('[data-review-grid]');
+            if (!grid) return;
+            var cards = Array.from(
+                grid.querySelectorAll('[data-review-card]'),
+            );
+            function applyState(card, isActive) {
+                card.setAttribute('data-active', isActive ? 'true' : 'false');
+                var frame = card.querySelector('.review-card-frame');
+                var overlay = card.querySelector('.review-overlay');
+                var halo = card.querySelector('.review-card-halo');
+                if (frame) {
+                    frame.style.transform = isActive
+                        ? 'translateY(calc(var(--y, 0) - 6px)) rotate(0deg) scale(1.04)'
+                        : 'translateY(var(--y, 0)) rotate(var(--tilt, 0deg))';
+                    frame.style.zIndex = isActive ? '2' : '';
+                    frame.style.boxShadow = isActive
+                        ? '0 26px 56px -18px hsl(220 60% 4% / 0.55), 0 10px 24px -10px hsl(220 60% 4% / 0.3)'
+                        : '0 18px 40px -16px hsl(218 50% 38% / 0.35), 0 6px 16px -8px hsl(222 47% 11% / 0.15)';
+                }
+                if (overlay) overlay.style.opacity = isActive ? '1' : '0';
+                if (halo) halo.style.opacity = isActive ? '1' : '0';
+            }
+            function setActive(target) {
+                for (var i = 0; i < cards.length; i++) {
+                    applyState(cards[i], cards[i] === target);
+                }
+            }
+            // Apply initial state — first card active, rest resting.
+            setActive(cards[0]);
+            for (var i = 0; i < cards.length; i++) {
+                (function (card) {
+                    card.addEventListener('mouseenter', function () {
+                        setActive(card);
+                    });
+                })(cards[i]);
+            }
+            if (cards[0]) {
+                grid.addEventListener('mouseleave', function () {
+                    setActive(cards[0]);
+                });
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+</script>
