@@ -2,12 +2,13 @@
 import { Logo } from '@/components/brand';
 import FooterColumn from './FooterColumn.astro';
 import { Paths } from '@/lib/utils/paths';
+import { MailIcon, PhoneIcon } from '@/icons';
 ---
 
 <footer class="bg-ink text-[hsl(0_0%_90%)] pt-16 pb-8 relative">
     <div class="container mx-auto px-6">
         <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] gap-8 lg:gap-10 mb-12"
+            class="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1.4fr] gap-10 lg:gap-16 mb-12"
         >
             <!-- Brand column -->
             <div>
@@ -95,23 +96,70 @@ import { Paths } from '@/lib/utils/paths';
                 </ul>
             </div>
 
-            <FooterColumn
-                title="Company"
-                links={[
-                    { label: 'Pricing', href: Paths.PRICING },
-                    { label: 'Book a Demo', href: Paths.BOOK_DEMO },
-                    { label: 'Contact', href: Paths.CONTACT },
-                ]}
-            />
+            <!-- Middle column — Company and Resources side-by-side as two sub-columns. -->
+            <div class="grid grid-cols-2 gap-8">
+                <FooterColumn
+                    title="Company"
+                    links={[
+                        { label: 'Pricing', href: Paths.PRICING },
+                        { label: 'Book a Demo', href: Paths.BOOK_DEMO },
+                        { label: 'Contact', href: Paths.CONTACT },
+                    ]}
+                />
 
-            <FooterColumn
-                title="Resources"
-                links={[
-                    { label: 'FAQ', href: Paths.FAQ },
-                    { label: 'Help Center', href: Paths.HELP_CENTER },
-                    { label: 'Our Story', href: Paths.OUR_STORY },
-                ]}
-            />
+                <FooterColumn
+                    title="Resources"
+                    links={[
+                        { label: 'FAQ', href: Paths.FAQ },
+                        { label: 'Help Center', href: Paths.HELP_CENTER },
+                        { label: 'Our Story', href: Paths.OUR_STORY },
+                    ]}
+                />
+            </div>
+
+            <!-- Contact column -->
+            <div>
+                <h5
+                    class="font-mono text-[11px] font-semibold uppercase tracking-[0.10em] text-[hsl(0_0%_60%)] mb-4"
+                >
+                    Get in touch
+                </h5>
+                <ul class="list-none p-0 m-0 space-y-3">
+                    <li class="flex items-center gap-2.5">
+                        <MailIcon
+                            class="w-4 h-4 text-[hsl(0_0%_60%)] flex-shrink-0"
+                        />
+                        <a
+                            href="mailto:support@travelity.app"
+                            class="font-body text-sm text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
+                        >
+                            support@travelity.app
+                        </a>
+                    </li>
+                    <li class="flex items-center gap-2.5">
+                        <MailIcon
+                            class="w-4 h-4 text-[hsl(0_0%_60%)] flex-shrink-0"
+                        />
+                        <a
+                            href="mailto:sales@travelity.app"
+                            class="font-body text-sm text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
+                        >
+                            sales@travelity.app
+                        </a>
+                    </li>
+                    <li class="flex items-center gap-2.5">
+                        <PhoneIcon
+                            class="w-4 h-4 text-[hsl(0_0%_60%)] flex-shrink-0"
+                        />
+                        <a
+                            href="tel:+13022447375"
+                            class="font-body text-sm text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
+                        >
+                            +1 (302) 244-7375
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div

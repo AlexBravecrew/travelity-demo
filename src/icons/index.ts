@@ -64,3 +64,4 @@ export { Search as SearchIcon } from '@lucide/astro';
 
 // Phase 11 — Contact page
 export { Mail as MailIcon } from '@lucide/astro';
+export { Phone as PhoneIcon } from '@lucide/astro';
