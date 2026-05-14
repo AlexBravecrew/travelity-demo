@@ -59,7 +59,7 @@ const lines: {
     },
     {
         id: 'viator',
-        to: { x: 90, y: 53 },
+        to: { x: 90, y: 50 },
         color: '#028768',
         delay: '1.2s',
     },
@@ -92,13 +92,20 @@ const center = { x: 50, y: 50 };
     >
         <defs>
             <!-- Subtle glow for the static guide line. Single blur pass
-                 + source overlay. -->
+                 + source overlay.
+                 filterUnits="userSpaceOnUse" with absolute viewBox coords
+                 is critical: the default objectBoundingBox + percentage
+                 region collapses to zero area on any line where x1==x2 or
+                 y1==y2 (zero-width/height bbox), which makes the filter
+                 clip the element away. Viator's perfectly horizontal line
+                 is the case that hit this. -->
             <filter
                 id="channel-guide-glow"
-                x="-50%"
-                y="-50%"
-                width="200%"
-                height="200%"
+                filterUnits="userSpaceOnUse"
+                x="-10"
+                y="-10"
+                width="120"
+                height="120"
             >
                 <feGaussianBlur stdDeviation="0.7" result="blur"
                 ></feGaussianBlur>
@@ -111,10 +118,11 @@ const center = { x: 50, y: 50 };
                  the single dash a bright comet-like halo. -->
             <filter
                 id="channel-pulse-glow"
-                x="-50%"
-                y="-50%"
-                width="200%"
-                height="200%"
+                filterUnits="userSpaceOnUse"
+                x="-10"
+                y="-10"
+                width="120"
+                height="120"
             >
                 <feGaussianBlur stdDeviation="1.4" result="blur"
                 ></feGaussianBlur>

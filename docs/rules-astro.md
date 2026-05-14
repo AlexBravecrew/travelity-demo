@@ -50,7 +50,7 @@ src/
 │   ├── chrome/                # site-wide chrome
 │   │   ├── nav/               # Nav + NavLink + NavSubRow + MobileMenuTrigger + MobileMenu
 │   │   ├── analytics/         # Phase 23 — GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2
-│   │   └── footer/            # 4-col responsive (Phase 22 dropped Solutions col)
+│   │   └── footer/            # 3-col [2fr_2fr_3fr]: brand+socials / Get-in-touch (plain-text contact, non-clickable) / nested Company+Resources
 │   ├── home/                  # home-page sections only
 │   │   ├── hero/              # Hero only (post-Phase-18 — HeroVisual / BookingFlowCard / AudienceChips deleted)
 │   │   ├── channels-section/

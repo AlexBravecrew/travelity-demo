@@ -84,7 +84,7 @@ src/
 │   │   │   ├── nav-active.ts        # getActiveSection(pathname, links) (Phase 14)
 │   │   │   └── nav.client.ts        # Hover-swap, scroll handlers, mobile drawer + backdrop/close wiring
 │   │   ├── analytics/               # GA4 + Google Ads via Partytown + Consent Mode v2 (Phase 23)
-│   │   └── footer/                  # 4-col responsive (Phase 22 dropped Solutions col), dark ink
+│   │   └── footer/                  # 3-col grid [2fr_2fr_3fr]: brand+socials / Get-in-touch (plain-text email + phone, non-clickable) / nested Company+Resources. Dark ink.
 │   │
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
 │   │   ├── hero/                    # Hero only — HeroVisual/BookingFlowCard/AudienceChips deleted Phase 18 (video on right now)

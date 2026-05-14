@@ -8,7 +8,7 @@ import { MailIcon, PhoneIcon } from '@/icons';
 <footer class="bg-ink text-[hsl(0_0%_90%)] pt-16 pb-8 relative">
     <div class="container mx-auto px-6">
         <div
-            class="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1.4fr] gap-10 lg:gap-16 mb-12"
+            class="grid grid-cols-1 lg:grid-cols-[2fr_2fr_3fr] gap-10 lg:gap-16 mb-12"
         >
             <!-- Brand column -->
             <div>
@@ -117,7 +117,41 @@ import { MailIcon, PhoneIcon } from '@/icons';
                 </ul>
             </div>
 
-            <!-- Middle column — Company and Resources side-by-side as two sub-columns. -->
+            <!-- Contact column -->
+            <div>
+                <h5
+                  class="font-mono text-[11px] font-semibold uppercase tracking-widest text-[hsl(0_0%_60%)] mb-4"
+                >
+                    Get in touch
+                </h5>
+                <ul class="list-none p-0 m-0 space-y-3">
+                    <li class="flex items-center gap-2.5">
+                        <MailIcon
+                          class="w-4 h-4 text-[hsl(0_0%_60%)] shrink-0"
+                        />
+                        <span class="font-body text-sm text-[hsl(0_0%_80%)]">
+                            support@travelity.app
+                        </span>
+                    </li>
+                    <li class="flex items-center gap-2.5">
+                        <MailIcon
+                          class="w-4 h-4 text-[hsl(0_0%_60%)] shrink-0"
+                        />
+                        <span class="font-body text-sm text-[hsl(0_0%_80%)]">
+                            sales@travelity.app
+                        </span>
+                    </li>
+                    <li class="flex items-center gap-2.5">
+                        <PhoneIcon
+                          class="w-4 h-4 text-[hsl(0_0%_60%)] shrink-0"
+                        />
+                        <span class="font-body text-sm text-[hsl(0_0%_80%)]">
+                            +1 (302) 244-7375
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
             <div class="grid grid-cols-2 gap-8">
                 <FooterColumn
                     title="Company"
@@ -136,57 +170,13 @@ import { MailIcon, PhoneIcon } from '@/icons';
                     ]}
                 />
             </div>
-
-            <!-- Contact column -->
-            <div>
-                <h5
-                    class="font-mono text-[11px] font-semibold uppercase tracking-[0.10em] text-[hsl(0_0%_60%)] mb-4"
-                >
-                    Get in touch
-                </h5>
-                <ul class="list-none p-0 m-0 space-y-3">
-                    <li class="flex items-center gap-2.5">
-                        <MailIcon
-                            class="w-4 h-4 text-[hsl(0_0%_60%)] flex-shrink-0"
-                        />
-                        <a
-                            href="mailto:support@travelity.app"
-                            class="font-body text-sm text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
-                        >
-                            support@travelity.app
-                        </a>
-                    </li>
-                    <li class="flex items-center gap-2.5">
-                        <MailIcon
-                            class="w-4 h-4 text-[hsl(0_0%_60%)] flex-shrink-0"
-                        />
-                        <a
-                            href="mailto:sales@travelity.app"
-                            class="font-body text-sm text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
-                        >
-                            sales@travelity.app
-                        </a>
-                    </li>
-                    <li class="flex items-center gap-2.5">
-                        <PhoneIcon
-                            class="w-4 h-4 text-[hsl(0_0%_60%)] flex-shrink-0"
-                        />
-                        <a
-                            href="tel:+13022447375"
-                            class="font-body text-sm text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
-                        >
-                            +1 (302) 244-7375
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
 
         <div
             class="border-t border-white/10 pt-6 flex flex-wrap justify-between gap-3 font-mono text-[11.5px] text-[hsl(0_0%_60%)]"
         >
             <span>© 2026 BraveCrew Inc.</span>
-            <div class="flex flex-wrap gap-[18px]">
+            <div class="flex flex-wrap gap-4.5">
                 <a
                     href={Paths.LEGAL_TERMS}
                     class="text-[hsl(0_0%_60%)] no-underline hover:text-white transition-colors"
