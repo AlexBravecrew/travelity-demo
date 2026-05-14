@@ -1,13 +1,9 @@
 ---
 import { cn } from '@/lib/utils/cn';
-import ChannelSourceCard from './ChannelSourceCard.astro';
 import ChannelConnectorLines from './ChannelConnectorLines.astro';
 import ChannelHub from './ChannelHub.astro';
-import {
-    GygLogo,
-    ViatorLogo,
-    KlookLogo,
-} from '@/components/decorative/ota-logos';
+import { GygLogo, ViatorLogo } from '@/components/decorative/ota-logos';
+import { LayoutGridIcon, CodeIcon } from '@/icons';
 import type { HTMLAttributes } from 'astro/types';
 
 export interface Props extends HTMLAttributes<'div'> {
@@ -25,9 +21,9 @@ const wrapperClasses = cn(
     className,
 );
 
-const otaBadgeClasses = cn(
-    'channel-ota',
-    'w-16 h-16 rounded-full',
+const badgeClasses = cn(
+    'channel-badge',
+    'w-24 h-24 rounded-full',
     'flex items-center justify-center',
     'bg-paper border border-line',
     'shadow-[0_6px_16px_-6px_hsl(var(--ink)/0.10)]',
@@ -35,7 +31,9 @@ const otaBadgeClasses = cn(
     'hover:-translate-y-0.5',
 );
 
-const otaLogoClasses = 'w-10 h-auto';
+const otaLogoClasses = 'w-14 h-auto';
+
+const badgeTitleClasses = 'font-body font-bold text-sm text-ink leading-none';
 
 /**
  * Element positions in % of the orbit container. Intentionally slightly
@@ -45,11 +43,11 @@ const otaLogoClasses = 'w-10 h-auto';
  * these values exactly.
  */
 const POS = {
-    backoffice: { left: '17%', top: '24%' },
-    widget: { left: '19%', top: '77%' },
-    gyg: { left: '76%', top: '18%' },
+    backoffice: { left: '15%', top: '22%' },
+    widget: { left: '17%', top: '78%' },
+    gyg: { left: '85%', top: '20%' },
     viator: { left: '90%', top: '53%' },
-    klook: { left: '78%', top: '83%' },
+    otas: { left: '85%', top: '82%' },
     hub: { left: '50%', top: '50%' },
 } as const;
 ---
@@ -69,7 +67,7 @@ const POS = {
     >
     </div>
 
-    <!-- Orbit (>= sm): 5 peripheral elements + central hub, all absolute. -->
+    <!-- Orbit (>= sm): 5 peripheral badges + central hub, all absolute. -->
     <div
         class="hidden sm:block relative w-full aspect-[5/4] min-h-[440px] z-[2]"
     >
@@ -81,29 +79,10 @@ const POS = {
             class="absolute z-[2]"
             style={`left: ${POS.backoffice.left}; top: ${POS.backoffice.top}; transform: translate(-50%, -50%);`}
         >
-            <ChannelSourceCard
-                kind="backoffice"
-                title="Back-office"
-                subtitle="Direct sales"
-            >
-                <ul class="flex flex-col gap-1.5 m-0 p-0 list-none">
-                    <li
-                        class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
-                    >
-                        Manual orders
-                    </li>
-                    <li
-                        class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
-                    >
-                        Partner B2B
-                    </li>
-                    <li
-                        class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
-                    >
-                        Walk-ins
-                    </li>
-                </ul>
-            </ChannelSourceCard>
+            <div class={cn(badgeClasses, 'flex-col gap-1')}>
+                <LayoutGridIcon class="w-8 h-8 text-travelity-blue" />
+                <span class={badgeTitleClasses}>Back-office</span>
+            </div>
         </div>
 
         <!-- Widget -->
@@ -111,18 +90,10 @@ const POS = {
             class="absolute z-[2]"
             style={`left: ${POS.widget.left}; top: ${POS.widget.top}; transform: translate(-50%, -50%);`}
         >
-            <ChannelSourceCard
-                kind="widget"
-                title="Widget"
-                subtitle="On your site"
-            >
-                <p class="text-[11px] text-ink font-medium leading-[1.5] m-0">
-                    Embeds <span class="text-travelity-teal font-semibold"
-                        >directly on your website</span
-                    >
-                    — your branding, no commission.
-                </p>
-            </ChannelSourceCard>
+            <div class={cn(badgeClasses, 'flex-col gap-1')}>
+                <CodeIcon class="w-8 h-8 text-travelity-teal" />
+                <span class={badgeTitleClasses}>Widget</span>
+            </div>
         </div>
 
         <!-- GYG -->
@@ -131,7 +102,7 @@ const POS = {
             style={`left: ${POS.gyg.left}; top: ${POS.gyg.top}; transform: translate(-50%, -50%);`}
             aria-label="GetYourGuide"
         >
-            <div class={otaBadgeClasses}>
+            <div class={badgeClasses}>
                 <GygLogo class={otaLogoClasses} />
             </div>
         </div>
@@ -142,19 +113,22 @@ const POS = {
             style={`left: ${POS.viator.left}; top: ${POS.viator.top}; transform: translate(-50%, -50%);`}
             aria-label="Viator"
         >
-            <div class={otaBadgeClasses}>
+            <div class={badgeClasses}>
                 <ViatorLogo class={otaLogoClasses} />
             </div>
         </div>
 
-        <!-- Klook -->
+        <!-- OTAs (aggregate of all other OTA partners) -->
         <div
             class="absolute z-[2]"
-            style={`left: ${POS.klook.left}; top: ${POS.klook.top}; transform: translate(-50%, -50%);`}
-            aria-label="Klook"
+            style={`left: ${POS.otas.left}; top: ${POS.otas.top}; transform: translate(-50%, -50%);`}
+            aria-label="Other OTAs"
         >
-            <div class={otaBadgeClasses}>
-                <KlookLogo class={otaLogoClasses} />
+            <div class={badgeClasses}>
+                <span
+                    class="font-display font-semibold text-base text-ink"
+                    >OTAs</span
+                >
             </div>
         </div>
 
@@ -169,47 +143,28 @@ const POS = {
 
     <!-- Mobile fallback: vertical stack, no orbit / no connectors. -->
     <div class="sm:hidden relative z-[2] flex flex-col items-center gap-4 py-2">
-        <ChannelSourceCard
-            kind="backoffice"
-            title="Back-office"
-            subtitle="Direct sales"
-        >
-            <ul class="flex flex-col gap-1.5 m-0 p-0 list-none">
-                <li
-                    class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
-                >
-                    Manual orders
-                </li>
-                <li
-                    class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
-                >
-                    Partner B2B
-                </li>
-                <li
-                    class="flex items-center gap-2 font-body text-[11px] font-medium text-ink before:content-[''] before:w-1 before:h-1 before:rounded-full before:bg-ink-muted before:flex-shrink-0"
-                >
-                    Walk-ins
-                </li>
-            </ul>
-        </ChannelSourceCard>
-        <ChannelSourceCard kind="widget" title="Widget" subtitle="On your site">
-            <p class="text-[11px] text-ink font-medium leading-[1.5] m-0">
-                Embeds <span class="text-travelity-teal font-semibold"
-                    >directly on your website</span
-                >
-                — your branding, no commission.
-            </p>
-        </ChannelSourceCard>
+        <div class="flex items-center gap-3">
+            <div class={cn(badgeClasses, 'flex-col gap-1')}>
+                <LayoutGridIcon class="w-8 h-8 text-travelity-blue" />
+                <span class={badgeTitleClasses}>Back-office</span>
+            </div>
+            <div class={cn(badgeClasses, 'flex-col gap-1')}>
+                <CodeIcon class="w-8 h-8 text-travelity-teal" />
+                <span class={badgeTitleClasses}>Widget</span>
+            </div>
+        </div>
         <ChannelHub class="my-2" />
         <div class="flex items-center gap-3">
-            <div class={otaBadgeClasses}>
+            <div class={badgeClasses}>
                 <GygLogo class={otaLogoClasses} />
             </div>
-            <div class={otaBadgeClasses}>
+            <div class={badgeClasses}>
                 <ViatorLogo class={otaLogoClasses} />
             </div>
-            <div class={otaBadgeClasses}>
-                <KlookLogo class={otaLogoClasses} />
+            <div class={badgeClasses}>
+                <span class="font-display font-semibold text-base text-ink"
+                    >OTAs</span
+                >
             </div>
         </div>
     </div>
@@ -217,10 +172,10 @@ const POS = {
 
 <style>
     @media (prefers-reduced-motion: reduce) {
-        .channel-ota {
+        .channel-badge {
             transition: none !important;
         }
-        .channel-ota:hover {
+        .channel-badge:hover {
             transform: none !important;
         }
     }
