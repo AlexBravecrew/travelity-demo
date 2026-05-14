@@ -1,3 +1,2 @@
-export { OutcomeCollage } from './outcome-collage';
-export type { CollageImage } from './outcome-collage';
-export { BookingToast, LockChip, QueueStack } from './floating-accents';
+export { OutcomeBlock } from './outcome-block';
+export type { BlockSurface, BlockTone } from './outcome-block';

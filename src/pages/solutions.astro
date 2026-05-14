@@ -3,63 +3,22 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
 import { Eyebrow } from '@/components/ui/eyebrow';
-import {
-    OutcomeCollage,
-    BookingToast,
-    LockChip,
-    QueueStack,
-} from '@/components/solutions';
-import type { CollageImage } from '@/components/solutions';
+import { OutcomeBlock } from '@/components/solutions';
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
 
 export const prerender = true;
 
 /**
- * Solutions page — scrapbook-style outcome sections (giant title above a
- * 3-photo collage above body text). Deliberately NOT a two-column
- * text/image grid — that layout is reserved for /features.
+ * Solutions page — three full-width editorial blocks, each with its own
+ * centered title + 3-4 sentence body + large image below. Sections
+ * alternate paper / surface-alt backgrounds so each outcome reads as a
+ * distinct "act". Eyebrow tone rotates teal → sunset → blue for a
+ * single warm accent without bg artifacts.
  *
- * TODO: replace the placeholder images with real travel photographs.
- *       Drop assets under `/public/solutions/<slug>/<n>.jpg` and update
- *       each `images:` entry below. The component's CSS duotone filter
- *       tints whatever you drop in on-palette automatically.
+ * TODO: replace `/solutions/placeholder.svg` with real travel
+ *       photographs at `/public/solutions/<slug>.jpg`. The duotone
+ *       filter tints whatever you drop in on-palette automatically.
  */
-
-interface Outcome {
-    slug: string;
-    body: string;
-    images: CollageImage[];
-}
-
-const outcomes: Outcome[] = [
-    {
-        slug: 'increase-sales',
-        body: 'Reach buyers wherever they search. Direct site, OTA partners, embedded widget on partner sites — same inventory, one setup, every channel, no duplicate work, and no double-bookings.',
-        images: [
-            { src: '/solutions/placeholder.svg', alt: 'Direct site bookings' },
-            { src: '/solutions/placeholder.svg', alt: 'OTA partner channels' },
-            { src: '/solutions/placeholder.svg', alt: 'Embedded booking widget' },
-        ],
-    },
-    {
-        slug: 'prevent-overbookings',
-        body: "Inventory locks the instant a booking starts — across every channel, simultaneously. No more reconciling spreadsheets at midnight. No more refunding angry customers on a Saturday morning.",
-        images: [
-            { src: '/solutions/placeholder.svg', alt: 'Real-time availability' },
-            { src: '/solutions/placeholder.svg', alt: 'Inventory lock in action' },
-            { src: '/solutions/placeholder.svg', alt: 'Channel sync audit log' },
-        ],
-    },
-    {
-        slug: 'manage-all-bookings',
-        body: "Whether it came through your widget, GetYourGuide, an inbound email, or a sales rep — it lands in the same queue. Edit, refund, reassign, generate documents. No spreadsheet juggling.",
-        images: [
-            { src: '/solutions/placeholder.svg', alt: 'Unified booking inbox' },
-            { src: '/solutions/placeholder.svg', alt: 'Customer record builder' },
-            { src: '/solutions/placeholder.svg', alt: 'On-demand documents' },
-        ],
-    },
-];
 ---
 
 <MarketingLayout
@@ -70,8 +29,8 @@ const outcomes: Outcome[] = [
 
     <main class="bg-paper">
         <!-- Compact top intro -->
-        <section class="relative py-16 md:py-24">
-            <div class="container mx-auto px-6 text-center">
+        <section class="py-12 md:py-16 text-center">
+            <div class="container mx-auto px-6">
                 <Eyebrow withRule centered>Solutions</Eyebrow>
 
                 <h1
@@ -96,48 +55,67 @@ const outcomes: Outcome[] = [
         </section>
 
         <!-- Outcome 1 — Increase Sales -->
-        <OutcomeCollage
-            id={outcomes[0]!.slug}
-            images={outcomes[0]!.images}
+        <OutcomeBlock
+            id="increase-sales"
+            eyebrow="Outcome 01"
+            imageSrc="/solutions/placeholder.svg"
+            imageAlt="Multiple booking channels feeding a single inventory"
+            surface="alt"
+            tone="teal"
         >
             <Fragment slot="title">
-                <em>Increase</em> Sales.
+                <em>Increase</em> sales.
             </Fragment>
-            <Fragment slot="body">{outcomes[0]!.body}</Fragment>
-            <Fragment slot="accent">
-                <BookingToast class="top-4 right-4 md:top-5 md:right-5" />
+            <Fragment slot="body">
+                Reach buyers wherever they search. Your direct site, OTA
+                partners like GetYourGuide and Viator, and embedded widgets on
+                partner sites — same inventory, one setup. Every channel stays
+                in sync. Bookings flow into a single queue with no duplicate
+                work and no double-bookings.
             </Fragment>
-        </OutcomeCollage>
+        </OutcomeBlock>
 
         <!-- Outcome 2 — Prevent Overbookings -->
-        <OutcomeCollage
-            id={outcomes[1]!.slug}
-            images={outcomes[1]!.images}
+        <OutcomeBlock
+            id="prevent-overbookings"
+            eyebrow="Outcome 02"
+            imageSrc="/solutions/placeholder.svg"
+            imageAlt="A seat locked across three booking channels at once"
+            surface="paper"
+            tone="sunset"
         >
             <Fragment slot="title">
-                <em>Prevent</em> Overbookings <br class="hidden md:inline" />
-                and Revenue Loss.
+                <em>Prevent</em> overbookings and revenue loss.
             </Fragment>
-            <Fragment slot="body">{outcomes[1]!.body}</Fragment>
-            <Fragment slot="accent">
-                <LockChip class="bottom-4 left-4 md:bottom-5 md:left-5" />
+            <Fragment slot="body">
+                Inventory locks the instant a booking starts — across every
+                channel, simultaneously. No more reconciling spreadsheets at
+                midnight. No more refunding angry customers on a Saturday
+                morning. The seat is yours the second a guest clicks book,
+                and the platform enforces it for you.
             </Fragment>
-        </OutcomeCollage>
+        </OutcomeBlock>
 
         <!-- Outcome 3 — Manage All Bookings -->
-        <OutcomeCollage
-            id={outcomes[2]!.slug}
-            images={outcomes[2]!.images}
+        <OutcomeBlock
+            id="manage-all-bookings"
+            eyebrow="Outcome 03"
+            imageSrc="/solutions/placeholder.svg"
+            imageAlt="Unified booking queue with cards from multiple sources"
+            surface="alt"
+            tone="blue"
         >
             <Fragment slot="title">
-                <em>Manage</em> All Bookings <br class="hidden md:inline" />
-                in One Place.
+                <em>Manage</em> every booking in one place.
             </Fragment>
-            <Fragment slot="body">{outcomes[2]!.body}</Fragment>
-            <Fragment slot="accent">
-                <QueueStack class="top-4 right-4 md:top-5 md:right-5" />
+            <Fragment slot="body">
+                Whether it came through your widget, GetYourGuide, an inbound
+                email, or a sales rep — it lands in the same queue. Edit,
+                refund, reassign, and generate tickets, vouchers, or invoices
+                on demand. Customer records build themselves from every
+                booking. No more spreadsheet juggling.
             </Fragment>
-        </OutcomeCollage>
+        </OutcomeBlock>
 
         <ClosingCTASection />
     </main>
