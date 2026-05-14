@@ -7,225 +7,155 @@ import {
 export const prerender = true;
 
 const tocItems: TocItem[] = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'information-we-collect', label: 'Information we collect' },
-    { id: 'how-we-use-information', label: 'How we use information' },
-    { id: 'sharing-and-disclosure', label: 'Sharing and disclosure' },
-    { id: 'data-retention', label: 'Data retention' },
-    { id: 'your-rights', label: 'Your rights' },
-    { id: 'security', label: 'Security' },
-    { id: 'international-transfers', label: 'International transfers' },
-    { id: 'children', label: 'Children' },
-    { id: 'changes', label: 'Changes to this policy' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'introduction', label: '1. Introduction' },
+    { id: 'information-we-collect', label: '2. Information we collect' },
+    { id: 'how-we-use-information', label: '3. How we use your information' },
+    { id: 'data-sharing', label: '4. Data sharing & third parties' },
+    { id: 'data-security', label: '5. Data security' },
+    { id: 'data-retention', label: '6. Data retention' },
+    { id: 'user-rights', label: '7. User rights & choices' },
+    { id: 'international-transfers', label: '8. International data transfers' },
+    { id: 'governing-law', label: '9. Governing law' },
+    { id: 'changes', label: '10. Changes to this policy' },
+    { id: 'contact', label: '11. Contact us' },
 ];
 ---
 
 <LegalPageLayout
     title="Privacy Policy"
     tagline="How Travelity collects, uses, and protects information."
-    lastUpdated="May 1, 2026"
-    effectiveDate="May 1, 2026"
+    lastUpdated="February 4, 2025"
+    effectiveDate="February 4, 2025"
     tocItems={tocItems}
     description="Travelity's privacy policy: what data we collect, how we use it, your rights, and how to contact us."
+    showDraftBanner={false}
 >
-    <h2 id="overview">Overview</h2>
+    <h2 id="introduction">1. Introduction</h2>
     <p>
-        This Privacy Policy explains how BraveCrew Inc.
-        (&ldquo;Travelity&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) collects,
-        uses, and protects information when you use the Travelity platform, our
-        website at <a href="/">travelity.app</a>, and related services
-        (collectively, the &ldquo;Services&rdquo;).
+        BraveCrew Inc. (&ldquo;Company,&rdquo; &ldquo;we,&rdquo;
+        &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates Travelity, a tour
+        booking management software. We are committed to protecting your
+        privacy and ensuring the security of personal data collected through
+        our platform. This Privacy Policy explains how we collect, use, store,
+        and protect your information.
     </p>
+
+    <h2 id="information-we-collect">2. Information we collect</h2>
+    <p>When you use Travelity, we may collect the following information:</p>
+    <ul>
+        <li>
+            <strong>Customer data:</strong> business details, names, email
+            addresses, phone numbers, and other identifiers provided during
+            account creation.
+        </li>
+        <li>
+            <strong>End-user data:</strong> information entered about customers
+            booking services, such as names, contact details, and booking
+            preferences.
+        </li>
+        <li>
+            <strong>Payment information:</strong> billing details necessary for
+            subscription processing.
+        </li>
+        <li>
+            <strong>Technical information:</strong> IP addresses, device
+            details, and usage statistics to enhance platform performance.
+        </li>
+        <li>
+            <strong>Communications:</strong> any correspondence with our
+            support or sales teams.
+        </li>
+    </ul>
+
+    <h2 id="how-we-use-information">3. How we use your information</h2>
+    <p>We process collected data for the following purposes:</p>
+    <ul>
+        <li>Providing and managing the Travelity platform.</li>
+        <li>Processing bookings and managing customer relationships.</li>
+        <li>Communicating important service updates.</li>
+        <li>Improving platform functionality and security.</li>
+        <li>Complying with legal and regulatory requirements.</li>
+    </ul>
+
+    <h2 id="data-sharing">4. Data sharing & third-party services</h2>
+    <ul>
+        <li>We do not sell or rent your personal data.</li>
+        <li>
+            We may share data with service providers (e.g. payment processors,
+            cloud storage providers) strictly for operational purposes.
+        </li>
+        <li>
+            If required by law, we may disclose information to regulatory
+            authorities.
+        </li>
+    </ul>
+
+    <h2 id="data-security">5. Data security</h2>
     <p>
-        We aim to be straightforward: we collect what we need to operate the
-        Services, we protect it appropriately, and we give you control over it.
-        If anything in this policy is unclear, contact us at <a
+        We implement industry-standard security measures to protect personal
+        data from unauthorized access, alteration, or disclosure. However, no
+        system is entirely secure, and users should also take precautions in
+        handling sensitive data.
+    </p>
+
+    <h2 id="data-retention">6. Data retention</h2>
+    <ul>
+        <li>
+            We retain customer data for as long as necessary to provide
+            services and comply with legal obligations.
+        </li>
+        <li>
+            End-user data entered into Travelity is managed by the respective
+            Customer and can be deleted upon request.
+        </li>
+    </ul>
+
+    <h2 id="user-rights">7. User rights & choices</h2>
+    <p>
+        Depending on your location and applicable laws, you may have the right
+        to:
+    </p>
+    <ul>
+        <li>Access, update, or delete your personal data.</li>
+        <li>Opt out of marketing communications.</li>
+        <li>Request details on how your data is used.</li>
+        <li>Submit complaints regarding data handling.</li>
+    </ul>
+
+    <h2 id="international-transfers">8. International data transfers</h2>
+    <p>
+        As Travelity operates under BraveCrew Inc., a <strong
+            >Delaware, USA</strong
+        >-registered company, data may be stored or processed in the United
+        States or other jurisdictions. We ensure compliance with relevant data
+        protection laws when transferring data internationally.
+    </p>
+
+    <h2 id="governing-law">9. Governing law</h2>
+    <p>
+        This Privacy Policy is governed by and interpreted under the laws of
+        the <strong>State of Delaware, USA</strong>. Any disputes arising from
+        this policy will be subject to the exclusive jurisdiction of the courts
+        located in Delaware.
+    </p>
+
+    <h2 id="changes">10. Changes to this privacy policy</h2>
+    <p>
+        We may update this Privacy Policy periodically. Continued use of
+        Travelity after changes take effect constitutes acceptance of the
+        revised terms.
+    </p>
+
+    <h2 id="contact">11. Contact us</h2>
+    <p>
+        For any questions or data requests, please contact us at <a
             href="mailto:privacy@travelity.app">privacy@travelity.app</a
         >.
     </p>
-
-    <h2 id="information-we-collect">Information we collect</h2>
-    <h3>Information you provide</h3>
+    <p>By using Travelity, you acknowledge and agree to this Privacy Policy.</p>
     <p>
-        When you create an account, request a demo, or contact us, we collect
-        information you submit, including your name, email address, company
-        name, business type, team size, and any message content. When you
-        actively use the Services, we collect business data such as products,
-        schedules, pricing, bookings, customer records, and payments — this is
-        your data, processed on your behalf.
-    </p>
-    <h3>Information collected automatically</h3>
-    <p>
-        When you visit our website or use the Services, we automatically collect
-        certain technical information including IP address, browser type and
-        version, device identifiers, pages visited, referring URL, and
-        timestamps. We use cookies and similar technologies to operate the
-        Services and remember preferences. See our <a href="/legal/cookies"
-            >Cookies Policy</a
-        > for details.
-    </p>
-    <h3>Information from third parties</h3>
-    <p>
-        If you connect Travelity to a third-party service (e.g. an OTA platform
-        like GetYourGuide, Viator, or Klook, or a payment processor like
-        Stripe), we receive data from that service necessary to operate the
-        integration — typically booking events, inventory updates, and payment
-        confirmations.
-    </p>
-
-    <h2 id="how-we-use-information">How we use information</h2>
-    <p>We use information to:</p>
-    <ul>
-        <li>Provide, operate, and maintain the Services.</li>
-        <li>
-            Process bookings, payments, and other transactions on your behalf.
-        </li>
-        <li>
-            Communicate with you about your account, including service
-            announcements and support.
-        </li>
-        <li>
-            Improve and develop the Services, including analyzing usage patterns
-            and debugging issues.
-        </li>
-        <li>
-            Detect, prevent, and respond to fraud, abuse, security incidents,
-            and policy violations.
-        </li>
-        <li>Comply with legal obligations and enforce our agreements.</li>
-        <li>
-            Send marketing communications, where you have consented or where
-            permitted by law (you can opt out at any time).
-        </li>
-    </ul>
-    <p>
-        We do not sell personal information. We do not use your business data to
-        train AI models without your consent.
-    </p>
-
-    <h2 id="sharing-and-disclosure">Sharing and disclosure</h2>
-    <p>We share information with:</p>
-    <ul>
-        <li>
-            <strong>Service providers</strong> who process data on our behalf under
-            contract (hosting, payment processing, email delivery, error tracking,
-            analytics). These providers are bound by confidentiality and may use the
-            information only for the purposes we specify.
-        </li>
-        <li>
-            <strong>Integration partners</strong> when you authorize a connection
-            (e.g. an OTA platform). The data shared is limited to what's necessary
-            to operate the integration.
-        </li>
-        <li>
-            <strong>Legal authorities</strong> when required by law, court order,
-            or to protect rights, property, or safety.
-        </li>
-        <li>
-            <strong>Successors</strong> in the event of a merger, acquisition, or
-            sale of assets, subject to confidentiality and to this Privacy Policy.
-        </li>
-    </ul>
-
-    <h2 id="data-retention">Data retention</h2>
-    <p>
-        We retain personal information as long as your account is active and as
-        necessary to provide the Services. After cancellation, we retain your
-        data for 90 days in case you reactivate, then permanently delete it,
-        except where law requires longer retention (for example, financial
-        records typically retained for 7 years).
-    </p>
-    <p>
-        You can export your data at any time, including after cancellation, as
-        CSV from your account settings.
-    </p>
-
-    <h2 id="your-rights">Your rights</h2>
-    <p>
-        Depending on your location, you may have the following rights regarding
-        your personal information:
-    </p>
-    <ul>
-        <li>
-            <strong>Access:</strong> request a copy of the personal information we
-            hold about you.
-        </li>
-        <li>
-            <strong>Correction:</strong> ask us to correct inaccurate or incomplete
-            information.
-        </li>
-        <li>
-            <strong>Deletion:</strong> request that we delete your personal information,
-            subject to legal exceptions.
-        </li>
-        <li>
-            <strong>Portability:</strong> receive your information in a structured,
-            machine-readable format.
-        </li>
-        <li>
-            <strong>Objection or restriction:</strong> object to certain processing
-            or ask us to restrict it.
-        </li>
-        <li>
-            <strong>Withdrawal of consent:</strong> withdraw consent where we rely
-            on it.
-        </li>
-        <li>
-            <strong>Complaint:</strong> lodge a complaint with your local data protection
-            authority.
-        </li>
-    </ul>
-    <p>
-        To exercise any of these rights, contact <a
-            href="mailto:privacy@travelity.app">privacy@travelity.app</a
-        >. We respond within 30 days.
-    </p>
-
-    <h2 id="security">Security</h2>
-    <p>
-        We use industry-standard measures to protect information, including
-        encryption in transit (TLS) and at rest, role-based access controls,
-        audit logging, and regular security reviews. No system is perfectly
-        secure; in the unlikely event of a breach affecting your information, we
-        will notify you without undue delay as required by applicable law.
-    </p>
-
-    <h2 id="international-transfers">International transfers</h2>
-    <p>
-        Travelity is hosted in the European Union (Frankfurt, Germany). If you
-        access the Services from outside the EU, your information may be
-        transferred to and processed in the EU. Where we transfer personal
-        information across borders, we use appropriate safeguards, including the
-        European Commission's Standard Contractual Clauses where applicable.
-    </p>
-
-    <h2 id="children">Children</h2>
-    <p>
-        The Services are not directed to individuals under 16 years of age. We
-        do not knowingly collect personal information from children. If you
-        believe a child has provided us information, contact us and we will
-        delete it.
-    </p>
-
-    <h2 id="changes">Changes to this policy</h2>
-    <p>
-        We may update this policy from time to time. When we do, we will revise
-        the &ldquo;Last updated&rdquo; date at the top. For material changes, we
-        will notify you via email or through the Services before the changes
-        take effect.
-    </p>
-
-    <h2 id="contact">Contact</h2>
-    <p>
-        BraveCrew Inc.<br />Email: <a href="mailto:privacy@travelity.app"
-            >privacy@travelity.app</a
-        >
-    </p>
-    <p>
-        For data protection inquiries (EU/EEA residents), you may also contact
-        our Data Protection Officer at <a href="mailto:dpo@travelity.app"
-            >dpo@travelity.app</a
-        >.
+        BraveCrew Inc.<br />
+        651 N Broad St, Suite 201<br />
+        Middletown, Delaware, 19709, US
     </p>
 </LegalPageLayout>

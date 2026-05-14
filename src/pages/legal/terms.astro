@@ -7,217 +7,261 @@ import {
 export const prerender = true;
 
 const tocItems: TocItem[] = [
-    { id: 'acceptance', label: 'Acceptance of terms' },
-    { id: 'accounts', label: 'Accounts' },
-    { id: 'subscription-and-billing', label: 'Subscription and billing' },
-    { id: 'acceptable-use', label: 'Acceptable use' },
-    { id: 'your-content', label: 'Your content and data' },
-    { id: 'service-availability', label: 'Service availability' },
-    { id: 'termination', label: 'Termination' },
-    { id: 'warranties', label: 'Warranties and disclaimers' },
-    { id: 'liability', label: 'Limitation of liability' },
-    { id: 'indemnification', label: 'Indemnification' },
-    { id: 'governing-law', label: 'Governing law' },
-    { id: 'changes', label: 'Changes to these terms' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'introduction', label: '1. Introduction' },
+    { id: 'defined-terms', label: '2. Defined terms & interpretation' },
+    { id: 'rights-and-obligations', label: '3. Customer rights and obligations' },
+    { id: 'intellectual-property', label: '4. Intellectual property rights' },
+    { id: 'payment-terms', label: '5. Payment terms' },
+    { id: 'termination', label: '6. Termination or suspension' },
+    { id: 'confidentiality', label: '7. Confidentiality' },
+    { id: 'data-protection', label: '8. Data protection' },
+    { id: 'dispute-resolution', label: '9. Dispute resolution' },
+    { id: 'force-majeure', label: '10. Force majeure' },
+    { id: 'amendments', label: '11. Amendments & contact' },
 ];
 ---
 
 <LegalPageLayout
-    title="Terms of Service"
+    title="Terms and Conditions"
     tagline="The agreement between you and Travelity for use of the platform."
-    lastUpdated="May 1, 2026"
-    effectiveDate="May 1, 2026"
+    lastUpdated="February 4, 2025"
+    effectiveDate="February 4, 2025"
     tocItems={tocItems}
-    description="Travelity's terms of service: subscription terms, acceptable use, your content, warranties, and contact."
+    description="Travelity's terms and conditions: customer rights, obligations, payments, termination, and dispute resolution."
+    showDraftBanner={false}
 >
-    <h2 id="acceptance">Acceptance of terms</h2>
+    <h2 id="introduction">1. Introduction</h2>
     <p>
-        These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and
-        use of the Travelity platform, website, and related services (the
-        &ldquo;Services&rdquo;) operated by BraveCrew Inc.
-        (&ldquo;Travelity&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;). By
-        creating an account or using the Services, you agree to be bound by
-        these Terms.
-    </p>
-    <p>
-        If you are using the Services on behalf of an organization, you
-        represent that you have authority to bind that organization, and
-        &ldquo;you&rdquo; refers to that organization throughout these Terms.
+        Travelity is a tour booking management software developed and operated
+        by BraveCrew Inc., registered at 651 N Broad St Suite 201, Middletown,
+        Delaware, 19709, US. These Terms and Conditions govern your use of
+        Travelity. By accessing or using the platform, you agree to abide by
+        these terms. If you do not agree, you must discontinue use immediately.
     </p>
 
-    <h2 id="accounts">Accounts</h2>
-    <p>
-        You must provide accurate information when registering and keep your
-        credentials secure. You are responsible for all activity under your
-        account. Notify us immediately at <a
-            href="mailto:security@travelity.app">security@travelity.app</a
-        > of any unauthorized access.
-    </p>
-    <p>
-        You must be at least 18 years old to use the Services. The Services are
-        intended for use by businesses and not consumers.
-    </p>
-
-    <h2 id="subscription-and-billing">Subscription and billing</h2>
-    <p>
-        Travelity offers Free, Plus, and Ultimate plans, each with their own
-        features and limits as described on our <a href="/pricing"
-            >pricing page</a
-        >. Paid subscriptions are billed in advance, monthly or annually,
-        depending on the plan you select.
-    </p>
-    <p>
-        Fees are non-refundable except as required by law or as expressly
-        stated. Annual plans may be refunded on a pro-rata basis if cancelled
-        within the first 30 days of the subscription term. Monthly plans may be
-        cancelled at any time and will not renew, but no refund is given for the
-        current period.
-    </p>
-    <p>
-        We may change prices for paid plans with at least 30 days' prior notice.
-        Price changes take effect at your next renewal.
-    </p>
-    <p>
-        If a payment fails, we may suspend access to paid features until payment
-        is current. We will notify you and give you a reasonable opportunity to
-        update payment information before suspension.
-    </p>
-
-    <h2 id="acceptable-use">Acceptable use</h2>
-    <p>You agree not to:</p>
+    <h2 id="defined-terms">2. Defined terms & interpretation</h2>
     <ul>
         <li>
-            Use the Services to violate any law, regulation, or third-party
-            right.
+            <strong>&ldquo;Company,&rdquo; &ldquo;We,&rdquo;
+            &ldquo;Us,&rdquo;</strong> refers to BraveCrew Inc. operating
+            Travelity.
         </li>
         <li>
-            Attempt to gain unauthorized access to any portion of the Services
-            or any related system.
+            <strong>&ldquo;Customer,&rdquo; &ldquo;You&rdquo;</strong> refers
+            to any company, tour operator, or guide using Travelity.
         </li>
         <li>
-            Interfere with or disrupt the integrity or performance of the
-            Services, including by sending malicious code, conducting
-            denial-of-service attacks, or attempting to overwhelm rate limits.
+            <strong>&ldquo;Platform&rdquo;</strong> refers to the Travelity
+            software and related services.
         </li>
         <li>
-            Reverse-engineer, decompile, or disassemble any part of the
-            Services, except where permitted by law.
+            <strong>&ldquo;Subscription Plan&rdquo;</strong> refers to the paid
+            service tier selected by the Customer.
         </li>
         <li>
-            Use the Services to send spam, phishing, or other unsolicited
-            communications.
+            <strong>&ldquo;Trial Period&rdquo;</strong> refers to any free or
+            limited access period offered by Travelity.
         </li>
         <li>
-            Resell, sublicense, or commercialize access to the Services without
-            our written agreement.
+            <strong>&ldquo;Agreement&rdquo;</strong> refers to this document and
+            any updates made to it.
+        </li>
+        <li>Singular terms include plural meanings where applicable.</li>
+    </ul>
+
+    <h2 id="rights-and-obligations">3. Customer rights and obligations</h2>
+    <h3>3.1 Customer rights</h3>
+    <ul>
+        <li>
+            You have the right to access and use Travelity in accordance with
+            your selected subscription plan.
         </li>
         <li>
-            Use the Services to process data of individuals under the age of 16
-            without lawful basis.
+            You have the right to receive platform updates, support, and any
+            features included in your plan.
+        </li>
+        <li>
+            You have the right to manage bookings, customer data, and content
+            within the platform in compliance with applicable laws.
+        </li>
+        <li>
+            You have the right to terminate your subscription as per the
+            termination terms outlined in this agreement.
+        </li>
+        <li>
+            You have the right to request information regarding how your data
+            is handled in accordance with our <a href="/legal/privacy"
+                >Privacy Policy</a
+            >.
         </li>
     </ul>
 
-    <h2 id="your-content">Your content and data</h2>
+    <h3>3.2 Customer obligations</h3>
+    <ul>
+        <li>You must provide accurate, lawful business information.</li>
+        <li>
+            You are responsible for all activities and bookings managed through
+            your account.
+        </li>
+        <li>You must comply with all applicable laws and regulations.</li>
+        <li>
+            You shall not use the platform for unlawful, fraudulent, or
+            unethical activities.
+        </li>
+        <li>
+            You must ensure that uploaded content does not infringe on
+            third-party rights.
+        </li>
+    </ul>
+
+    <h3>3.3 Our rights & obligations</h3>
+    <ul>
+        <li>
+            We provide access to the Travelity platform based on your
+            subscription plan.
+        </li>
+        <li>
+            We may modify, suspend, or discontinue services with prior notice,
+            except in cases of a breach.
+        </li>
+        <li>
+            We reserve the right to remove or disable content that violates
+            these Terms.
+        </li>
+        <li>
+            We maintain the right to update software features, pricing, and
+            service offerings.
+        </li>
+    </ul>
+
+    <h2 id="intellectual-property">4. Intellectual property rights</h2>
+    <ul>
+        <li>
+            BraveCrew Inc. retains all ownership rights to the Travelity
+            software, trademarks, and content.
+        </li>
+        <li>
+            You may not copy, modify, or distribute any part of the software
+            unless expressly permitted.
+        </li>
+        <li>
+            Any feedback or suggestions provided by you may be used by Travelity
+            without compensation.
+        </li>
+    </ul>
+
+    <h2 id="payment-terms">5. Payment terms</h2>
+    <ul>
+        <li>
+            Travelity offers a <strong>free version</strong> with limited
+            features and <strong>subscription plans</strong> on a monthly or
+            annual basis.
+        </li>
+        <li>
+            Payments are due in advance, invoiced for the selected period, and
+            are <strong>non-refundable</strong>.
+        </li>
+        <li>
+            Subscriptions may be set to <strong>auto-renew</strong> or require
+            <strong>manual renewal</strong> as per the chosen plan.
+        </li>
+        <li>
+            Failure to make payments within the specified period may result in
+            suspension or termination.
+        </li>
+        <li>
+            Travelity reserves the right to adjust pricing with prior notice.
+        </li>
+    </ul>
+
+    <h2 id="termination">6. Termination or suspension</h2>
+    <p>We may suspend or terminate your access if:</p>
+    <ul>
+        <li>You breach these Terms.</li>
+        <li>You fail to make timely payments.</li>
+        <li>You engage in fraudulent, illegal, or harmful activities.</li>
+        <li>Your use of the platform causes harm to Travelity or its users.</li>
+    </ul>
     <p>
-        You retain all rights to data you upload, create, or store using the
-        Services (&ldquo;Your Content&rdquo;). You grant Travelity a worldwide,
-        non-exclusive license to host, copy, transmit, and display Your Content
-        solely as necessary to operate the Services on your behalf.
-    </p>
-    <p>
-        You are responsible for the accuracy, legality, and quality of Your
-        Content. You represent that you have the rights necessary to upload,
-        store, and process Your Content using the Services, including with
-        respect to the personal information of any third parties (your
-        customers, employees, etc.).
-    </p>
-    <p>
-        We will not access Your Content except as necessary to provide the
-        Services, comply with law, or with your authorization. See our <a
-            href="/legal/dpa">Data Processing Agreement</a
-        > for details on how we process personal data on your behalf.
+        Termination does not relieve you of outstanding payment obligations.
     </p>
 
-    <h2 id="service-availability">Service availability</h2>
+    <h2 id="confidentiality">7. Confidentiality</h2>
+    <ul>
+        <li>
+            Both parties agree to keep confidential any proprietary or
+            business-sensitive information.
+        </li>
+        <li>
+            Confidentiality obligations survive termination of this agreement.
+        </li>
+        <li>
+            You agree not to disclose, share, or misuse confidential
+            information received from Travelity.
+        </li>
+    </ul>
+
+    <h2 id="data-protection">8. Data protection</h2>
+    <ul>
+        <li>Travelity complies with applicable data protection laws.</li>
+        <li>
+            We collect, process, and store data as described in our <a
+                href="/legal/privacy">Privacy Policy</a
+            >.
+        </li>
+        <li>
+            Customers must ensure compliance with data protection laws when
+            handling user data.
+        </li>
+        <li>
+            Travelity is not liable for unauthorized access due to user
+            negligence.
+        </li>
+    </ul>
+
+    <h2 id="dispute-resolution">9. Dispute resolution</h2>
+    <ul>
+        <li>
+            Any disputes shall first be resolved through good-faith
+            negotiations.
+        </li>
+        <li>
+            If unresolved, disputes shall be referred to arbitration under
+            Delaware law.
+        </li>
+        <li>
+            Legal proceedings may only be initiated after arbitration efforts
+            have been exhausted.
+        </li>
+    </ul>
+
+    <h2 id="force-majeure">10. Force majeure</h2>
     <p>
-        We aim for high availability of the Services but do not guarantee
-        uninterrupted access. Scheduled maintenance is announced in advance
-        where reasonably possible. Ultimate-plan customers receive an
-        availability commitment described in their separate Service Level
-        Agreement.
+        We are not liable for delays or failure to perform due to unforeseen
+        events beyond our control, including natural disasters, government
+        actions, cyberattacks, or other force majeure events.
     </p>
 
-    <h2 id="termination">Termination</h2>
+    <h2 id="amendments">11. Amendments & contact information</h2>
+    <ul>
+        <li>
+            We reserve the right to update these Terms. Continued use of
+            Travelity after changes constitutes acceptance.
+        </li>
+        <li>Customers will be notified of significant changes.</li>
+        <li>
+            For inquiries, contact us at <a href="mailto:legal@travelity.app"
+                >legal@travelity.app</a
+            >.
+        </li>
+    </ul>
     <p>
-        You may cancel your subscription at any time from your account settings.
-        Upon cancellation, you retain access until the end of your current
-        billing period. After cancellation, we retain Your Content for 90 days,
-        after which it is permanently deleted unless retention is required by
-        law.
+        By using Travelity, you acknowledge and agree to these Terms and
+        Conditions.
     </p>
     <p>
-        We may suspend or terminate your access if you materially breach these
-        Terms, fail to pay, or use the Services in a way that creates legal or
-        security risk. Where reasonably possible, we will give you notice and an
-        opportunity to cure.
-    </p>
-
-    <h2 id="warranties">Warranties and disclaimers</h2>
-    <p>
-        The Services are provided &ldquo;as is&rdquo; and &ldquo;as
-        available&rdquo; without warranties of any kind, whether express or
-        implied, including warranties of merchantability, fitness for a
-        particular purpose, or non-infringement, except to the extent such
-        warranties cannot be disclaimed under applicable law.
-    </p>
-
-    <h2 id="liability">Limitation of liability</h2>
-    <p>
-        To the maximum extent permitted by law, Travelity's aggregate liability
-        arising out of or related to the Services will not exceed the amount you
-        paid us in the 12 months preceding the event giving rise to liability.
-        In no event will Travelity be liable for indirect, incidental, special,
-        consequential, or punitive damages, lost profits, or loss of business,
-        even if advised of the possibility.
-    </p>
-    <p>
-        Some jurisdictions do not allow these limitations; in those
-        jurisdictions, our liability is limited to the maximum extent permitted
-        by law.
-    </p>
-
-    <h2 id="indemnification">Indemnification</h2>
-    <p>
-        You agree to indemnify and hold harmless Travelity, its affiliates, and
-        their respective directors, officers, employees, and agents from any
-        claims, damages, liabilities, and expenses (including reasonable legal
-        fees) arising out of (a) Your Content, (b) your use of the Services in
-        violation of these Terms or applicable law, or (c) your infringement of
-        any third-party right.
-    </p>
-
-    <h2 id="governing-law">Governing law</h2>
-    <p>
-        These Terms are governed by the laws of [jurisdiction TBD — confirm with
-        counsel], excluding conflict-of-laws rules. Any dispute arising from
-        these Terms or the Services will be resolved in the courts of
-        [jurisdiction TBD], unless mandatory consumer protection law in your
-        jurisdiction provides otherwise.
-    </p>
-
-    <h2 id="changes">Changes to these terms</h2>
-    <p>
-        We may update these Terms from time to time. For material changes, we
-        will notify you in advance via email or through the Services. Your
-        continued use of the Services after the effective date of the changes
-        constitutes acceptance.
-    </p>
-
-    <h2 id="contact">Contact</h2>
-    <p>
-        BraveCrew Inc.<br />Email: <a href="mailto:legal@travelity.app"
-            >legal@travelity.app</a
-        >
+        BraveCrew Inc.<br />
+        651 N Broad St, Suite 201<br />
+        Middletown, Delaware, 19709, US
     </p>
 </LegalPageLayout>
