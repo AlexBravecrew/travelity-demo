@@ -4,25 +4,22 @@ import ReviewCard from './ReviewCard.astro';
 import type { HTMLAttributes } from 'astro/types';
 
 /**
- * Home "social proof" band — replaces the retired ParallaxBreak mountain
- * scene. A dark teal→navy gradient panel separates this band from the
- * surrounding white sections without using literal photography; warm
- * atmospheric blobs + dust particles sit over the dark bg.
+ * Home "social proof" band — replaces the retired ParallaxBreak. Dark
+ * teal→navy gradient separates this section from the surrounding white
+ * sections. The CAROUSEL container inside is transparent and gets its
+ * own vertical padding so the polaroid halos have room to bloom without
+ * triggering a vertical scrollbar.
  *
- * 5 polaroid-style ReviewCards in one row on desktop (5 cols), 3 on
- * tablet, 2 on small phones, 1 on tiny screens. No section header — the
- * cards carry the message via their review overlay.
- *
- * Active-card model:
- *   - At rest: card 1 is the "active" one (straight, lifted, review on).
- *   - Hover any card → that card becomes active; first card returns to
- *     tilted resting state. Exactly one card active at any time.
- *   - Driven by a small inline <script> at the bottom of this file that
- *     toggles `data-active="true|false"` on each card. We tried a pure
- *     CSS cascade with `:has(:hover)` first; Astro's scoped-CSS handling
- *     of `:has()` combined with the specificity boost it adds made the
- *     correct rule lose to the first-child default. The JS approach is
- *     simpler to reason about and has the same one-shot intent.
+ * Layout:
+ *   - lg+ (≥1024px): 5-column grid of polaroid cards. First card is the
+ *     default-active; hovering any card transfers active state.
+ *   - <lg (mobile + tablet): horizontal scroll-snap carousel, ONE card
+ *     visible at a time. All cards are visually active (text on, halo
+ *     on) and STRAIGHT (no tilt, no Y offset, no scale-up). Infinite
+ *     loop via JS-cloned first/last cards at the ends — when the user
+ *     lands on a clone after scrolling, scrollLeft is silently set to
+ *     the matching real card. Two arrow buttons (prev / next) sit on
+ *     the left/right edges as visual affordances + click-to-nudge.
  */
 
 export interface Props extends HTMLAttributes<'section'> {
@@ -83,45 +80,148 @@ const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
 
 <section
     class={cn(
-        'reviews-section relative overflow-hidden',
-        'py-16 md:py-20 lg:py-24',
+        'reviews-section relative overflow-hidden py-12 md:py-16 lg:py-20',
         className,
     )}
     style="background: linear-gradient(180deg, hsl(218 50% 14%) 0%, hsl(194 38% 22%) 50%, hsl(218 50% 14%) 100%);"
     {...rest}
 >
-    <div class="container mx-auto px-6 relative">
-        <div
-            class="review-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6 lg:gap-5"
-            data-review-grid
-        >
-            {
-                reviews.map((r, i) => (
-                    <ReviewCard
-                        imageSrc={r.imageSrc}
-                        imageAlt={r.imageAlt}
-                        quote={r.quote}
-                        name={r.name}
-                        byline={r.byline}
-                        tilt={tilts[i % tilts.length]}
-                        yOffset={yOffsets[i % yOffsets.length]}
-                        data-review-card
-                        data-active={i === 0 ? 'true' : 'false'}
-                    />
-                ))
-            }
+    <!-- Wider than the site-standard 1280px on lg+ so the 5-up grid
+         gives each card meaningfully more horizontal room. -->
+    <div class="mx-auto max-w-7xl lg:max-w-375 px-6 relative">
+        <div class="reviews-carousel-wrap relative">
+            <div
+                class="review-grid grid grid-cols-1 lg:grid-cols-5 lg:gap-5"
+                data-review-grid
+            >
+                {
+                    reviews.map((r, i) => (
+                        <ReviewCard
+                            imageSrc={r.imageSrc}
+                            imageAlt={r.imageAlt}
+                            quote={r.quote}
+                            name={r.name}
+                            byline={r.byline}
+                            tilt={tilts[i % tilts.length]}
+                            yOffset={yOffsets[i % yOffsets.length]}
+                            data-review-card
+                            data-active={i === 0 ? 'true' : 'false'}
+                        />
+                    ))
+                }
+            </div>
+
+            <!-- Below-lg pagination dots. One dot per real card; the
+                 active one is the first-visible card in the current
+                 viewport. Click a dot to scroll to that card. Hidden
+                 on lg+ where the grid shows everything at once. -->
+            <div
+                class="reviews-dots lg:hidden flex items-center justify-center gap-2 mt-6"
+                data-review-dots
+                role="tablist"
+                aria-label="Review pagination"
+            >
+                {
+                    reviews.map((_, i) => (
+                        <button
+                            type="button"
+                            data-review-dot={i}
+                            aria-label={`Go to review ${i + 1}`}
+                            class="reviews-dot"
+                        />
+                    ))
+                }
+            </div>
         </div>
     </div>
 </section>
 
 <style>
-    /* Pre-JS resting fallback — before the inline script runs (which
-       happens on DOMContentLoaded), every card sits at its tilt + Y
-       offset so there's no flash of un-positioned content. After that
-       point all visual state is written inline by the script. */
+    /* Pre-JS resting fallback — straight, no transform. The inline script
+       on DOMContentLoaded writes inline styles for the actual visual
+       state once it knows which mode (mobile vs desktop) applies. */
     .review-grid :global(.review-card .review-card-frame) {
         transform: translateY(var(--y, 0)) rotate(var(--tilt, 0deg));
         will-change: transform;
+    }
+
+    /* Below-lg carousel — horizontal scroll-snap row. overflow-x: auto
+       + overflow-y: clip prevents either axis from showing a scrollbar
+       even when the polaroid halo extends past the card edges. Inner
+       padding-block gives the halo room. */
+    @media (max-width: 1023px) {
+        .review-grid {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            overflow-x: auto;
+            overflow-y: clip;
+            padding-block: 24px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scrollbar-color: transparent transparent;
+        }
+        .review-grid::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background: transparent;
+            display: none;
+        }
+        .review-grid :global(.review-card) {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+    }
+
+    /* Phone — one card visible at a time. */
+    @media (max-width: 767px) {
+        .review-grid {
+            gap: 0;
+        }
+        .review-grid :global(.review-card) {
+            flex: 0 0 100%;
+            min-width: 100%;
+        }
+    }
+
+    /* Tablet (md → lg) — three cards visible with a small gap between.
+       Each card snaps to start so swipes and arrow nudges advance by
+       exactly one card. */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .review-grid {
+            gap: 16px;
+        }
+        .review-grid :global(.review-card) {
+            flex: 0 0 calc((100% - 32px) / 3);
+            min-width: calc((100% - 32px) / 3);
+        }
+    }
+
+    /* Pagination dots — small pills below the carousel. Inactive dots
+       sit at low opacity; the active one expands and goes full opacity.
+       Sized for comfortable tap targets while staying visually small. */
+    .reviews-dot {
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: hsl(var(--paper) / 0.4);
+        cursor: pointer;
+        transition:
+            width 220ms var(--ease-out),
+            background-color 220ms var(--ease-out),
+            opacity 220ms var(--ease-out);
+    }
+    .reviews-dot:hover {
+        background: hsl(var(--paper) / 0.7);
+    }
+    .reviews-dot[data-active='true'] {
+        width: 24px;
+        background: hsl(var(--paper));
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -129,63 +229,293 @@ const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
             transform: none !important;
             transition: none !important;
         }
+        .reviews-dot {
+            transition: none !important;
+        }
     }
 </style>
 
 <script is:inline>
-    // Active-card management — exactly one .review-card has
-    // data-active="true" at any time. First card is active by default;
-    // hover any card → it becomes active; cursor leaves grid → first
-    // card resumes as active.
+    // Reviews carousel — two display modes:
     //
-    // We write inline styles directly (transform / opacity / z-index)
-    // so the visual state can't be undone by any CSS specificity
-    // surprise. The data-active attribute is also kept in sync for
-    // any future CSS hooks.
+    //   lg+ (≥1024px): grid layout. One card "active" at a time. Card 1
+    //     is the default-active; hovering any card transfers state;
+    //     leaving the grid restores card 1.
+    //
+    //   <lg (mobile + tablet): horizontal scroll-snap carousel. Every
+    //     card visually active (text on, halo on) and STRAIGHT — no
+    //     tilt, no Y offset, no scale-up. Infinite loop via clones of
+    //     first/last cards at the ends; on each scroll-settle we check
+    //     for a clone-landing and silently jump scrollLeft to the
+    //     matching real card. Arrow buttons trigger smooth scrollBy.
+    //
+    // All visual state is written as inline styles (transform / opacity
+    // / box-shadow / z-index) so it can't be undone by CSS specificity
+    // surprises. The script re-syncs on viewport resize.
     (function () {
+        const ACTIVE_TRANSFORM =
+            'translateY(calc(var(--y, 0) - 6px)) rotate(0deg) scale(1.04)';
+        const RESTING_TRANSFORM =
+            'translateY(var(--y, 0)) rotate(var(--tilt, 0deg))';
+        const STRAIGHT_TRANSFORM = 'translateY(0) rotate(0deg) scale(1)';
+        const ACTIVE_SHADOW =
+            '0 26px 56px -18px hsl(220 60% 4% / 0.4), 0 10px 24px -10px hsl(220 60% 4% / 0.2)';
+        const RESTING_SHADOW =
+            '0 18px 40px -16px hsl(218 50% 38% / 0.35), 0 6px 16px -8px hsl(222 47% 11% / 0.15)';
+
+        function writeStyles(card, transform, shadow, overlayOn, haloOn, zIdx) {
+            const frame = card.querySelector('.review-card-frame');
+            const overlay = card.querySelector('.review-overlay');
+            const halo = card.querySelector('.review-card-halo');
+            if (frame) {
+                frame.style.transform = transform;
+                frame.style.boxShadow = shadow;
+                frame.style.zIndex = zIdx;
+            }
+            if (overlay) overlay.style.opacity = overlayOn ? '1' : '0';
+            if (halo) halo.style.opacity = haloOn ? '1' : '0';
+        }
+
+        function setDesktopActive(card) {
+            card.setAttribute('data-active', 'true');
+            writeStyles(card, ACTIVE_TRANSFORM, ACTIVE_SHADOW, true, true, '2');
+        }
+        function setDesktopResting(card) {
+            card.setAttribute('data-active', 'false');
+            writeStyles(card, RESTING_TRANSFORM, RESTING_SHADOW, false, false, '');
+        }
+        function setMobileActive(card) {
+            // Every card on mobile: straight, active, halo on, text on.
+            card.setAttribute('data-active', 'true');
+            writeStyles(card, STRAIGHT_TRANSFORM, RESTING_SHADOW, true, true, '');
+        }
+
         function init() {
-            var grid = document.querySelector('[data-review-grid]');
+            const grid = document.querySelector('[data-review-grid]');
             if (!grid) return;
-            var cards = Array.from(
+            const cards = Array.from(
                 grid.querySelectorAll('[data-review-card]'),
             );
-            function applyState(card, isActive) {
-                card.setAttribute('data-active', isActive ? 'true' : 'false');
-                var frame = card.querySelector('.review-card-frame');
-                var overlay = card.querySelector('.review-overlay');
-                var halo = card.querySelector('.review-card-halo');
-                if (frame) {
-                    frame.style.transform = isActive
-                        ? 'translateY(calc(var(--y, 0) - 6px)) rotate(0deg) scale(1.04)'
-                        : 'translateY(var(--y, 0)) rotate(var(--tilt, 0deg))';
-                    frame.style.zIndex = isActive ? '2' : '';
-                    frame.style.boxShadow = isActive
-                        ? '0 26px 56px -18px hsl(220 60% 4% / 0.55), 0 10px 24px -10px hsl(220 60% 4% / 0.3)'
-                        : '0 18px 40px -16px hsl(218 50% 38% / 0.35), 0 6px 16px -8px hsl(222 47% 11% / 0.15)';
+            if (cards.length === 0) return;
+
+            const carouselQuery = window.matchMedia('(max-width: 1023px)');
+            const tabletQuery = window.matchMedia(
+                '(min-width: 768px) and (max-width: 1023px)',
+            );
+            let clonesStart = [];
+            let clonesEnd = [];
+
+            // How many cards are visible in the carousel viewport at
+            // once — 3 on tablet, 1 on phone. Drives clone count and
+            // initial scroll position so the wrap math stays correct.
+            function visibleCount() {
+                return tabletQuery.matches ? 3 : 1;
+            }
+
+            function setOnlyActive(target) {
+                for (let i = 0; i < cards.length; i++) {
+                    if (cards[i] === target) setDesktopActive(cards[i]);
+                    else setDesktopResting(cards[i]);
                 }
-                if (overlay) overlay.style.opacity = isActive ? '1' : '0';
-                if (halo) halo.style.opacity = isActive ? '1' : '0';
             }
-            function setActive(target) {
-                for (var i = 0; i < cards.length; i++) {
-                    applyState(cards[i], cards[i] === target);
+
+            function setAllMobileActive() {
+                for (let i = 0; i < cards.length; i++) {
+                    setMobileActive(cards[i]);
                 }
             }
-            // Apply initial state — first card active, rest resting.
-            setActive(cards[0]);
-            for (var i = 0; i < cards.length; i++) {
-                (function (card) {
-                    card.addEventListener('mouseenter', function () {
-                        setActive(card);
-                    });
-                })(cards[i]);
+
+            function ensureClones(N) {
+                // If the clone count matches the current visible count
+                // we can keep them; otherwise rebuild from scratch.
+                if (clonesStart.length === N && clonesEnd.length === N) {
+                    return;
+                }
+                removeClones();
+                // Start clones: the LAST N real cards, in order, so the
+                // user scrolling backward sees [..., R-2, R-1, R0, R1].
+                const startFrag = document.createDocumentFragment();
+                for (let i = 0; i < N; i++) {
+                    const source = cards[cards.length - N + i];
+                    const clone = source.cloneNode(true);
+                    clone.removeAttribute('data-review-card');
+                    clone.setAttribute('data-review-clone', 'true');
+                    setMobileActive(clone);
+                    clonesStart.push(clone);
+                    startFrag.appendChild(clone);
+                }
+                grid.insertBefore(startFrag, grid.firstChild);
+                // End clones: the FIRST N real cards, in order.
+                const endFrag = document.createDocumentFragment();
+                for (let i = 0; i < N; i++) {
+                    const clone = cards[i].cloneNode(true);
+                    clone.removeAttribute('data-review-card');
+                    clone.setAttribute('data-review-clone', 'true');
+                    setMobileActive(clone);
+                    clonesEnd.push(clone);
+                    endFrag.appendChild(clone);
+                }
+                grid.appendChild(endFrag);
             }
-            if (cards[0]) {
-                grid.addEventListener('mouseleave', function () {
-                    setActive(cards[0]);
+
+            function removeClones() {
+                clonesStart.forEach(function (c) {
+                    if (c.parentNode) c.parentNode.removeChild(c);
+                });
+                clonesEnd.forEach(function (c) {
+                    if (c.parentNode) c.parentNode.removeChild(c);
+                });
+                clonesStart = [];
+                clonesEnd = [];
+            }
+
+            function getStep() {
+                // Width of one card + gap. Re-read on every call so
+                // resize / orientation changes don't break the math.
+                const styles = getComputedStyle(grid);
+                const gap =
+                    parseFloat(
+                        styles.columnGap || styles.gap || '0',
+                    ) || 0;
+                return cards[0].offsetWidth + gap;
+            }
+
+            function scrollToCardIndex(idx, smooth) {
+                grid.scrollTo({
+                    left: idx * getStep(),
+                    behavior: smooth ? 'smooth' : 'instant',
                 });
             }
+
+            function applyMobileMode() {
+                setAllMobileActive();
+                const N = visibleCount();
+                ensureClones(N);
+                requestAnimationFrame(function () {
+                    // Real cards begin at index N (after the N start
+                    // clones), so position user there.
+                    scrollToCardIndex(N, false);
+                });
+            }
+
+            function applyDesktopMode() {
+                removeClones();
+                grid.scrollLeft = 0;
+                setOnlyActive(cards[0]);
+            }
+
+            function sync() {
+                if (carouselQuery.matches) applyMobileMode();
+                else applyDesktopMode();
+            }
+
+            sync();
+
+            // Desktop hover handlers (no-op while in carousel mode)
+            cards.forEach(function (card) {
+                card.addEventListener('mouseenter', function () {
+                    if (!carouselQuery.matches) setOnlyActive(card);
+                });
+            });
+            grid.addEventListener('mouseleave', function () {
+                if (!carouselQuery.matches && cards[0]) {
+                    setOnlyActive(cards[0]);
+                }
+            });
+
+            // Pagination dots — one per real card. The active one
+            // tracks the current "first visible" real card. Click a
+            // dot to scroll to that real card.
+            const dots = Array.from(
+                document.querySelectorAll('[data-review-dot]'),
+            );
+            function updateDots() {
+                if (!carouselQuery.matches || dots.length === 0) return;
+                const step = getStep();
+                if (step === 0) return;
+                const idx = Math.round(grid.scrollLeft / step);
+                const N = visibleCount();
+                const R = cards.length;
+                // Map carousel index (which can land on clones) to the
+                // real card index it visually represents.
+                const realIdx = (((idx - N) % R) + R) % R;
+                dots.forEach(function (dot, i) {
+                    dot.setAttribute(
+                        'data-active',
+                        i === realIdx ? 'true' : 'false',
+                    );
+                });
+            }
+            dots.forEach(function (dot, i) {
+                dot.addEventListener('click', function () {
+                    if (!carouselQuery.matches) return;
+                    scrollToCardIndex(visibleCount() + i, true);
+                });
+            });
+
+            // Carousel scroll handler — two jobs, two timing strategies:
+            //
+            //   1. updateDots() runs on every scroll frame (rAF-throttled
+            //      to one call per animation frame). The dot indicator
+            //      tracks the swipe in real time so it never feels
+            //      "behind" the user's gesture.
+            //
+            //   2. Infinite-loop wrap detection is debounced 120ms after
+            //      the last scroll event so snap has time to settle. We
+            //      don't want to mid-swipe scrollTo and fight the user.
+            //      Generalized math: with N visible at a time, real
+            //      cards sit at indices [N .. N+R-1]. When the first-
+            //      visible index hits the start clones (idx <= 0) or
+            //      the end clones (idx >= N+R), silently jump scrollLeft
+            //      to the matching real position. Visually identical
+            //      because clones are exact copies of the cards they
+            //      shadow.
+            let scrollRaf = null;
+            let settleTimer;
+            grid.addEventListener(
+                'scroll',
+                function () {
+                    if (!carouselQuery.matches || clonesStart.length === 0) {
+                        return;
+                    }
+                    if (scrollRaf === null) {
+                        scrollRaf = requestAnimationFrame(function () {
+                            scrollRaf = null;
+                            updateDots();
+                        });
+                    }
+                    clearTimeout(settleTimer);
+                    settleTimer = setTimeout(function () {
+                        const step = getStep();
+                        if (step === 0) return;
+                        const idx = Math.round(grid.scrollLeft / step);
+                        const N = visibleCount();
+                        const R = cards.length;
+                        if (idx <= 0) {
+                            scrollToCardIndex(R, false);
+                        } else if (idx >= N + R) {
+                            scrollToCardIndex(N, false);
+                        }
+                        updateDots();
+                    }, 120);
+                },
+                { passive: true },
+            );
+
+            // Initial dot state — after applyMobileMode positions the
+            // scroll at the first real card. Run after the rAF so the
+            // scroll position has settled before we read it.
+            requestAnimationFrame(updateDots);
+
+            // Re-sync on viewport resize — debounced 200ms so we don't
+            // thrash the mode switch during a slow resize.
+            let resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(sync, 200);
+            });
         }
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
