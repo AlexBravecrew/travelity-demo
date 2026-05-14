@@ -36,7 +36,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 
 | Path           | Phase   | Notes                                                                                       |
 | -------------- | ------- | ------------------------------------------------------------------------------------------- |
-| `/`            | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Parallax → Pricing (hover-swap active card) → GoLive → ClosingCTA |
+| `/`            | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Reviews (5 polaroid cards, hover-swap on desktop, scroll-snap carousel on mobile/tablet) → Pricing (hover-swap active card) → GoLive → ClosingCTA |
 | `/solutions`   | 22      | Compact top title + 6 `OutcomeCard`s in a 3-up grid (wraps to 2 / 1 columns) + ClosingCTA. Replaces the Phase-5 six-page cluster. Cards 1-3 carry the canonical Increase / Prevent / Manage outcomes (anchored `#increase-sales` / `#prevent-overbookings` / `#manage-all-bookings`); cards 4-6 are anchor-less duplicates of 1-3 pending real copy. |
 | `/features`    | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
 | `/pricing`     | 8, 21   | Page hero → 3 plan cards (hover-swap active card, Phase 21; section header suppressed via `hideHeader` to avoid duplicate title) → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close |
@@ -90,7 +90,7 @@ src/
 │   │   ├── hero/                    # Hero only — HeroVisual/BookingFlowCard/AudienceChips deleted Phase 18 (video on right now)
 │   │   ├── channels-section/        # Orbit diagram: hub + 5 nodes + flowing dashed pulses (Phase 15)
 │   │   ├── features-section/        # FeatureCard requires href; renders first 6 of 9 entries (Phase 19)
-│   │   ├── parallax-break/          # Scroll-driven photo break
+│   │   ├── reviews-section/         # 5 polaroid customer review cards on a dark teal-blue band; desktop hover-swap, <lg scroll-snap carousel with infinite-loop clones + dot pagination (replaced retired ParallaxBreak)
 │   │   ├── pricing-section/         # 3 plan cards (Phase 21 hover-swap active card; reused on /pricing with hideHeader)
 │   │   ├── golive-section/          # 4-col onboarding
 │   │   └── closing-cta-section/     # Final conversion strip (primary/secondaryCtaExternal props, Phase 19)
@@ -138,6 +138,9 @@ src/
 │
 ├── actions/
 │   └── index.ts                     # contact Astro Action (bookDemo removed Phase 16 — Calendly handles)
+│
+├── assets/                          # Photos / large raster assets — imported via `astro:assets` + <Image />
+│   └── reviews/                     # review-01..05 (.jpg/.png) — customer photos for the home Reviews section
 │
 ├── icons/
 │   └── index.ts                     # Single barrel for ~30 lucide icons; .astro files import only from here
@@ -215,7 +218,7 @@ const { class: className, ...rest } = Astro.props;
 
 ### 4.5 Reduced-motion
 
-Every animation, hover-lift, and transition has a `@media (prefers-reduced-motion: reduce)` override that disables it. Verified for: ChannelHub's pulse, ParallaxBreak's scroll-driven translate, all card hover lifts, FAQ icon rotations, the mobile drawer slide + backdrop fade, the featured PricingPlan's animated conic-gradient border.
+Every animation, hover-lift, and transition has a `@media (prefers-reduced-motion: reduce)` override that disables it. Verified for: ChannelHub's pulse, all card hover lifts, FAQ icon rotations, the mobile drawer slide + backdrop fade, the featured PricingPlan's animated conic-gradient border, the ReviewsSection polaroid hover-swap (tilt/scale/halo) and pagination-dot transitions, the GoLiveSection per-step icon animations.
 
 ### 4.6 Reusable URL constants
 
@@ -248,6 +251,17 @@ Naming convention: namespaced prefixes (`LEGAL_*`) for grouped routes; flat name
 - Helpers: `kebab-case.ts` (`nav.client.ts`, `book-demo-schema.ts`)
 - Each component folder has an `index.ts` barrel re-exporting its public surface
 - Test/preview pages live under `src/pages/_internal/` (Astro skips underscore-prefixed paths from the build)
+
+### 4.7a Image strategy — `src/assets/` vs `/public/`
+
+Two image roots, picked by purpose:
+
+| Where | Use for | How referenced |
+| --- | --- | --- |
+| `src/assets/` | Raster photos (customer review polaroids, future product screenshots). Source can be multi-MB — Astro optimizes at build time. | `import img from '@/assets/foo/bar.jpg'` + `<Image src={img} widths={[...]} sizes="..." />` from `astro:assets`. The runtime serves a responsive `srcset` via Netlify's Image CDN (`/.netlify/images?...`); the original is the source-of-truth and is never shipped directly. |
+| `/public/` | Decorative SVGs / placeholder graphics, icons too bespoke for the lucide barrel, anything that should be served verbatim with no processing. | Reference by absolute path: `<img src="/features/placeholder.svg" />`. |
+
+Rule: if it's a photograph or any raster that needs responsive sizing, it goes through `src/assets/` + `<Image />`. If it's already small (SVG, ≤ ~20KB icon), it goes in `/public/`.
 
 ### 4.8 Tailwind v4 — no config file
 
@@ -358,7 +372,8 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 | ChannelHub           | Pulse breath                             | 4s ease-in-out infinite (gentler — Phase 15 retune; was 3s)                                     |
 | Card hover           | translateY-1 + shadow                    | 240ms cubic-bezier(0.4,0,0.2,1)                                                                 |
 | FaqItem              | Plus → minus rotation                    | 200ms (CSS transition; native `<details>` for state)                                            |
-| ParallaxBreak        | Scroll-driven translateY                 | rAF-driven, ±40px range                                                                         |
+| ReviewsSection card (desktop) | Hover-swap tilt/scale/halo      | transform + box-shadow: 600ms cubic-bezier(0.4,0,0.2,1); overlay opacity 350ms ease-out         |
+| ReviewsSection carousel (<lg) | Scroll-snap + infinite-loop wrap | wrap fires 120ms after last scroll event (snap-settle debounce); dot updates rAF-throttled    |
 | Featured PricingPlan | Elevated translateY-3 + scale 1.02 (lg+) | Same as Card hover transition                                                                   |
 
 ---
