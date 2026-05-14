@@ -101,7 +101,12 @@ const plans: Plan[] = [
     <div class="container mx-auto px-6">
         {
             !hideHeader && (
-                <SectionHeader eyebrow="Pricing" eyebrowWithRule align="center">
+                <SectionHeader
+                    eyebrow="Pricing"
+                    eyebrowWithRule
+                    align="center"
+                    data-reveal
+                >
                     <Fragment slot="headline">
                         Plans for every <em>size of operation.</em>
                     </Fragment>
@@ -121,19 +126,29 @@ const plans: Plan[] = [
             class="pricing-cards grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-4 max-w-[1100px] mx-auto items-stretch"
         >
             {
-                plans.map((plan) => (
-                    <PricingPlan
-                        name={plan.name}
-                        tagline={plan.tagline}
-                        priceAmount={plan.priceAmount}
-                        billing={plan.billing}
-                        ctaLabel={plan.ctaLabel}
-                        ctaHref={plan.ctaHref}
-                        ctaVariant={plan.ctaVariant}
-                        includesLabel={plan.includesLabel}
-                        features={plan.features}
-                        badgeLabel={plan.badgeLabel}
-                    />
+                plans.map((plan, idx) => (
+                    <div
+                        class="h-full"
+                        data-reveal
+                        data-reveal-direction={
+                            idx === 0 ? 'left' : idx === 2 ? 'right' : 'up'
+                        }
+                        data-reveal-delay={idx === 1 ? 80 : 0}
+                    >
+                        <PricingPlan
+                            name={plan.name}
+                            tagline={plan.tagline}
+                            priceAmount={plan.priceAmount}
+                            billing={plan.billing}
+                            ctaLabel={plan.ctaLabel}
+                            ctaHref={plan.ctaHref}
+                            ctaVariant={plan.ctaVariant}
+                            includesLabel={plan.includesLabel}
+                            features={plan.features}
+                            badgeLabel={plan.badgeLabel}
+                            class="h-full"
+                        />
+                    </div>
                 ))
             }
         </div>
@@ -170,8 +185,12 @@ const plans: Plan[] = [
             border-color 240ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Active state: middle card by default, OR any hovered card. */
-    .pricing-cards:not(:has(.pricing-plan:hover)) .pricing-plan:nth-child(2),
+    /* Active state: middle card by default, OR any hovered card.
+       The `> *:nth-child(2) .pricing-plan` chain (instead of
+       `.pricing-plan:nth-child(2)`) accommodates the data-reveal wrapper
+       div around each PricingPlan — the .pricing-plan is no longer a
+       direct child of .pricing-cards. */
+    .pricing-cards:not(:has(.pricing-plan:hover)) > *:nth-child(2) .pricing-plan,
     .pricing-cards .pricing-plan:hover {
         --card-gradient-angle: 0deg;
         isolation: isolate;
@@ -189,7 +208,8 @@ const plans: Plan[] = [
 
     @media (min-width: 1024px) {
         .pricing-cards:not(:has(.pricing-plan:hover))
-            .pricing-plan:nth-child(2),
+            > *:nth-child(2)
+            .pricing-plan,
         .pricing-cards .pricing-plan:hover {
             transform: translateY(-12px) scale(1.02);
         }
@@ -197,7 +217,8 @@ const plans: Plan[] = [
 
     /* Paper-colored interior overlay — completes the gradient-ring look. */
     .pricing-cards:not(:has(.pricing-plan:hover))
-        .pricing-plan:nth-child(2)::before,
+        > *:nth-child(2)
+        .pricing-plan::before,
     .pricing-cards .pricing-plan:hover::before {
         content: '';
         position: absolute;
@@ -212,7 +233,8 @@ const plans: Plan[] = [
             transition: none !important;
         }
         .pricing-cards:not(:has(.pricing-plan:hover))
-            .pricing-plan:nth-child(2),
+            > *:nth-child(2)
+            .pricing-plan,
         .pricing-cards .pricing-plan:hover {
             animation: none !important;
             transform: none !important;

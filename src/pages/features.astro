@@ -139,11 +139,13 @@ const features = [
         <!-- Compact top section: short title, no hero -->
         <section class="bg-paper py-10 md:py-14">
             <div class="container mx-auto px-6 text-center">
-                <Eyebrow withRule centered>Features</Eyebrow>
+                <Eyebrow withRule centered data-reveal>Features</Eyebrow>
 
                 <h1
                     class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.03em] max-w-[20ch] mx-auto mt-6 mb-5"
                     style="font-size: clamp(32px, 4vw, 48px);"
+                    data-reveal
+                    data-reveal-delay="80"
                 >
                     Everything Travelity does,
                     <em class="not-italic">
@@ -155,6 +157,8 @@ const features = [
 
                 <p
                     class="text-lg text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                    data-reveal
+                    data-reveal-delay="160"
                 >
                     Nine capabilities your travel business runs on. Each
                     section below maps to the cards on the home page — click

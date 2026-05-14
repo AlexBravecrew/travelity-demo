@@ -61,17 +61,21 @@ const routes: ContactRoute[] = [
             style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
         >
             <div class="container mx-auto px-6 max-w-[820px]">
-                <Eyebrow withRule centered>Contact</Eyebrow>
+                <Eyebrow withRule centered data-reveal>Contact</Eyebrow>
 
                 <h1
                     class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mt-5 mb-5"
                     style="font-size: clamp(34px, 4.4vw, 48px);"
+                    data-reveal
+                    data-reveal-delay="80"
                 >
                     Get in touch.
                 </h1>
 
                 <p
                     class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                    data-reveal
+                    data-reveal-delay="160"
                 >
                     We read everything and reply within one business day. The
                     fastest path depends on why you're writing.
@@ -86,34 +90,40 @@ const routes: ContactRoute[] = [
                     class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-[1100px] mx-auto"
                 >
                     {
-                        routes.map((route) => (
-                            <a
-                                href={route.href}
-                                class="contact-route group flex flex-col p-7 rounded-xl bg-paper border border-line text-ink no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-travelity-teal hover:shadow-[0_8px_24px_-8px_hsl(var(--ink)/0.1)]"
+                        routes.map((route, idx) => (
+                            <div
+                                class="h-full"
+                                data-reveal
+                                data-reveal-delay={idx * 80}
                             >
-                                <div class="w-10 h-10 rounded-lg bg-[hsl(var(--travelity-teal)/0.10)] text-travelity-teal flex items-center justify-center mb-4">
-                                    <route.Icon
-                                        class="w-5 h-5"
-                                        stroke-width="1.75"
-                                        aria-hidden="true"
-                                    />
-                                </div>
-                                <h3 class="font-display text-[16px] font-semibold text-ink leading-[1.3] tracking-[-0.015em] mb-2">
-                                    {route.title}
-                                </h3>
-                                <p class="font-body text-[14px] text-ink-muted leading-[1.55] m-0 mb-4 flex-1">
-                                    {route.description}
-                                </p>
-                                <span class="font-display text-[13px] font-semibold text-travelity-blue inline-flex items-center gap-1 mt-auto">
-                                    {route.linkLabel}
-                                    <span
-                                        class="transition-transform group-hover:translate-x-0.5"
-                                        aria-hidden="true"
-                                    >
-                                        →
+                                <a
+                                    href={route.href}
+                                    class="contact-route group flex flex-col h-full p-7 rounded-xl bg-paper border border-line text-ink no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-travelity-teal hover:shadow-[0_8px_24px_-8px_hsl(var(--ink)/0.1)]"
+                                >
+                                    <div class="w-10 h-10 rounded-lg bg-[hsl(var(--travelity-teal)/0.10)] text-travelity-teal flex items-center justify-center mb-4">
+                                        <route.Icon
+                                            class="w-5 h-5"
+                                            stroke-width="1.75"
+                                            aria-hidden="true"
+                                        />
+                                    </div>
+                                    <h3 class="font-display text-[16px] font-semibold text-ink leading-[1.3] tracking-[-0.015em] mb-2">
+                                        {route.title}
+                                    </h3>
+                                    <p class="font-body text-[14px] text-ink-muted leading-[1.55] m-0 mb-4 flex-1">
+                                        {route.description}
+                                    </p>
+                                    <span class="font-display text-[13px] font-semibold text-travelity-blue inline-flex items-center gap-1 mt-auto">
+                                        {route.linkLabel}
+                                        <span
+                                            class="transition-transform group-hover:translate-x-0.5"
+                                            aria-hidden="true"
+                                        >
+                                            →
+                                        </span>
                                     </span>
-                                </span>
-                            </a>
+                                </a>
+                            </div>
                         ))
                     }
                 </div>
@@ -130,6 +140,7 @@ const routes: ContactRoute[] = [
                     eyebrow="Or send a message"
                     eyebrowWithRule
                     align="center"
+                    data-reveal
                 >
                     <Fragment slot="headline">
                         We'll get back to you.
@@ -143,7 +154,11 @@ const routes: ContactRoute[] = [
                     </p>
                 </SectionHeader>
 
-                <div class="max-w-[680px] mx-auto mt-2">
+                <div
+                    class="max-w-[680px] mx-auto mt-2"
+                    data-reveal
+                    data-reveal-delay="120"
+                >
                     <ContactForm client:load />
                 </div>
             </div>
@@ -154,6 +169,7 @@ const routes: ContactRoute[] = [
             <div class="container mx-auto px-6 max-w-[920px]">
                 <div
                     class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left"
+                    data-reveal
                 >
                     <div>
                         <div
@@ -196,7 +212,11 @@ const routes: ContactRoute[] = [
                     </div>
                 </div>
 
-                <div class="mt-10 pt-8 border-t border-line text-center">
+                <div
+                    class="mt-10 pt-8 border-t border-line text-center"
+                    data-reveal
+                    data-reveal-delay="200"
+                >
                     <p
                         class="font-body text-[14px] text-ink-muted leading-[1.55] m-0"
                     >

@@ -47,7 +47,11 @@ const {
             )}
         >
             <!-- Text column -->
-            <div class={cn('max-w-[540px]', flip && 'lg:order-2')}>
+            <div
+                class={cn('max-w-[540px]', flip && 'lg:order-2')}
+                data-reveal
+                data-reveal-direction={flip ? 'right' : 'left'}
+            >
                 <Eyebrow withRule>{eyebrow}</Eyebrow>
 
                 <h2
@@ -82,7 +86,11 @@ const {
             </div>
 
             <!-- Visual column -->
-            <div class={cn(flip && 'lg:order-1')}>
+            <div
+                class={cn(flip && 'lg:order-1')}
+                data-reveal
+                data-reveal-direction={flip ? 'left' : 'right'}
+            >
                 <slot name="visual" />
             </div>
         </div>

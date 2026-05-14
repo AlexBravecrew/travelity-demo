@@ -65,7 +65,12 @@ const steps: Step[] = [
         aria-hidden="true"></span>
 
     <div class="container mx-auto px-6 relative z-[1]">
-        <SectionHeader eyebrow="Onboarding" eyebrowWithRule align="center">
+        <SectionHeader
+            eyebrow="Onboarding"
+            eyebrowWithRule
+            align="center"
+            data-reveal
+        >
             <Fragment slot="headline">
                 We help you <em>go live.</em>
             </Fragment>
@@ -82,10 +87,13 @@ const steps: Step[] = [
             class="golive-steps grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-x-8 lg:gap-y-12 mt-6"
         >
             {
-                steps.map((step) => (
+                steps.map((step, idx) => (
                     <GoLiveStep
                         title={step.title}
                         description={step.description}
+                        data-reveal
+                        data-reveal-direction={idx % 2 === 0 ? 'down' : 'up'}
+                        data-reveal-delay={idx * 80}
                     >
                         <step.Icon
                             slot="icon"

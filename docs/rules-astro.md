@@ -64,9 +64,7 @@ src/
 │   │   ├── coverage-list/
 │   │   ├── comparison-table/  # Phase 23 — excluded cells now red X
 │   │   ├── faq-accordion/
-│   │   ├── legal-page-layout/
-│   │   ├── guide-card/
-│   │   └── help-tile/
+│   │   └── legal-page-layout/
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -332,7 +330,7 @@ Don't add a second client script that duplicates the rAF loop. Add to this one.
 
 The desktop nav uses a **persistent secondary row** (Phase 14), not a hover-dropdown popover. The pattern:
 
-- **Pinned by route.** On `/solutions/*` and `/our-story|/faq|/guides|/help-center`, the parent section (Solutions or Resources) renders teal in the top row and its child items render as horizontal underline-tabs in a 44px sub-row sticky beneath the main nav. The active child has a 2px teal `border-bottom`. `aria-current="page"` on the active child link.
+- **Pinned by route.** On `/solutions/*` and `/our-story|/faq`, the parent section (Solutions or Resources) renders teal in the top row and its child items render as horizontal underline-tabs in a 44px sub-row sticky beneath the main nav. The active child has a 2px teal `border-bottom`. `aria-current="page"` on the active child link.
 - **Hover-preview swap.** Hovering a different top-level trigger swaps the visible panel via instant `display: none/flex` (a cross-fade was tried first but caused brief content overlap during transition — see Phase 14 narrative in PROJECT-STATE.md §10). The pinned parent's teal text stays as the wayfinding anchor.
 - **Click is a no-op on dropdown triggers** (Phase 17 — hover-only by product decision). Keyboard Escape still closes the hover-preview for accessibility. Flat top-level links navigate normally.
 - **Hover-slide-down from idle.** On pages with no pinned section (e.g. `/`, `/pricing`), hovering a trigger slides the sub-row down via a `max-height` transition on the sub-row itself (0 → 44px, 220ms). Content below pushes down smoothly.
@@ -448,7 +446,6 @@ Every piece of placeholder content carries an unmistakable marker so a launch re
 | ---------------------- | --------------------------------------------- | ------------------------------------ |
 | Plan feature labels    | `Plan feature one`, `Plus feature two`, etc.  | `PricingSection`, `ComparisonTable`  |
 | Screenshot slots       | `[Screenshot: brief description]`             | Solutions pages × ~21 slots          |
-| Future article URLs    | `href="#"`                                    | `guides.astro`                       |
 | Avatar fallbacks       | gradient circle (no `avatarSrc`)              | `TestimonialCard`                    |
 | OTA logos              | ~~`[GYG logo]`, `[Viator logo]`, `[Klook logo]`~~ | **Done Phase 15** — real `GygLogo`/`ViatorLogo`/`KlookLogo` ship under `decorative/ota-logos/` |
 | Legal/AI-drafted prose | amber DRAFT banner                            | `LegalPageLayout`, `our-story.astro` |
@@ -460,7 +457,6 @@ Source-level `// TODO:` markers are tied to specific known follow-ups. Current a
 
 - `// TODO: split when signup page exists` — near every `Paths.BOOK_DEMO` CTA that should eventually route to a different secondary destination (e.g. `Start Free Trial`, `View live demo`, `Download whitepaper`).
 - `// TODO: replace placeholder feature copy with real plan details before launch` — `pricing.astro`, `PricingSection.astro`.
-- `// TODO: replace # hrefs with real guide article URLs as they're written` — `guides.astro`.
 
 When you address a TODO, remove the comment in the same change. Orphaned TODOs lie.
 

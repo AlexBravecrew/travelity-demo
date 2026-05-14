@@ -1,0 +1,12 @@
+---
+/**
+ * Mounts the site-wide scroll-reveal client script. Empty output — the only
+ * job of this component is to make Astro bundle the script into the page.
+ * Drop into MarketingLayout once; every `[data-reveal]` element on every
+ * prerendered page picks up the IntersectionObserver from there.
+ */
+---
+
+<script>
+    import './scroll-reveal.client.ts';
+</script>

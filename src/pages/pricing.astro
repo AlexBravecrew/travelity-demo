@@ -90,11 +90,13 @@ const comparisonGroups: ComparisonGroup[] = [
             style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
         >
             <div class="container mx-auto px-6">
-                <Eyebrow withRule centered>Pricing</Eyebrow>
+                <Eyebrow withRule centered data-reveal>Pricing</Eyebrow>
 
                 <h1
                     class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] max-w-[18ch] mx-auto mt-5 mb-5"
                     style="font-size: clamp(36px, 4.6vw, 56px);"
+                    data-reveal
+                    data-reveal-delay="80"
                 >
                     Plans for every
                     <em class="not-italic">
@@ -106,6 +108,8 @@ const comparisonGroups: ComparisonGroup[] = [
 
                 <p
                     class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                    data-reveal
+                    data-reveal-delay="160"
                 >
                     From solo guides on the Free plan to multi-product operators
                     on Ultimate. Same booking engine, same channel reach —
@@ -124,6 +128,7 @@ const comparisonGroups: ComparisonGroup[] = [
                     eyebrow="Compare plans"
                     eyebrowWithRule
                     align="center"
+                    data-reveal
                 >
                     <Fragment slot="headline">
                         Side by side, every detail.
@@ -137,7 +142,11 @@ const comparisonGroups: ComparisonGroup[] = [
                     </p>
                 </SectionHeader>
 
-                <div class="mt-2 max-w-[1100px] mx-auto">
+                <div
+                    class="mt-2 max-w-[1100px] mx-auto"
+                    data-reveal
+                    data-reveal-delay="120"
+                >
                     <ComparisonTable
                         groups={comparisonGroups}
                         featuredIndex={1}

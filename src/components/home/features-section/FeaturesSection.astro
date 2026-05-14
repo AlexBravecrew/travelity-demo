@@ -109,6 +109,7 @@ const features = [
             eyebrow="Built for daily operations"
             eyebrowWithRule
             align="center"
+            data-reveal
         >
             <Fragment slot="headline">
                 Everything you need, <em>nothing you don't.</em>
@@ -131,13 +132,15 @@ const features = [
                 /features. Slug definitions for all 9 stay in the array
                 above so anchor targets remain visible alongside this
                 consumer. */
-                features.slice(0, 6).map((f) => {
+                features.slice(0, 6).map((f, idx) => {
                     const Icon = f.icon;
                     return (
                         <FeatureCard
                             title={f.title}
                             description={f.description}
                             href={`${Paths.FEATURES}#${f.slug}`}
+                            data-reveal
+                            data-reveal-delay={idx * 60}
                         >
                             <Icon
                                 slot="icon"
@@ -152,7 +155,7 @@ const features = [
         </div>
 
         <div class="features-cta mt-14 text-center relative z-[1]">
-            <LinkInline href={Paths.FEATURES} withArrow>
+            <LinkInline href={Paths.FEATURES} withArrow data-reveal>
                 See all capabilities in detail
             </LinkInline>
         </div>

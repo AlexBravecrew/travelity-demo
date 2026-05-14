@@ -29,13 +29,15 @@ const { class: className, ...rest } = Astro.props;
         >
             <!-- Text column -->
             <div class="hero-text max-w-140">
-                <Eyebrow withRule
+                <Eyebrow withRule data-reveal
                     >Booking platform for travel businesses</Eyebrow
                 >
 
                 <h1
                     class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] mt-6 mb-6"
                     style="font-size: clamp(36px, 4.2vw, 56px);"
+                    data-reveal
+                    data-reveal-delay="80"
                 >
                     Run your travel business<br />
                     <em class="not-italic">
@@ -47,12 +49,14 @@ const { class: className, ...rest } = Astro.props;
 
                 <p
                     class="text-[22px] text-ink-muted leading-[1.55] max-w-[52ch] mb-4"
+                    data-reveal
+                    data-reveal-delay="160"
                 >
                     Bookings, channels, OTA integrations, payments, and
                     operations — all in one platform.
                 </p>
 
-                <div class="mb-9">
+                <div class="mb-9" data-reveal data-reveal-delay="240">
                     <p class="text-lg text-ink-muted leading-[1.55] mb-3">
                         Built for:
                     </p>
@@ -81,7 +85,11 @@ const { class: className, ...rest } = Astro.props;
                     </ul>
                 </div>
 
-                <div class="flex flex-wrap gap-3 mb-7">
+                <div
+                    class="flex flex-wrap gap-3 mb-7"
+                    data-reveal
+                    data-reveal-delay="320"
+                >
                     <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
                         Book a Demo
                     </Button>
@@ -97,6 +105,8 @@ const { class: className, ...rest } = Astro.props;
 
                 <div
                     class="flex flex-wrap items-center gap-6 text-[13px] text-ink-muted"
+                    data-reveal
+                    data-reveal-delay="400"
                 >
                     <span class="inline-flex items-center gap-1.5">
                         <CheckIcon
@@ -126,7 +136,12 @@ const { class: className, ...rest } = Astro.props;
             </div>
 
             <!-- Visual column -->
-            <BookDemoVideo videoId="LZfT8xLdzIQ" />
+            <BookDemoVideo
+                videoId="LZfT8xLdzIQ"
+                data-reveal
+                data-reveal-direction="right"
+                data-reveal-delay="200"
+            />
         </div>
     </div>
 </section>

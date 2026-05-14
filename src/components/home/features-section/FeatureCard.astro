@@ -22,12 +22,8 @@ const { title, description, href, class: className, ...rest } = Astro.props;
     Card so FeaturesSection's :nth-child color rotation still works (the
     selector targets direct children of `.features-grid`). */
 }
-<Card interactive class={cn('feature-card', className)}>
-    <a
-        href={href}
-        class="block no-underline p-7 text-inherit h-full"
-        {...rest}
-    >
+<Card interactive class={cn('feature-card', className)} {...rest}>
+    <a href={href} class="block no-underline p-7 text-inherit h-full">
         <!-- Icon container — color rotation is set by FeaturesSection's scoped CSS -->
         <div
             class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5 relative z-[1]"

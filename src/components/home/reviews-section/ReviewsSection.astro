@@ -117,6 +117,8 @@ const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
                             yOffset={yOffsets[i % yOffsets.length]}
                             data-review-card
                             data-active={i === 0 ? 'true' : 'false'}
+                            data-reveal
+                            data-reveal-delay={i * 100}
                         />
                     ))
                 }
@@ -154,6 +156,19 @@ const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
     .review-grid :global(.review-card .review-card-frame) {
         transform: translateY(var(--y, 0)) rotate(var(--tilt, 0deg));
         will-change: transform;
+    }
+
+    /* Below lg, cards live in a horizontal scroll-snap carousel and only
+       one is in the viewport at a time. Per-card scroll-reveal would
+       leave cards 2-5 invisible until the user swipes to them, which
+       reads as jank rather than polish. Force them visible immediately;
+       the per-card cascade stays a desktop-only effect. */
+    @media (max-width: 1023px) {
+        .review-grid :global([data-reveal]) {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
     }
 
     /* Below-lg carousel — horizontal scroll-snap row. overflow-x: auto

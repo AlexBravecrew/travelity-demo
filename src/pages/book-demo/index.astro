@@ -23,11 +23,16 @@ export const prerender = true;
                 >
                     <!-- Left: text + coverage list -->
                     <div>
-                        <Eyebrow withRule>Book a demo</Eyebrow>
+                        <Eyebrow withRule data-reveal data-reveal-direction="left"
+                            >Book a demo</Eyebrow
+                        >
 
                         <h1
                             class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] mt-6 mb-6"
                             style="font-size: clamp(36px, 4.2vw, 56px);"
+                            data-reveal
+                            data-reveal-direction="left"
+                            data-reveal-delay="80"
                         >
                             30 minutes.
                             <em class="not-italic">
@@ -41,6 +46,9 @@ export const prerender = true;
 
                         <p
                             class="text-lg text-ink-muted leading-[1.55] max-w-[52ch] mb-8"
+                            data-reveal
+                            data-reveal-direction="left"
+                            data-reveal-delay="160"
                         >
                             We'll walk you through Travelity in your own context
                             — bring your current booking spreadsheet if you have
@@ -49,11 +57,19 @@ export const prerender = true;
 
                         <p
                             class="font-mono text-xs font-semibold uppercase tracking-[0.10em] text-ink-soft mb-4"
+                            data-reveal
+                            data-reveal-direction="left"
+                            data-reveal-delay="240"
                         >
                             What we'll cover
                         </p>
 
-                        <CoverageList class="mx-0 max-w-none">
+                        <CoverageList
+                            class="mx-0 max-w-none"
+                            data-reveal
+                            data-reveal-direction="left"
+                            data-reveal-delay="320"
+                        >
                             <CoverageItem
                                 title="Walk through the platform"
                                 description="The actual back-office, with your products and channels in mind."
@@ -75,7 +91,11 @@ export const prerender = true;
 
                     <!-- Right: Calendly inline widget (native advanced embed) -->
                     <div>
-                        <CalendlyWidget />
+                        <CalendlyWidget
+                            data-reveal
+                            data-reveal-direction="right"
+                            data-reveal-delay="200"
+                        />
                     </div>
                 </div>
             </div>

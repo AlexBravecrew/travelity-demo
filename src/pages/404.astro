@@ -1,0 +1,67 @@
+---
+import MarketingLayout from '@/layouts/MarketingLayout.astro';
+import { Nav } from '@/components/chrome/nav';
+import { Footer } from '@/components/chrome/footer';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { Button } from '@/components/ui/button';
+import { Paths } from '@/lib/utils/paths';
+
+export const prerender = true;
+---
+
+<MarketingLayout
+    title="Page not found · Travelity"
+    description="The page you're looking for doesn't exist. Head back home or get in touch."
+>
+    <Nav />
+
+    <main class="bg-paper">
+        <section
+            class="pt-10 md:pt-14 pb-14 md:pb-20 text-center min-h-[60vh] flex items-center"
+            style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
+        >
+            <div class="container mx-auto px-6 max-w-[680px]">
+                <Eyebrow withRule centered data-reveal>Error 404</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.02] tracking-[-0.035em] mt-5 mb-5"
+                    style="font-size: clamp(48px, 6vw, 80px);"
+                    data-reveal
+                    data-reveal-delay="80"
+                >
+                    That page
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal"
+                            >wandered off.</span
+                        >
+                    </em>
+                </h1>
+
+                <p
+                    class="text-[18px] text-ink-muted leading-[1.55] max-w-[52ch] mx-auto mb-9"
+                    data-reveal
+                    data-reveal-delay="160"
+                >
+                    The page you're looking for doesn't exist, has moved, or
+                    was retired. Head back to the homepage — or get in touch
+                    and we'll help you find what you need.
+                </p>
+
+                <div
+                    class="flex flex-wrap gap-3 justify-center"
+                    data-reveal
+                    data-reveal-delay="240"
+                >
+                    <Button href={Paths.HOME} size="lg" withArrow>
+                        Back to home
+                    </Button>
+                    <Button href={Paths.CONTACT} size="lg" variant="outline">
+                        Talk to us
+                    </Button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <Footer />
+</MarketingLayout>

@@ -24,17 +24,23 @@ export const prerender = true;
             style="background: radial-gradient(ellipse 60% 50% at 50% 0%, hsl(var(--travelity-teal) / 0.08) 0%, transparent 60%), hsl(var(--paper));"
         >
             <div class="container mx-auto px-6 max-w-[820px]">
-                <Eyebrow withRule centered>Frequently asked</Eyebrow>
+                <Eyebrow withRule centered data-reveal
+                    >Frequently asked</Eyebrow
+                >
 
                 <h1
                     class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.035em] mt-5 mb-5"
                     style="font-size: clamp(36px, 4.6vw, 52px);"
+                    data-reveal
+                    data-reveal-delay="80"
                 >
                     Questions, answered.
                 </h1>
 
                 <p
                     class="text-[18px] text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                    data-reveal
+                    data-reveal-delay="160"
                 >
                     If you don't see your question here, <a
                         href={Paths.CONTACT}
@@ -52,11 +58,12 @@ export const prerender = true;
                     eyebrow="Getting started"
                     eyebrowWithRule
                     align="center"
+                    data-reveal
                 >
                     <Fragment slot="headline">First questions.</Fragment>
                 </SectionHeader>
 
-                <FaqAccordion class="mt-2">
+                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
                     <FaqItem question="How do I sign up?">
                         Click <a href={Paths.BOOK_DEMO}>Book a demo</a> on any page.
                         We'll set up a 30-minute walkthrough, answer your questions,
@@ -106,11 +113,12 @@ export const prerender = true;
                     eyebrow="Pricing & plans"
                     eyebrowWithRule
                     align="center"
+                    data-reveal
                 >
                     <Fragment slot="headline">Money questions.</Fragment>
                 </SectionHeader>
 
-                <FaqAccordion class="mt-2">
+                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
                     <FaqItem question="Which plan should I start on?">
                         Most operators start on the 30-day Plus trial. If you
                         have very low volume (under 50 bookings a month) and
@@ -158,11 +166,12 @@ export const prerender = true;
                     eyebrow="Bookings & channels"
                     eyebrowWithRule
                     align="center"
+                    data-reveal
                 >
                     <Fragment slot="headline">How it works.</Fragment>
                 </SectionHeader>
 
-                <FaqAccordion class="mt-2">
+                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
                     <FaqItem
                         question="Which OTAs does Travelity integrate with?"
                     >
@@ -210,11 +219,12 @@ export const prerender = true;
                     eyebrow="Security & data"
                     eyebrowWithRule
                     align="center"
+                    data-reveal
                 >
                     <Fragment slot="headline">Trust and protection.</Fragment>
                 </SectionHeader>
 
-                <FaqAccordion class="mt-2">
+                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
                     <FaqItem question="Where is my data stored?">
                         On servers in the European Union (Frankfurt, Germany).
                         Data is encrypted at rest (AES-256) and in transit (TLS

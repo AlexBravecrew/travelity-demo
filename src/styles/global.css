@@ -193,6 +193,37 @@ body {
     transform: translateY(0);
 }
 
+/* Scroll-reveal system — declarative API driven by IntersectionObserver in
+   src/components/chrome/motion/scroll-reveal.client.ts. Consumers mark an
+   element with `data-reveal` and optionally `data-reveal-direction` +
+   `data-reveal-delay`. On intersection the script adds `.is-revealed`,
+   which transitions opacity + transform back to neutral. One-shot — does
+   not re-trigger on scroll-back. */
+[data-reveal] {
+    opacity: 0;
+    transition:
+        opacity 600ms var(--ease-out),
+        transform 600ms var(--ease-out);
+    will-change: opacity, transform;
+}
+[data-reveal][data-reveal-direction='up'],
+[data-reveal]:not([data-reveal-direction]) {
+    transform: translateY(24px);
+}
+[data-reveal][data-reveal-direction='down'] {
+    transform: translateY(-24px);
+}
+[data-reveal][data-reveal-direction='left'] {
+    transform: translateX(-32px);
+}
+[data-reveal][data-reveal-direction='right'] {
+    transform: translateX(32px);
+}
+[data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+}
+
 /* Reduced-motion respect — applied globally; per-component animations
    must also include their own `prefers-reduced-motion: reduce` override */
 @media (prefers-reduced-motion: reduce) {
@@ -203,6 +234,13 @@ body {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+    /* Reveal targets stay visible even if JS doesn't run — the client
+       script also adds `.is-revealed` to every target on init under
+       reduced motion, but this is the CSS-only safety net. */
+    [data-reveal] {
+        opacity: 1;
+        transform: none;
     }
 }
 

@@ -32,7 +32,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 
 ---
 
-## 2. Site shape — 15 prerendered pages + 1 server endpoint
+## 2. Site shape — 14 prerendered pages + branded 404 + 1 server endpoint
 
 | Path           | Phase   | Notes                                                                                       |
 | -------------- | ------- | ------------------------------------------------------------------------------------------- |
@@ -49,13 +49,14 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | `/our-story`                | 10      | AI-drafted founder narrative                                                                |
 | `/faq`                      | 10      | 18 Q&As across 4 categories                                                                 |
 | `/contact`                  | 11      | React form island, 4 fields, posts to `contact` Astro Action                                |
+| `/404` (catch-all)          | —       | Branded "Page not found" served by `src/pages/404.astro`. Astro routes any unmatched path here automatically. Eyebrow + italic-em headline + 2 CTAs (Home / Contact). |
 | Server: `/_actions/*`       | 7, 11   | Astro Action endpoints for the contact form                                                 |
 
 **Retired in Phase 18:** `/audiences/tour-operators`, `/audiences/transfer-providers`, `/audiences/accommodation-hosts`, `/audiences/independent-guides`. The four audience pages and their dedicated shared components (`pain-grid`, `solution-map`, `feature-pillars`, `workflow`, `plan-rec`) were deleted. Audience routing lives now only in the home Hero dek (italic teal phrase listing the four types).
 
 **Retired in Phase 22:** `/solutions/booking-engine`, `/solutions/widget`, `/solutions/integrations`, `/solutions/proposals`, `/solutions/reporting`, `/solutions/security`. The six-page Solutions cluster collapsed into a single outcome-oriented `/solutions` page. `ProductHero`, `CrossSell`, `SocialProof` shared components were deleted with the cluster (no remaining consumers).
 
-**Intentionally 404:** `/help`, `/privacy`, `/terms`, `/dpa`, `/cookies`, the four `/audiences/*` paths, and the six `/solutions/<sub>` paths. Set up redirects before going live if external campaigns indexed any of those.
+**Intentionally 404:** `/help`, `/help-center`, `/guides`, `/privacy`, `/terms`, `/dpa`, `/cookies`, the four `/audiences/*` paths, and the six `/solutions/<sub>` paths. All resolve to the branded `404.astro` page with a 404 status. Set up real redirects before going live if external campaigns indexed any of those.
 
 ---
 
@@ -129,7 +130,8 @@ src/
 │   ├── pricing.astro
 │   ├── faq.astro
 │   ├── our-story.astro
-│   └── thank-you.astro
+│   ├── thank-you.astro
+│   └── 404.astro                   # Branded catch-all "Page not found"
 │   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
 │   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
 │
@@ -537,7 +539,7 @@ Three loose-end edits committed together as `9c8bbe6`:
 
 - **`/book-demo` merged into one section**: previously had ProductHero + "What we'll cover" + "#schedule" anchored CalendlyWidget across three sections. Now a single two-column section — left column has the combined eyebrow + headline + lead + 4 CoverageItems (overridden to `mx-0 max-w-none` so the list left-aligns), right column has the Calendly widget directly. Removed: `BookDemoVideo` (no longer used on this page), the `#schedule` anchor, the redundant "Pick a time" CTA, the scroll-mt offset.
 - **`react-calendly` removed**: `CalendlyWidget.tsx` deleted. Replaced with `CalendlyWidget.astro` using Calendly's **simple inline embed** pattern (`<div class="calendly-inline-widget" data-url>` + widget.js auto-discovery) at the same fixed 700px height v1 uses — chosen specifically because internal iframe scroll keeps Calendly's internal dropdowns on-screen (the bug we hit when trying the JS API with `resize: true`). `react-calendly` removed from `package.json`. Site is down to **1 React island** (only `ContactForm` left). CRM-sync POST also removed (per product direction).
-- **Resources dropdown removed from nav**: top-level Resources entry deleted from `nav-data.ts`. Both desktop nav and mobile drawer lose it automatically (single source). Guides / FAQ / Help Center / Our Story remain reachable via the Footer's Resources column.
+- **Resources dropdown removed from nav**: top-level Resources entry deleted from `nav-data.ts`. Both desktop nav and mobile drawer lose it automatically (single source). FAQ / Our Story remain reachable via the Footer's Resources column. (Subsequent bulk-cleanup commits also retired `/guides` and `/help-center` outright.)
 
 ### Phase 18 — home hero + retire audiences + layout density pass
 
@@ -576,7 +578,7 @@ Three loose-end edits committed together as `9c8bbe6`:
 
 Hover-dropdown popovers replaced with a **pinned sub-row** pattern.
 
-- **Pinned secondary row** (44px, sticky `top: 68px` directly under the main nav). On `/solutions/*` and `/our-story|/faq|/guides|/help-center`, the row is present in SSR HTML and shows the section's child links as horizontal underline-tabs. Active child has a 2px teal `border-bottom` and `aria-current="page"`.
+- **Pinned secondary row** (44px, sticky `top: 68px` directly under the main nav). On `/solutions/*` and `/our-story|/faq`, the row is present in SSR HTML and shows the section's child links as horizontal underline-tabs. Active child has a 2px teal `border-bottom` and `aria-current="page"`.
 - **Active nav indicator** in the top row: the parent section renders `text-travelity-teal`. Flat top-level links (Pricing) also render teal when on their own page.
 - **Hover-swap behavior**: hovering a different top-level trigger swaps the visible panel in the sub-row via instant `display:none/flex` (the original cross-fade was dropped — it caused content overlap during transition). 100ms open intent + 120ms close delay. On pages with no pinned section, hovering slides the sub-row down via `max-height` transition (0 → 44px, 220ms) on the sub-row itself.
 - **Layout/sticky**: sub-row owns `overflow-hidden` + `max-height` directly (an ancestor with `overflow:hidden` would have killed `position: sticky`).
