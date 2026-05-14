@@ -1,0 +1,96 @@
+---
+import { cn } from '@/lib/utils/cn';
+import { Card } from '@/components/ui/card';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * One outcome on the Solutions page — a peer card in a 3-up grid.
+ *
+ * Top half: a screenshot panel (light teal/blue gradient with the
+ * shared `/solutions/placeholder.svg` until real product imagery
+ * arrives). Bottom half: eyebrow with rule, title (sans-serif bold
+ * with a teal serif-italic opening word via the `<em>` slot pattern),
+ * 3-4 sentence body.
+ *
+ * Built on the shared `Card` primitive with `interactive` enabled so
+ * the whole tile lifts on hover — communicates "selectable" without
+ * being a link (these aren't navigation targets). Card supplies the
+ * hairline border + rounded corners + transition; this component
+ * supplies the inner layout + content slots.
+ *
+ * Title slot uses the SectionHeader-style `:global(em)` italic-em
+ * pattern (rules-astro.md §6.3 variant 2) — the parent renders sans
+ * via `font-display`, and the em-word overrides to serif italic teal.
+ */
+
+export interface Props extends HTMLAttributes<'div'> {
+    /** Anchor id for cross-page deep links. */
+    id?: string;
+    /** Short uppercase eyebrow label, e.g. "Outcome 01". */
+    eyebrow: string;
+    /** Image src for the screenshot panel. */
+    imageSrc: string;
+    /** Alt text for the image. */
+    imageAlt: string;
+    class?: string;
+}
+
+const {
+    id,
+    eyebrow,
+    imageSrc,
+    imageAlt,
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<Card
+    id={id}
+    interactive
+    class={cn(
+        'outcome-card',
+        'overflow-hidden flex flex-col h-full',
+        className,
+    )}
+    {...rest}
+>
+    <!-- Screenshot panel — top of card, fixed aspect, image fills. -->
+    <div class="relative aspect-[5/3] overflow-hidden bg-surface-alt">
+        <img
+            src={imageSrc}
+            alt={imageAlt}
+            loading="lazy"
+            decoding="async"
+            class="absolute inset-0 w-full h-full object-cover"
+        />
+    </div>
+
+    <!-- Content — eyebrow + italic-em title + body. -->
+    <div class="p-7 flex flex-col gap-4">
+        <Eyebrow withRule>{eyebrow}</Eyebrow>
+
+        <h3
+            class="outcome-card-title font-display font-semibold text-ink leading-[1.2] tracking-[-0.01em] text-xl md:text-2xl"
+        >
+            <slot name="title" />
+        </h3>
+
+        <p class="text-sm text-ink-muted leading-[1.65]">
+            <slot name="body" />
+        </p>
+    </div>
+</Card>
+
+<style>
+    /* Italic-em opening word in the title — serif italic teal, against
+       the sans-serif rest of the headline. Same pattern as SectionHeader
+       (rules-astro.md §6.3 variant 2). */
+    .outcome-card-title :global(em) {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-weight: 500;
+        color: hsl(var(--travelity-teal));
+    }
+</style>

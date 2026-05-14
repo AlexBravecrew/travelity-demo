@@ -37,7 +37,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Path           | Phase   | Notes                                                                                       |
 | -------------- | ------- | ------------------------------------------------------------------------------------------- |
 | `/`            | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Parallax → Pricing (hover-swap active card) → GoLive → ClosingCTA |
-| `/solutions`   | 22      | Compact top title + 3 CapabilitySections (Increase Sales, Prevent Overbookings and Revenue Loss, Manage All Bookings in One Place) + ClosingCTA. Replaces the Phase-5 six-page cluster. |
+| `/solutions`   | 22      | Compact top title + 6 `OutcomeCard`s in a 3-up grid (wraps to 2 / 1 columns) + ClosingCTA. Replaces the Phase-5 six-page cluster. Cards 1-3 carry the canonical Increase / Prevent / Manage outcomes (anchored `#increase-sales` / `#prevent-overbookings` / `#manage-all-bookings`); cards 4-6 are anchor-less duplicates of 1-3 pending real copy. |
 | `/features`    | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
 | `/pricing`     | 8, 21   | Page hero → 3 plan cards (hover-swap active card, Phase 21; section header suppressed via `hideHeader` to avoid duplicate title) → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close |
 | `/book-demo`   | 7,16,18 | Single two-column section: left = headline + lead + 4 CoverageItems; right = Calendly inline widget (native v1 embed, 700px fixed height). Post-Phase-18 cleanup. Conversion fires Google Ads conversion event on `event_scheduled` (Phase 23). |
@@ -96,7 +96,7 @@ src/
 │   │   └── closing-cta-section/     # Final conversion strip (primary/secondaryCtaExternal props, Phase 19)
 │   │
 │   ├── shared/                      # Cross-page components
-│   │   ├── capability-section/      # 2-col with `flip` prop — reused on /solutions and /features (Phase 4)
+│   │   ├── capability-section/      # 2-col with `flip` prop — used on /features only (was on /solutions through Phase 22; superseded by OutcomeCard there)
 │   │   ├── coverage-list/           # /book-demo "what we'll cover" (Phase 7)
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
@@ -114,12 +114,15 @@ src/
 │   ├── book-demo/                   # /book-demo page-specific (Phase 16, simplified post-18, conversion-wired Phase 23)
 │   │   └── CalendlyWidget.astro     # Native v1 inline embed at 700px; postMessage → gtag conversion + /thank-you redirect
 │   │
+│   ├── solutions/                   # /solutions page-specific
+│   │   └── outcome-card/            # Screenshot-panel-top peer tile (image + eyebrow + italic-em title + body); 3-up grid on /solutions
+│   │
 │   └── forms/                       # React form islands
 │       └── contact/                 # 4-field contact form (the only React island left)
 │
 ├── pages/
 │   ├── index.astro                  # /
-│   ├── solutions.astro              # Phase 22 — 3 outcome sections; replaces the retired 6-page cluster
+│   ├── solutions.astro              # 6 OutcomeCards in a 3-up grid; replaces the retired Phase-22 six-page cluster
 │   ├── features.astro               # Phase 19 — 9 anchored CapabilitySections + placeholder screenshots
 │   ├── legal/                       # 4 Legal pages
 │   ├── _internal/                   # Underscore-prefixed: showcase (not built)

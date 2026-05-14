@@ -60,7 +60,7 @@ src/
 │   │   ├── golive-section/
 │   │   └── closing-cta-section/  # primaryCtaExternal / secondaryCtaExternal props (Phase 19)
 │   ├── shared/                # cross-page composable components
-│   │   ├── capability-section/   # reused on /solutions + /features
+│   │   ├── capability-section/   # used on /features (was on /solutions through Phase 22; superseded by OutcomeCard there)
 │   │   ├── coverage-list/
 │   │   ├── comparison-table/  # Phase 23 — excluded cells now red X
 │   │   ├── faq-accordion/
@@ -74,6 +74,8 @@ src/
 │   ├── ui/                    # atoms (Button, Eyebrow, Tag, Card, etc.)
 │   ├── decorative/            # bespoke SVG (mountain-scene deleted Phase 18 — only ota-logos/ now)
 │   │   └── ota-logos/
+│   ├── solutions/             # /solutions page-specific
+│   │   └── outcome-card/      # screenshot-top peer tile, 3-up grid on /solutions
 │   └── forms/                 # React form islands
 │       └── contact/           # the only React island left
 ├── icons/index.ts             # the icon barrel (single source of truth)
@@ -82,7 +84,7 @@ src/
 ├── pages/                     # file-based routes
 │   ├── _internal/             # underscore prefix → excluded from build
 │   ├── features.astro         # Phase 19 — 9 anchored CapabilitySections
-│   ├── solutions.astro        # Phase 22 — 3 outcome sections; replaces retired 6-page cluster
+│   ├── solutions.astro        # 6 OutcomeCards in a 3-up grid; replaces retired Phase-22 six-page cluster
 │   └── legal/
 │   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
 │   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
