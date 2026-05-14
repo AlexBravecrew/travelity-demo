@@ -35,12 +35,12 @@ export const navLinks: NavLinkData[] = [
         href: Paths.FEATURES,
         items: [
             {
-                label: 'Channels',
+                label: 'Channel Manager',
                 description: 'Channel manager — direct, OTAs, partners.',
                 href: `${Paths.FEATURES}#channel-manager`,
             },
             {
-                label: 'Booking Widget',
+                label: 'Widget',
                 description: 'Embed Travelity on any site.',
                 href: `${Paths.FEATURES}#booking-widget`,
             },

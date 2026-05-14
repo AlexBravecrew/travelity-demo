@@ -49,7 +49,6 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | `/our-story`                | 10      | AI-drafted founder narrative                                                                |
 | `/faq`                      | 10      | 18 Q&As across 4 categories                                                                 |
 | `/guides`                   | 10      | 9 placeholder guide cards (hrefs are `#`)                                                   |
-| `/help-center`              | 10      | Visual search bar (non-functional) + 3 hub tiles                                            |
 | `/contact`                  | 11      | React form island, 4 fields, posts to `contact` Astro Action                                |
 | Server: `/_actions/*`       | 7, 11   | Astro Action endpoints for the contact form                                                 |
 
@@ -102,8 +101,7 @@ src/
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
 │   │   ├── legal-page-layout/       # Shared chrome for 4 legal pages (Phase 9)
-│   │   ├── guide-card/              # Article preview card (Phase 10)
-│   │   └── help-tile/               # Help center hub tile (Phase 10)
+│   │   └── guide-card/              # Article preview card (Phase 10)
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -130,7 +128,6 @@ src/
 │   ├── pricing.astro
 │   ├── faq.astro
 │   ├── guides.astro
-│   ├── help-center.astro
 │   ├── our-story.astro
 │   └── thank-you.astro
 │   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
@@ -235,10 +232,7 @@ export const Paths = {
     CONTACT: '/contact',
     THANK_YOU: '/thank-you',
     FAQ: '/faq',
-    GUIDES: '/guides',
-    HELP_CENTER: '/help-center',
     OUR_STORY: '/our-story',
-    STATUS: 'https://status.travelity.app', // external
 } as const;
 ```
 
@@ -348,7 +342,8 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 
 ### 5.4 Spacing rhythm
 
-- Page sections: `py-12 md:py-16` (canonical — every section, every page). The earlier three-tier system (`py-16 md:py-24`, `py-24`, `py-12 md:py-16`) was consolidated to a single tier for consistency; the home Hero keeps its own `pt-8 pb-4` because it sits directly under the nav and has its own `min-h`.
+- Page sections: `py-10 md:py-14` (canonical — every section, every page → 40px mobile / 56px desktop per side, ~80/112px gap between adjacent sections). The earlier values were `py-16 md:py-24` → `py-12 md:py-16` → briefly `py-6 md:py-8` (too tight) → settled at `py-10 md:py-14` after a desktop-feel review against Linear/Stripe-scale section gaps. The home Hero keeps its own `pt-8 pb-4` because it sits directly under the nav and has its own `min-h`.
+- **Closing CTA exception**: `ClosingCTASection` uses `py-14 md:py-20` (~1.4× the standard tier) to give the final conversion strip deliberate weight as the page's last moment. Applies wherever `ClosingCTASection` is used (home + 6 other pages — see §2).
 - Card padding: `p-6` (small), `p-7` (default — feature cards, plan cards), `p-9` or `p-7 md:p-9` (forms, plan-rec)
 - Container: `container mx-auto px-6` plus a `max-w-*` constraint when the content is narrower than the page
 
@@ -442,7 +437,7 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Must-haves (engineering)
 
 - [ ] **Wire real email service** to the `contact` Astro Action. Resend / SendGrid / Postmark or CRM/ticketing. Subject routing (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
-- [ ] **301 redirects** from old URLs: `/help` → `/help-center`, `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
+- [ ] **301 redirects** from old URLs: `/help` and `/help-center` → `/faq` (or `/contact`), `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
 - [ ] **Add prod + preview domains to CookieYes whitelist** (Phase 23). Production `travelity.app` is already configured. For Netlify deploy previews or staging, add the relevant domain pattern in CookieYes dashboard → Organizations & Sites; otherwise the banner refuses to render. `localhost:3000` was added for local prod-preview testing.
@@ -472,7 +467,6 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Nice-to-haves
 
 - [ ] **Lighthouse audit + tuning.** LCP, CLS, font loading. Probably already healthy.
-- [ ] **Real search on `/help-center`.** Currently visual-only. Pagefind (lightweight) or Algolia (powerful).
 - [ ] **Analytics integration.** Cookies policy mentions "[analytics provider TBD]". Plausible / Fathom / GA4 — pick one and wire it.
 - [ ] **Subprocessors page** at `/legal/subprocessors` referenced by DPA. Reuses LegalPageLayout, lists service providers.
 - [ ] **Mobile menu polish** (Phase 2 carry-forward): animation timing, accordion item density, scrim, iOS scroll-position preservation.

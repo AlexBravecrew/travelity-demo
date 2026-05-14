@@ -31,7 +31,6 @@ export const Paths = {
     // Resources (Phase 9 — deferred until content)
     OUR_STORY: '/our-story',
     FAQ: '/faq',
-    HELP_CENTER: '/help-center',
 
     // Utility
     CONTACT: '/contact',

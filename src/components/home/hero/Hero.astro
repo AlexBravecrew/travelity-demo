@@ -52,26 +52,34 @@ const { class: className, ...rest } = Astro.props;
                     operations — all in one platform.
                 </p>
 
-                <p
-                    class="text-lg text-ink-muted leading-[1.55] max-w-[52ch] mb-9"
-                >
-                    Built for:
-                    <span class="font-semibold text-travelity-teal"
-                        >Tour Operators</span
+                <div class="mb-9">
+                    <p class="text-lg text-ink-muted leading-[1.55] mb-3">
+                        Built for:
+                    </p>
+                    <ul
+                        class="m-0 p-0 list-none grid grid-cols-2 gap-x-6 gap-y-2.5 max-w-[460px]"
                     >
-                    |
-                    <span class="font-semibold text-travelity-teal"
-                        >Transfer Providers</span
-                    >
-                    |
-                    <span class="font-semibold text-travelity-teal"
-                        >Travel Agencies</span
-                    >
-                    |
-                    <span class="font-semibold text-travelity-teal"
-                        >Independent Guides</span
-                    >
-                </p>
+                        {
+                            [
+                                'Tour Operators',
+                                'Transfer Providers',
+                                'Travel Agencies',
+                                'Independent Guides',
+                            ].map((label) => (
+                                <li class="grid grid-cols-[22px_1fr] gap-3 items-center text-[15px] text-ink">
+                                    <span
+                                        class="block w-1.5 h-1.5 rounded-full bg-travelity-teal mx-auto"
+                                        style="box-shadow: 0 0 0 3px hsl(var(--travelity-teal) / 0.16);"
+                                        aria-hidden="true"
+                                    />
+                                    <span class="font-display font-semibold">
+                                        {label}
+                                    </span>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
 
                 <div class="flex flex-wrap gap-3 mb-7">
                     <Button href={Paths.BOOK_DEMO} size="lg" withArrow>
