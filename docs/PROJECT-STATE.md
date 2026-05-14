@@ -48,7 +48,6 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | `/legal/cookies`            | 9       | AI-drafted Cookies Policy                                                                   |
 | `/our-story`                | 10      | AI-drafted founder narrative                                                                |
 | `/faq`                      | 10      | 18 Q&As across 4 categories                                                                 |
-| `/guides`                   | 10      | 9 placeholder guide cards (hrefs are `#`)                                                   |
 | `/contact`                  | 11      | React form island, 4 fields, posts to `contact` Astro Action                                |
 | Server: `/_actions/*`       | 7, 11   | Astro Action endpoints for the contact form                                                 |
 
@@ -100,8 +99,7 @@ src/
 │   │   ├── coverage-list/           # /book-demo "what we'll cover" (Phase 7)
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
-│   │   ├── legal-page-layout/       # Shared chrome for 4 legal pages (Phase 9)
-│   │   └── guide-card/              # Article preview card (Phase 10)
+│   │   └── legal-page-layout/       # Shared chrome for 4 legal pages (Phase 9)
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -130,7 +128,6 @@ src/
 │   ├── contact.astro
 │   ├── pricing.astro
 │   ├── faq.astro
-│   ├── guides.astro
 │   ├── our-story.astro
 │   └── thank-you.astro
 │   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
@@ -455,7 +452,7 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Must-haves (engineering)
 
 - [ ] **Wire real email service** to the `contact` Astro Action. Resend / SendGrid / Postmark or CRM/ticketing. Subject routing (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
-- [ ] **301 redirects** from old URLs: `/help` and `/help-center` → `/faq` (or `/contact`), `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
+- [ ] **301 redirects** from old URLs: `/help` and `/help-center` → `/faq` (or `/contact`), `/guides` → `/` (retired in the bulk-cleanup commit), `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
 - [ ] **Add prod + preview domains to CookieYes whitelist** (Phase 23). Production `travelity.app` is already configured. For Netlify deploy previews or staging, add the relevant domain pattern in CookieYes dashboard → Organizations & Sites; otherwise the banner refuses to render. `localhost:3000` was added for local prod-preview testing.
@@ -480,7 +477,6 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 - [ ] **Real screenshots for `/features`** (Phase 19). All 9 sections currently point at the shared `/public/features/placeholder.svg`. Drop per-section images in `/public/features/` and update each `<img src>` in `src/pages/features.astro`.
 - [ ] **Real headline / lead / bullet copy for the 9 `/features` sections.** Top-of-file TODO comment tracks this. Placeholder strings ship today.
 - [x] **Real OTA logos** in ChannelDiagram — done in Phase 15. `GygLogo`, `ViatorLogo`, `KlookLogo` ship as Astro components under `src/components/decorative/ota-logos/`.
-- [ ] **9 guide articles** for `/guides`. Currently all card hrefs are `#`.
 
 ### Nice-to-haves
 
