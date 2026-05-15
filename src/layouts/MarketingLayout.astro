@@ -11,7 +11,7 @@ interface Props {
 
 const {
     title,
-    description = 'The booking platform travel businesses run on.',
+    description = 'Tour Management Software Built for Travel Businesses.',
     canonical,
     ogImage = '/og-default.png',
 } = Astro.props;
@@ -87,7 +87,7 @@ const fullCanonical =
     </head>
     <body>
         <a href="#main" class="skip-link">Skip to content</a>
-        <main id="main">
+        <main id="main" tabindex="-1">
             <slot />
         </main>
     </body>

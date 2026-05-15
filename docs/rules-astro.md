@@ -448,7 +448,7 @@ Every piece of placeholder content carries an unmistakable marker so a launch re
 | Screenshot slots       | `[Screenshot: brief description]`             | Solutions pages × ~21 slots          |
 | Avatar fallbacks       | gradient circle (no `avatarSrc`)              | `TestimonialCard`                    |
 | OTA logos              | ~~`[GYG logo]`, `[Viator logo]`, `[Klook logo]`~~ | **Done Phase 15** — real `GygLogo`/`ViatorLogo`/`KlookLogo` ship under `decorative/ota-logos/` |
-| Legal/AI-drafted prose | amber DRAFT banner                            | `LegalPageLayout`, `our-story.astro` |
+| Legal/AI-drafted prose | amber DRAFT banner                            | `LegalPageLayout` (4 legal pages)    |
 | Address                | `[Address TBD before launch]`                 | `contact.astro`                      |
 
 ### TODO comments

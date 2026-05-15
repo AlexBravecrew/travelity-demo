@@ -61,9 +61,9 @@ const {
                     <slot name="headline" />
                 </h2>
 
-                <p class="text-[17px] text-ink-muted leading-[1.55] mb-6">
+                <div class="capability-lead text-[17px] text-ink-muted leading-[1.55] mb-6">
                     <slot name="lead" />
-                </p>
+                </div>
 
                 {
                     bullets.length > 0 && (
@@ -96,3 +96,12 @@ const {
         </div>
     </div>
 </section>
+
+<style>
+    /* Stack of <p> tags inside the lead slot. Spacing between paragraphs;
+       last paragraph has no extra margin (the wrapper's mb-6 handles
+       separation from anything below). */
+    .capability-lead :global(p + p) {
+        margin-top: 1em;
+    }
+</style>

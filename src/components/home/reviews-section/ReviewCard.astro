@@ -91,22 +91,25 @@ const {
                 class="review-overlay absolute inset-x-0 bottom-0 opacity-0"
                 style="transition: opacity 350ms var(--ease-out);"
             >
-                <!-- Dark legibility veil -->
+                <!-- Dark legibility veil. Pushed deeper than the original
+                     0.95/0.5/55% ramp so longer real quotes don't sit on a
+                     fading veil at the top of the overlay. -->
                 <span
                     aria-hidden="true"
                     class="absolute inset-0"
-                    style="background: linear-gradient(0deg, hsl(220 50% 6% / 0.95), hsl(220 50% 6% / 0.5) 55%, transparent);"
+                    style="background: linear-gradient(0deg, hsl(220 50% 6% / 0.95) 0%, hsl(220 50% 6% / 0.82) 40%, hsl(220 50% 6% / 0.5) 75%, transparent);"
                 >
                 </span>
 
                 <div class="relative px-4 pt-10 pb-4 lg:px-5 lg:pb-5">
                     <p
                         class="text-paper font-serif italic text-sm lg:text-base leading-snug mb-2.5"
+                        style="text-shadow: 0 1px 8px hsl(220 50% 6% / 0.6);"
                     >
                         “{quote}”
                     </p>
                     <div
-                        class="font-mono text-[10px] lg:text-[11px] uppercase tracking-[0.08em] leading-tight"
+                        class="font-mono text-[10px] lg:text-[11px] uppercase tracking-[0.06em] leading-tight"
                     >
                         <div class="text-paper font-semibold">{name}</div>
                         <div class="text-paper/70 mt-0.5">{byline}</div>

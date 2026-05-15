@@ -39,15 +39,15 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | `/`            | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Reviews (5 polaroid cards, hover-swap on desktop, scroll-snap carousel on mobile/tablet) → Pricing (hover-swap active card) → GoLive → ClosingCTA |
 | `/solutions`   | 22      | Compact top title + 6 `OutcomeCard`s in a 3-up grid (wraps to 2 / 1 columns) + ClosingCTA. Replaces the Phase-5 six-page cluster. Cards 1-3 carry the canonical Increase / Prevent / Manage outcomes (anchored `#increase-sales` / `#prevent-overbookings` / `#manage-all-bookings`); cards 4-6 are anchor-less duplicates of 1-3 pending real copy. |
 | `/features`    | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
-| `/pricing`     | 8, 21   | Page hero → 3 plan cards (hover-swap active card, Phase 21; section header suppressed via `hideHeader` to avoid duplicate title) → ComparisonTable (4 groups, 13 rows) → FaqAccordion (8 Q&As) → Close |
+| `/pricing`     | 8, 21   | Full `<PricingSection />` (header + 3 plan cards, identical to home — hover-swap active card from Phase 21) → ComparisonTable (4 groups, 13 rows) → ClosingCTASection |
 | `/book-demo`   | 7,16,18 | Single two-column section: left = headline + lead + 4 CoverageItems; right = Calendly inline widget (native v1 embed, 700px fixed height). Post-Phase-18 cleanup. Conversion fires Google Ads conversion event on `event_scheduled` (Phase 23). |
 | `/thank-you`                | 7       | Static post-booking destination                                                             |
 | `/legal/privacy`            | 9       | AI-drafted GDPR-aware privacy policy                                                        |
 | `/legal/terms`              | 9       | AI-drafted Terms of Service                                                                 |
 | `/legal/dpa`                | 9       | AI-drafted Data Processing Agreement                                                        |
 | `/legal/cookies`            | 9       | AI-drafted Cookies Policy                                                                   |
-| `/our-story`                | 10      | AI-drafted founder narrative                                                                |
-| `/faq`                      | 10      | 18 Q&As across 4 categories                                                                 |
+| `/our-story`                | 10      | Founder narrative — 3 editorial sections (Origin / Team / Mission) with alternating bg, eyebrow + display h2 with italic-em per section |
+| `/faq`                      | 10      | 12 Q&As across 3 categories (Getting started / Pricing & plans / Bookings & channels). Security & data category retired. |
 | `/contact`                  | 11      | React form island, 4 fields, posts to `contact` Astro Action                                |
 | `/404` (catch-all)          | —       | Branded "Page not found" served by `src/pages/404.astro`. Astro routes any unmatched path here automatically. Eyebrow + italic-em headline + 2 CTAs (Home / Contact). |
 | Server: `/_actions/*`       | 7, 11   | Astro Action endpoints for the contact form                                                 |
@@ -91,7 +91,7 @@ src/
 │   │   ├── channels-section/        # Orbit diagram: hub + 5 nodes + flowing dashed pulses (Phase 15)
 │   │   ├── features-section/        # FeatureCard requires href; renders first 6 of 9 entries (Phase 19)
 │   │   ├── reviews-section/         # 5 polaroid customer review cards on a dark teal-blue band; desktop hover-swap, <lg scroll-snap carousel with infinite-loop clones + dot pagination (replaced retired ParallaxBreak)
-│   │   ├── pricing-section/         # 3 plan cards (Phase 21 hover-swap active card; reused on /pricing with hideHeader)
+│   │   ├── pricing-section/         # Header + 3 plan cards (Phase 21 hover-swap active card; reused as-is on /pricing — hideHeader prop exists but is unused)
 │   │   ├── golive-section/          # 4-col onboarding
 │   │   └── closing-cta-section/     # Final conversion strip (primary/secondaryCtaExternal props, Phase 19)
 │   │
@@ -469,8 +469,8 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
     - Terms: governing-law jurisdiction (twice in "Governing law" section)
     - DPA: subprocessor list URL (`/legal/subprocessors` doesn't exist yet)
     - Cookies: analytics provider name, cookie preferences UI
-- [ ] **PO review of `/our-story` narrative.** AI-drafted; specifics about team, founding, customers, hiring/funding need to be true.
-- [ ] **PO review of FAQ entries** on both `/pricing` (8 Q&As) and `/faq` (18 Q&As) — particularly refund policy, OTA commission, payment methods, data retention claims.
+- [ ] **PO review of `/our-story` narrative.** Real copy is in; verify specifics about team, founding, customers, hiring/funding are accurate before launch.
+- [ ] **PO review of FAQ entries** on `/faq` (12 Q&As across 3 categories) — particularly OTA integration list, plan availability claims, support promises.
 - [ ] **Replace `Plan feature one`** placeholder copy in `PricingPlan.astro`. Same for the 13-row placeholder in `/pricing`'s ComparisonTable.
 
 ### Should-haves (content)

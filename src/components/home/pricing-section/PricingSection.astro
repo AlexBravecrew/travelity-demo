@@ -34,7 +34,8 @@ interface Plan {
 const plans: Plan[] = [
     {
         name: 'Free',
-        tagline: 'For solo guides and small operators just getting started.',
+        tagline:
+            'Perfect for solo guides, drivers, and travel agents. Get the essential tools to manage your bookings and schedules with ease.',
         priceAmount: '0',
         billing: 'Free forever · No credit card',
         ctaLabel: 'Start Free',
@@ -52,11 +53,12 @@ const plans: Plan[] = [
         ],
     },
     {
-        name: 'Plus',
-        tagline: 'For growing operators who sell across multiple channels.',
+        name: 'Ultimate',
+        tagline:
+            'Built for growing travel teams. Access advanced features for booking management, OTA connectivity, team collaboration and direct sales.',
         priceAmount: '79',
         billing: 'Billed monthly · or $69/mo annually',
-        ctaLabel: 'Start 30-day Trial',
+        ctaLabel: 'Start 14-day Trial',
         ctaHref: Paths.BOOK_DEMO,
         ctaVariant: 'primary',
         includesLabel: 'Everything in Free, plus',
@@ -72,15 +74,15 @@ const plans: Plan[] = [
         badgeLabel: 'Most popular',
     },
     {
-        name: 'Ultimate',
+        name: 'Enterprise',
         tagline:
-            'For multi-product operators with serious volume and complexity.',
+            'Get customized solutions, advanced workflows, dedicated support, and features tailored to your unique operational needs.',
         priceAmount: '199',
         billing: 'Billed monthly · custom enterprise plans available',
         ctaLabel: 'Talk to Sales',
         ctaHref: Paths.BOOK_DEMO,
         ctaVariant: 'outline',
-        includesLabel: 'Everything in Plus, plus',
+        includesLabel: 'Everything in Ultimate, plus',
         features: [
             { label: 'Ultimate feature one' },
             { label: 'Ultimate feature two', sub: 'short qualifier text' },
@@ -108,15 +110,17 @@ const plans: Plan[] = [
                     data-reveal
                 >
                     <Fragment slot="headline">
-                        Plans for every <em>size of operation.</em>
+                        Flexible Plans for Travel Businesses of <em
+                            >Every Size.</em
+                        >
                     </Fragment>
                     <p
                         slot="dek"
                         class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
                     >
-                        From solo guides on the Free plan to multi-product
-                        operators on Ultimate. Same booking engine, same channel
-                        reach — different limits, different support tiers.
+                        Solo guides can start with a free plan, while larger
+                        teams can access advanced tools for sales, operations,
+                        automation, and connectivity.
                     </p>
                 </SectionHeader>
             )

@@ -16,24 +16,19 @@ interface ChannelsBullet {
 
 const bullets: ChannelsBullet[] = [
     {
-        title: 'Live channel management',
+        title: 'Channel Management',
         description:
-            'Real-time inventory and pricing sync across every channel you sell on.',
+            'Sync availability, schedules, and bookings across multiple sales channels in real time and manage everything from a single dashboard.',
     },
     {
-        title: 'Native OTA integrations',
+        title: 'OTA Integrations',
         description:
-            'Two-way connections with GetYourGuide, Viator, and Klook — no third-party connector required.',
+            'Expand your reach by distributing your tours and activities across leading marketplaces like GetYourGuide and Viator.',
     },
     {
-        title: 'Embeddable widget',
+        title: 'Booking Widget',
         description:
-            'Take direct bookings on your own site with three lines of code. Your branding, your guest, no commission.',
-    },
-    {
-        title: 'One source of truth',
-        description:
-            'Bookings from every channel land in the same orders queue, with full attribution and audit trail.',
+            'Sell directly from your own website with an integrated booking widget connected to your live availability, with the ability to integrate your preferred payment gateways.',
     },
 ];
 
@@ -42,22 +37,23 @@ const classes = cn('channels-value max-w-[540px]', className);
 
 <div class={classes} {...rest}>
     <SectionHeader
-        eyebrow="All-in-one channel management"
+        eyebrow="Sync availability. Sell everywhere."
         eyebrowWithRule
         align="left"
         data-reveal
         data-reveal-direction="right"
     >
         <Fragment slot="headline">
-            Channels &amp; integrations, <em>built in.</em>
+            Manage All Your Sales Channels from <em>One Platform.</em>
         </Fragment>
         <p
             slot="dek"
             class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch]"
         >
-            Travelity is the booking engine, the channel manager, and the live
-            OTA integrations — all in one platform. Sell direct, embed a widget,
-            or list on the marketplaces. One inventory, one source of truth.
+            Travelity helps you connect your products with leading OTAs,
+            automate availability updates, reduce manual work, prevent
+            overbookings, and sell more through your own website with a
+            built-in booking widget — all from one centralized system.
         </p>
     </SectionHeader>
 

@@ -64,43 +64,40 @@ export const prerender = true;
                 </SectionHeader>
 
                 <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
-                    <FaqItem question="How do I sign up?">
-                        Click <a href={Paths.BOOK_DEMO}>Book a demo</a> on any page.
-                        We'll set up a 30-minute walkthrough, answer your questions,
-                        and configure trial access if Travelity looks like a fit.
-                        There's no credit card required for the trial.
-                    </FaqItem>
-
                     <FaqItem question="How long does setup take?">
-                        For most operators, getting from zero to taking real
-                        bookings is 2–5 days. Setup time depends on how many
-                        products you sell, how many channels you connect, and
-                        whether you're migrating data from another system. We
-                        help with the migration.
+                        For most companies, getting from zero to taking real
+                        bookings is 2–5 days. The exact timeframe depends on
+                        the number of products, sales channels, and
+                        integrations involved.
                     </FaqItem>
 
                     <FaqItem
-                        question="Can I import data from my current spreadsheet or system?"
+                        question="Can I get support during the setup process?"
                     >
-                        Yes. We can import products, prices, schedules, and
-                        historical bookings from CSV/Excel exports, or directly
-                        from common booking platforms. Larger or more complex
-                        migrations are handled by our team during onboarding.
+                        Yes. Our team assists with onboarding, account setup,
+                        and platform configuration to help you start using
+                        Travelity smoothly and efficiently.
                     </FaqItem>
 
-                    <FaqItem question="Do I need technical skills?">
-                        No. The back-office is designed for operations people,
-                        not engineers. The widget embed is three lines of code,
-                        but we'll set it up with you if you'd rather not touch
-                        HTML. API access exists for the Ultimate plan if your
-                        team wants to build custom integrations.
+                    <FaqItem
+                        question="I already use another system. Can I transfer my data?"
+                    >
+                        Yes. Travelity supports migration of bookings,
+                        customer data, products, and other operational
+                        information from existing systems or spreadsheets.
                     </FaqItem>
 
-                    <FaqItem question="What kind of training do you provide?">
-                        Live walkthroughs with your team — we map your existing
-                        workflows to Travelity rather than asking you to learn
-                        ours. Recorded session for new hires. Email and chat
-                        support throughout.
+                    <FaqItem
+                        question="Do I need technical knowledge to use Travelity?"
+                    >
+                        No. Travelity is designed to be simple and
+                        user-friendly for travel businesses of all sizes.
+                    </FaqItem>
+
+                    <FaqItem question="Do I get support after onboarding?">
+                        Yes. Travelity provides ongoing support, onboarding
+                        guidance, training materials, and assistance whenever
+                        your team needs help using the platform.
                     </FaqItem>
                 </FaqAccordion>
             </div>
@@ -119,41 +116,23 @@ export const prerender = true;
                 </SectionHeader>
 
                 <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
-                    <FaqItem question="Which plan should I start on?">
-                        Most operators start on the 30-day Plus trial. If you
-                        have very low volume (under 50 bookings a month) and
-                        only one product type, the Free plan may be enough.
-                        Larger operations or those needing API access, advanced
-                        reporting, or unlimited team members start on Ultimate.
-                        See <a href={Paths.PRICING}>full pricing</a> for the comparison.
+                    <FaqItem question="Is there a free plan?">
+                        Yes. Travelity offers a free plan for solo guides,
+                        drivers, and travel professionals with a smaller
+                        volume of operations.
                     </FaqItem>
 
-                    <FaqItem question="Can I switch plans later?">
-                        Yes, any time. Upgrades take effect immediately;
-                        downgrades take effect at the end of your billing
-                        period. Your data and access stay the same.
+                    <FaqItem question="Can I change my plan later?">
+                        Yes. You can upgrade, downgrade, or change your plan
+                        anytime.
                     </FaqItem>
 
                     <FaqItem
-                        question="What's the difference between monthly and annual billing?"
+                        question="Is Travelity a month-to-month contract?"
                     >
-                        Annual billing comes with a discount (~12% off the
-                        monthly rate) and is paid up-front. Monthly billing is
-                        more flexible and renews automatically each month. You
-                        can switch between the two at any renewal.
-                    </FaqItem>
-
-                    <FaqItem question="Do you charge commission on bookings?">
-                        No. Travelity itself takes no commission on bookings —
-                        ever. OTA platforms (GetYourGuide, Viator, Klook) charge
-                        their own commissions; those are separate from your
-                        Travelity subscription.
-                    </FaqItem>
-
-                    <FaqItem question="Can I get a refund?">
-                        Monthly plans are non-refundable but you can cancel any
-                        time. Annual plans are refundable on a pro-rata basis
-                        within the first 30 days.
+                        Yes. Travelity offers flexible subscriptions with no
+                        long-term commitment required. You can cancel your
+                        plan anytime.
                     </FaqItem>
                 </FaqAccordion>
             </div>
@@ -175,85 +154,27 @@ export const prerender = true;
                     <FaqItem
                         question="Which OTAs does Travelity integrate with?"
                     >
-                        GetYourGuide, Viator, and Klook are supported with
-                        two-way native integrations — bookings flow in,
-                        inventory updates flow out, in real time. Additional OTA
-                        integrations are added based on customer demand.
+                        Travelity currently integrates with GetYourGuide and
+                        Viator, with integrations for Klook, Ctrip, TUI
+                        Musement, Expedia, Airbnb Experiences, Tiqets, Google
+                        Things to Do, and Headout in progress.
+                    </FaqItem>
+
+                    <FaqItem question="What does the Channel Manager do?">
+                        It synchronizes availability, pricing, and bookings
+                        across connected sales channels automatically.
                     </FaqItem>
 
                     <FaqItem
-                        question="Can I sell multiple product types (tours, transfers, accommodation) on one account?"
+                        question="Can I accept direct bookings from my website?"
                     >
-                        Yes. The Plus and Ultimate plans support all three
-                        product types — tours, transfers, and accommodation —
-                        with the right model for each (group capacity for tours,
-                        route-based for transfers, room-night inventory for
-                        stays).
+                        Yes. The Booking Widget allows customers to book
+                        directly through your website.
                     </FaqItem>
 
-                    <FaqItem question="What happens if I get a double-booking?">
-                        You won't. Travelity locks inventory the moment a
-                        booking is initiated, before payment is even processed.
-                        The lock is shared across every channel — back-office,
-                        widget, OTAs — so the same seat can't be booked twice.
-                        This is the core promise of the platform.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Can I customize the booking widget to match my site?"
-                    >
-                        Yes. The widget takes your colors, fonts, and tone. It's
-                        style-isolated (shadow DOM) so it doesn't inherit
-                        unintended CSS from the host site. The Plus plan
-                        includes basic theming; the Ultimate plan exposes more
-                        granular control.
-                    </FaqItem>
-                </FaqAccordion>
-            </div>
-        </section>
-
-        <!-- Security & data -->
-        <section class="bg-surface-alt py-10 md:py-14">
-            <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="Security & data"
-                    eyebrowWithRule
-                    align="center"
-                    data-reveal
-                >
-                    <Fragment slot="headline">Trust and protection.</Fragment>
-                </SectionHeader>
-
-                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
-                    <FaqItem question="Where is my data stored?">
-                        On servers in the European Union (Frankfurt, Germany).
-                        Data is encrypted at rest (AES-256) and in transit (TLS
-                        1.2+). Each customer's data is logically separated from
-                        every other customer's data.
-                    </FaqItem>
-
-                    <FaqItem question="Are you GDPR-compliant?">
-                        Yes — we're aligned with GDPR principles, hosted in the
-                        EU, and offer a Data Processing Agreement (DPA) for
-                        customers who need it. <a href={Paths.LEGAL_DPA}
-                            >See the DPA</a
-                        >.
-                    </FaqItem>
-
-                    <FaqItem question="What happens to my data if I cancel?">
-                        You can export everything as CSV at any time, including
-                        after cancellation. We retain your data for 90 days
-                        post-cancellation in case you change your mind, then
-                        permanently delete it (except where law requires longer
-                        retention, like financial records).
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Do you have SOC 2 / ISO 27001 certifications?"
-                    >
-                        We're aligned with both frameworks; formal third-party
-                        audits are underway. We'll publish certifications as
-                        they're issued.
+                    <FaqItem question="Can I connect payment gateways?">
+                        Yes. Travelity supports integration with widely used
+                        online payment gateways.
                     </FaqItem>
                 </FaqAccordion>
             </div>

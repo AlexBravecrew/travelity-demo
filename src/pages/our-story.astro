@@ -48,69 +48,153 @@ export const prerender = true;
             </div>
         </section>
 
-        <!-- Body: long-form prose -->
-        <article
-            class="legal-prose container mx-auto px-6 max-w-[720px] py-10 md:py-14"
-            data-reveal
-        >
-            <h2>How Travelity was born</h2>
-            <p>
-                Travelity is a B2B software that was born out of the everyday
-                challenges and struggles of managing tours and bookings with
-                outdated tools like spreadsheets. The founders experienced
-                these frustrations firsthand — juggling multiple systems,
-                facing functionality gaps, and getting little to no support
-                when it mattered most. Those tools often led to chaos, lost
-                time, and unhappy clients.
-            </p>
-            <p>
-                Driven by the need for a smarter, more efficient solution, we
-                set out to build a platform that could bring structure,
-                clarity, and control to travel businesses.
-            </p>
+        <!-- 01 — Origin -->
+        <section class="bg-paper py-10 md:py-14">
+            <div class="container mx-auto px-6 max-w-[680px]">
+                <Eyebrow withRule data-reveal>Origin</Eyebrow>
 
-            <h2>Who we are</h2>
-            <p>
-                We're a team of travel industry and tech enthusiasts with over
-                20 years of experience in inbound tourism and a deep
-                understanding of how the industry works. What sets us apart is
-                our unique combination of strengths in both tourism and IT — a
-                blend that lets us develop smart, practical, and user-friendly
-                solutions tailored specifically for tour operators and travel
-                professionals.
-            </p>
-            <p>
-                We don't just understand the business — we've lived it. We
-                stood close to tourism and truly experienced its day-to-day
-                demands, operational nuances, and the expectations of both
-                travelers and agencies. That's why we built Travelity as a B2B
-                software solution — born from real-world challenges and driven
-                by a passion to solve them from the inside out.
-            </p>
+                <h2
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.025em] mt-5 mb-7"
+                    style="font-size: clamp(36px, 4.6vw, 56px);"
+                    data-reveal
+                    data-reveal-delay="80"
+                >
+                    How Travelity
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal"
+                            >Was Born.</span
+                        >
+                    </em>
+                </h2>
 
-            <h2>What we do for you</h2>
-            <p>
-                At Travelity, we simplify the way you run your tour business.
-                We give you tools that are easy to use but powerful enough to
-                scale with you. With features like automated operations, team
-                collaboration, built-in CRM essentials, and smart reporting,
-                you can offer a smooth and professional experience to your
-                customers.
-            </p>
-            <p>
-                In short, we built Travelity to take care of your travel
-                agency operations so you can focus on creating memorable
-                travel experiences.
-            </p>
+                <div
+                    class="text-lg text-ink-muted leading-[1.7] space-y-5"
+                    data-reveal
+                    data-reveal-delay="160"
+                >
+                    <p>
+                        Travelity was born from the real challenges travel
+                        companies face every day.
+                    </p>
+                    <p>
+                        Managing bookings across multiple channels, updating
+                        availability manually, coordinating daily services,
+                        handling customer requests, and keeping everything
+                        organized often required using disconnected tools
+                        and time-consuming processes. As operations grew, so
+                        did the complexity.
+                    </p>
+                    <p>
+                        After experiencing these challenges firsthand, we
+                        decided to build a platform designed specifically
+                        for the way modern travel businesses actually work —
+                        connected, practical, easy to use, and focused on
+                        solving real operational problems.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-            <h2>Get in touch</h2>
-            <p>
-                If you run a travel business and you've read this far, we'd
-                like to meet you. <a href="/book-demo">Book a demo</a> or <a
-                    href="/contact">drop us a line</a
-                > — we read everything, and we reply.
-            </p>
-        </article>
+        <!-- 02 — Team -->
+        <section class="bg-surface-alt py-10 md:py-14">
+            <div class="container mx-auto px-6 max-w-[680px]">
+                <Eyebrow withRule data-reveal>Team</Eyebrow>
+
+                <h2
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.025em] mt-5 mb-7"
+                    style="font-size: clamp(36px, 4.6vw, 56px);"
+                    data-reveal
+                    data-reveal-delay="80"
+                >
+                    Who
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal"
+                            >We Are.</span
+                        >
+                    </em>
+                </h2>
+
+                <div
+                    class="text-lg text-ink-muted leading-[1.7] space-y-5"
+                    data-reveal
+                    data-reveal-delay="160"
+                >
+                    <p>
+                        We are a team of travel industry and tech
+                        enthusiasts with over 20 years of experience in
+                        inbound tourism and a deep understanding of how the
+                        industry works. What sets us apart is our unique
+                        combination of strengths in both tourism and IT — a
+                        blend that allows us to develop smart, practical,
+                        and user-friendly solutions tailored specifically
+                        for tour operators and travel professionals.
+                    </p>
+                    <p>
+                        We don't just understand the business — we've lived
+                        it. We stood close to tourism and truly experienced
+                        its day-to-day demands, operational nuances, and
+                        the expectations of both travelers and agencies.
+                        That's why we built Travelity as a B2B software
+                        solution — born from real-world challenges and
+                        driven by a passion to solve them from the inside
+                        out.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 — Mission -->
+        <section class="bg-paper py-10 md:py-14 relative overflow-hidden">
+            <!-- Atmospheric teal bloom in upper-right corner -->
+            <span
+                class="absolute pointer-events-none -top-24 -right-24 w-[520px] h-[520px]"
+                style="background: radial-gradient(circle, hsl(var(--travelity-teal) / 0.10) 0%, transparent 60%);"
+                aria-hidden="true"></span>
+
+            <div class="container mx-auto px-6 max-w-[680px] relative z-[1]">
+                <Eyebrow withRule data-reveal>Mission</Eyebrow>
+
+                <h2
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.025em] mt-5 mb-7"
+                    style="font-size: clamp(36px, 4.6vw, 56px);"
+                    data-reveal
+                    data-reveal-delay="80"
+                >
+                    What
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal"
+                            >We Do For You.</span
+                        >
+                    </em>
+                </h2>
+
+                <div
+                    class="text-lg text-ink-muted leading-[1.7] space-y-5"
+                    data-reveal
+                    data-reveal-delay="160"
+                >
+                    <p>
+                        Travelity is built to help travel businesses operate
+                        with more clarity and less manual work.
+                    </p>
+                    <p>
+                        From managing bookings and coordinating daily
+                        services to distributing products across sales
+                        channels and improving team collaboration, the
+                        platform is designed to simplify complex workflows
+                        and support business growth as your operations
+                        scale.
+                    </p>
+                    <p>
+                        Our goal is simple: help travel companies spend less
+                        time managing operational chaos and more time
+                        growing their business, improving customer
+                        experience, and creating memorable travel
+                        experiences.
+                    </p>
+                </div>
+            </div>
+        </section>
 
         <ClosingCTASection />
     </main>

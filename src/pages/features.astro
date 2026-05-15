@@ -13,7 +13,14 @@ export const prerender = true;
  * card hrefs (Channel Manager → /features#channel-manager, etc.) — those
  * deep links are the entry path for users clicking from the home grid.
  *
- * TODO: replace placeholder copy across all 9 sections before launch.
+ * Per-feature data shape:
+ *   - title:        eyebrow + the "name" of the feature
+ *   - slug:         anchor id (matches home card hrefs)
+ *   - headlinePre:  regular-weight start of the h2 headline
+ *   - headlineEm:   italic-teal-em phrase at the end of the headline
+ *   - paragraphs:   2-3 body paragraphs rendered inside the lead slot
+ *   - image:        screenshot path (shared placeholder until real assets land)
+ *
  * TODO: replace `/features/placeholder.svg` with real per-section screenshots
  *       under `/public/features/<slug>.png` (or whatever filename you pick).
  */
@@ -21,108 +28,114 @@ const features = [
     {
         title: 'Channel Manager',
         slug: 'channel-manager',
-        headline: 'Channel Manager — headline placeholder.',
-        lead: 'Lead description for Channel Manager — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Sell through multiple booking channels without the hassle of',
+        headlineEm: 'managing inventory manually.',
+        paragraphs: [
+            'Travelity Channel Manager enables real-time connectivity between your reservation system and external distribution channels, including major OTAs, online and offline sales channels.',
+            'Product availability, pricing, schedules, and booking data are synchronized automatically between connected channels, ensuring consistent inventory management and minimizing discrepancies caused by manual updates.',
+            'By automating distribution and inventory synchronization, operators can reduce operational workload, prevent overbookings, maintain pricing consistency, and maximize sales across multiple sales channels.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'Booking Widget',
         slug: 'booking-widget',
-        headline: 'Booking Widget — headline placeholder.',
-        lead: 'Lead description for Booking Widget — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Turn your website into a direct booking channel with a',
+        headlineEm: 'conversion-focused booking widget.',
+        paragraphs: [
+            'Travelity Booking Widget allows tour operators to accept direct reservations through their own website using a modern and customizable booking interface designed to maximize conversions.',
+            'The widget is connected directly to your reservation system, ensuring that availability, pricing, and booking data remain continuously updated.',
+            'The widget can be adapted to match your website design and integrated with widely used payment gateways, helping you create a smoother booking experience, increase direct sales, and reduce dependency on third-party platforms.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'Real-Time Availability',
         slug: 'real-time-availability',
-        headline: 'Real-Time Availability — headline placeholder.',
-        lead: 'Lead description for Real-Time Availability — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Track live availability across all bookings and sales channels',
+        headlineEm: 'in real time.',
+        paragraphs: [
+            'Travelity Real-Time Availability Engine provides a live overview of your inventory, allowing your team to instantly see booked and available spots across tours, activities, transfers, and other services.',
+            'Availability is updated automatically as new reservations, cancellations, or changes occur — including bookings received through OTAs, partners, resellers, and direct sales channels. This helps maintain accurate inventory distribution across all connected platforms and significantly reduces the risk of overbookings or missed sales opportunities.',
+            'Advanced filtering tools allow operators and sales teams to quickly search availability based on travel dates, service type, group size, schedules, and other operational criteria, making it easier to manage capacity and make faster sales decisions.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'Trip Proposal Builder',
         slug: 'trip-proposal-builder',
-        headline: 'Trip Proposal Builder — headline placeholder.',
-        lead: 'Lead description for Trip Proposal Builder — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Create interactive trip proposals in a few clicks and turn inquiries into',
+        headlineEm: 'confirmed bookings.',
+        paragraphs: [
+            'Designed with a strong focus on conversion, the Proposal Builder helps travel companies present their services more professionally, improve customer experience, and convert inquiries into paying travelers more efficiently.',
+            'Travelity Trip Proposal Builder allows operators to create visually engaging and interactive travel offers in just a few clicks, with itineraries, pricing, images, inclusions, schedules, and booking details presented in a professional format.',
+            'Proposals can be shared with travelers through a dedicated link where customers can review the trip, explore the itinerary, and confirm their booking directly online. Once confirmed, reservations are automatically processed inside the platform without additional manual work.',
         ],
         image: '/features/placeholder.svg',
     },
     {
-        title: 'Integration with Payment Gateways',
+        title: 'Payment Gateway Integrations',
         slug: 'payment-gateways',
-        headline: 'Payment Gateway Integrations — headline placeholder.',
-        lead: 'Lead description for payment gateway integrations — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre: 'Accept online payments seamlessly through your',
+        headlineEm: 'booking flows and sales tools.',
+        paragraphs: [
+            'Travelity supports integration with widely used payment gateways, allowing tour operators to accept online payments directly through the Booking Widget and Trip Proposal Builder.',
+            'Customers can complete their reservations and payments through a smooth and secure booking experience, while payment information is automatically reflected inside the system together with booking data.',
+            'By integrating online payment solutions into the sales process, operators can simplify payment collection, improve customer convenience, maintain better financial control, and reduce manual payment handling.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'Booking Management',
         slug: 'booking-management',
-        headline: 'Booking Management — headline placeholder.',
-        lead: 'Lead description for Booking Management — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Manage all your reservations, customer details, and payments from',
+        headlineEm: 'one centralized system.',
+        paragraphs: [
+            'Travelity Booking Management provides tour operators with a complete workspace to receive, create, edit, and manage reservations from all sales channels in one place.',
+            'The system allows teams to track booking statuses, customer information, payment records, schedules, add-ons, operational notes, and other important reservation details through a structured and easy-to-use interface.',
+            'By centralizing booking operations inside a single platform, operators can reduce manual errors, eliminate the need for spreadsheets or disconnected tools, improve internal coordination, and manage daily reservations more efficiently.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'Daily Operations',
         slug: 'daily-operations',
-        headline: 'Daily Operations — headline placeholder.',
-        lead: 'Lead description for Daily Operations — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Plan and coordinate your daily tours, transfers, and check-ins from a',
+        headlineEm: 'centralized operational dashboard.',
+        paragraphs: [
+            'This feature allows you to stay organized and manage day-to-day services more efficiently. Daily Operations provides travel companies with a live overview of all scheduled tours, transfers, check-ins, and services for the day in a single workspace.',
+            'You can view schedules, manage passenger lists, divide travelers into groups, and assign guides, drivers, vehicles, and other resources directly within the system.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'CRM',
         slug: 'crm',
-        headline: 'CRM — headline placeholder.',
-        lead: 'Lead description for CRM — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre:
+            'Keep all customer information, bookings, and communication history',
+        headlineEm: 'organized.',
+        paragraphs: [
+            'CRM helps travel companies build and manage a centralized customer database with access to traveler profiles, booking history, contact details, uploaded documents, notes, and related order information.',
+            'Teams can quickly search customer records, review past and upcoming reservations, and keep important travel documents and communication details attached to each profile.',
+            'Having all customer information structured inside one system helps improve service quality, simplify communication, support repeat sales, and maintain better long-term relationships with travelers and partners.',
         ],
         image: '/features/placeholder.svg',
     },
     {
         title: 'Team Collaboration',
         slug: 'team-collaboration',
-        headline: 'Team Collaboration — headline placeholder.',
-        lead: 'Lead description for Team Collaboration — real copy coming soon.',
-        bullets: [
-            { label: 'Placeholder bullet one.' },
-            { label: 'Placeholder bullet two.' },
-            { label: 'Placeholder bullet three.' },
+        headlinePre: 'Work together with your team using',
+        headlineEm: 'role-based access and shared workflows.',
+        paragraphs: [
+            'Travelity Team Collaboration allows companies to create teams, invite staff members, and manage access through customizable roles and permission settings.',
+            'Different team members can be granted access to specific sections and actions based on their responsibilities, helping companies control who can view, edit, manage, or approve different parts of the system.',
+            'With structured team access and shared workflows, companies can improve internal coordination, protect sensitive information, reduce operational mistakes, and manage growing teams more efficiently.',
         ],
         image: '/features/placeholder.svg',
     },
@@ -177,11 +190,21 @@ const features = [
                     id={f.slug}
                     eyebrow={f.title}
                     flip={i % 2 === 1}
-                    bullets={f.bullets}
                     class="scroll-mt-[var(--nav-height)]"
                 >
-                    <Fragment slot="headline">{f.headline}</Fragment>
-                    <Fragment slot="lead">{f.lead}</Fragment>
+                    <Fragment slot="headline">
+                        {f.headlinePre}{' '}
+                        <em class="not-italic">
+                            <span class="italic font-medium text-travelity-teal">
+                                {f.headlineEm}
+                            </span>
+                        </em>
+                    </Fragment>
+                    <Fragment slot="lead">
+                        {f.paragraphs.map((para) => (
+                            <p>{para}</p>
+                        ))}
+                    </Fragment>
                     <Fragment slot="visual">
                         <img
                             src={f.image}
