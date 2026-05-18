@@ -1,0 +1,20 @@
+---
+/**
+ * Renders a JSON-LD structured-data block (`<script type="application/ld+json">`).
+ *
+ * Generic by design — the caller passes a ready-built schema object (or array
+ * of objects). Used for the site-wide Organization schema (MarketingLayout)
+ * and the FAQPage schema (faq.astro).
+ *
+ * `<` is escaped to `<` so a stray `</script>` in content can't break
+ * out of the script element.
+ */
+export interface Props {
+    schema: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { schema } = Astro.props;
+const json = JSON.stringify(schema).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" is:inline set:html={json} />

@@ -3,6 +3,7 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
 import { SectionHeader } from '@/components/ui/section-header';
+import { Eyebrow } from '@/components/ui/eyebrow';
 
 import { PricingSection } from '@/components/home/pricing-section';
 import {
@@ -82,9 +83,41 @@ const comparisonGroups: ComparisonGroup[] = [
 >
     <Nav />
 
-    <main>
-        <!-- Pricing section identical to home — header + 3 plan cards. -->
-        <PricingSection />
+    <div>
+        <!-- Compact top section: the page's single top-level heading.
+             PricingSection's own SectionHeader is suppressed via hideHeader
+             so the pricing title isn't rendered twice. -->
+        <section class="bg-paper py-10 md:py-14">
+            <div class="container mx-auto px-6 text-center">
+                <Eyebrow withRule centered data-reveal>Pricing</Eyebrow>
+
+                <h1
+                    class="font-serif font-semibold text-ink leading-[1.05] tracking-[-0.03em] max-w-[20ch] mx-auto mt-6 mb-5"
+                    style="font-size: clamp(32px, 4vw, 48px);"
+                    data-reveal
+                    data-reveal-delay="80"
+                >
+                    Flexible plans for travel businesses of
+                    <em class="not-italic">
+                        <span class="italic font-medium text-travelity-teal">
+                            every size.</span
+                        >
+                    </em>
+                </h1>
+
+                <p
+                    class="text-lg text-ink-muted leading-[1.55] max-w-[60ch] mx-auto"
+                    data-reveal
+                    data-reveal-delay="160"
+                >
+                    From solo guides to multi-product operators with serious
+                    volume — start free, upgrade only when you need to.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3 plan cards — header suppressed; the page title above covers it. -->
+        <PricingSection hideHeader />
 
         <!-- Comparison table -->
         <section class="bg-paper py-10 md:py-14 border-t border-line">
@@ -124,7 +157,7 @@ const comparisonGroups: ComparisonGroup[] = [
 
         <!-- Closing CTA — reused from home (default copy) -->
         <ClosingCTASection />
-    </main>
+    </div>
 
     <Footer />
 </MarketingLayout>

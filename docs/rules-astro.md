@@ -1,6 +1,6 @@
 # Travelity Marketing Website — Project Rules
 
-> Read this before writing any code. **Authoritative through Phase 25.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
+> Read this before writing any code. **Authoritative through Phase 26.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
 
 ---
 
@@ -63,7 +63,8 @@ src/
 │   │   ├── coverage-list/
 │   │   ├── comparison-table/  # Phase 23 — excluded cells now red X
 │   │   ├── faq-accordion/
-│   │   └── legal-page-layout/
+│   │   ├── legal-page-layout/
+│   │   └── structured-data/   # Phase 26 — JSON-LD <script> emitter
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -78,7 +79,7 @@ src/
 │       ├── ContactSuccess.astro   # success card, JS-revealed on 204
 │       └── contact.client.ts      # validation + fetch submit
 ├── icons/index.ts             # the icon barrel (single source of truth)
-├── layouts/MarketingLayout.astro  # renders <Analytics /> in <head>
+├── layouts/MarketingLayout.astro  # <head>: <Analytics />, canonical/OG, Organization JSON-LD
 ├── lib/utils/                 # cn(), Paths, externalAttrs
 ├── pages/                     # file-based routes
 │   ├── _internal/             # underscore prefix → excluded from build
@@ -89,7 +90,8 @@ src/
 │   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
 ├── public/
 │   ├── features/              # placeholder.svg + future per-section screenshots
-│   └── solutions/             # placeholder.svg + future per-section screenshots
+│   ├── solutions/             # placeholder.svg + future per-section screenshots
+│   └── robots.txt             # Phase 26 — allow-all + sitemap reference
 └── styles/global.css          # @theme tokens + container @utility (1280px) + --nav-height + smooth-scroll
 ```
 
@@ -438,6 +440,14 @@ Every real page declares `export const prerender = true;` in its frontmatter. As
 Use `externalAttrs(external)` from `@/lib/utils/external-attrs` whenever a link may open in a new tab. It returns `{}` or `{ target: '_blank', rel: 'noopener noreferrer' }`. Three consumers: `Button`, `LinkInline`, `FooterColumn`.
 
 The single external URL in the codebase right now: `Paths.STATUS = 'https://status.travelity.app'`.
+
+### 8.4 SEO metadata & structured data (Phase 26)
+
+- **`MarketingLayout` owns page metadata.** `<title>`, `<meta name="description">`, canonical, Open Graph and Twitter tags all render from its `title` / `description` / `canonical` / `ogImage` / `noindex` props. Pages pass copy — they never hand-roll `<head>` tags.
+- **`site` is the origin source of truth.** `site` in `astro.config.mjs` drives canonical + OG URLs (read via `Astro.site`, never a hardcoded literal) and is required by `@astrojs/sitemap`.
+- **The sitemap is generated.** `@astrojs/sitemap` emits `sitemap-index.xml` at build. A page kept out of search is excluded in **two** places that must stay in sync: the `filter` in `astro.config.mjs` AND a `noindex` prop on `MarketingLayout` (which emits `<meta name="robots" content="noindex, follow">`).
+- **Structured data goes through `StructuredData`.** JSON-LD is rendered only by `@/components/shared/structured-data` — pass it a ready-built schema object. `Organization` is site-wide (in `MarketingLayout`); a page-specific schema (e.g. `FAQPage`) is built in the page from data it already renders, never duplicated into a parallel literal.
+- **One `<main>` per document.** `MarketingLayout` emits the single `<main id="main">`; pages must not open their own `<main>` (use a `<div>`).
 
 ---
 

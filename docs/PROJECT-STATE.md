@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 25 — contact form ported from a React island to native Astro + vanilla JS; React / React Hook Form / zod removed entirely. The site now ships **zero React islands**. Earlier in this batch: Phase 24 contact-form API wiring, Phase 23 analytics.
+> **Last updated:** Phase 26 — SEO foundation: `@astrojs/sitemap` + `robots.txt`, canonical/OG derived from `Astro.site`, Organization + FAQPage JSON-LD, a real `/pricing` `<h1>`, and one `<main>` per page. Earlier in this batch: Phase 25 React removal, Phase 24 contact-form API wiring.
 
 ---
 
@@ -99,7 +99,8 @@ src/
 │   │   ├── coverage-list/           # /book-demo "what we'll cover" (Phase 7)
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
-│   │   └── legal-page-layout/       # Shared chrome for 2 legal pages (Phase 9)
+│   │   ├── legal-page-layout/       # Shared chrome for 2 legal pages (Phase 9)
+│   │   └── structured-data/         # JSON-LD <script> emitter (Phase 26)
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -145,7 +146,7 @@ src/
 │   └── index.ts                     # Single barrel for ~30 lucide icons; .astro files import only from here
 │
 ├── layouts/
-│   └── MarketingLayout.astro        # <html>/<head> wrapper, font links, meta tags
+│   └── MarketingLayout.astro        # <head>: meta, canonical + OG (from Astro.site), Organization JSON-LD
 │
 ├── lib/
 │   └── utils/
@@ -464,6 +465,8 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 - [ ] **Update privacy legal copy** to name GA4, Google Ads, and CookieYes by name (Phase 23 deferred this — see §6.2). GDPR specificity requires naming the data processors. (The standalone Cookies Policy page was retired post-Phase-24.)
 - [x] **Resolve Start-Free-Trial destination** — Phase 19. All four Start Free Trial CTAs now point at `Paths.START_TRIAL = https://admin.travelity.app` (external, opens in new tab).
 - [x] **Wire Google Ads conversion on Calendly bookings** — Phase 23. `CalendlyWidget.astro` fires `gtag('event', 'conversion', …)` with `value`/`currency`, gated redirect via `event_callback` + 1s timeout fallback.
+- [x] **SEO foundation** — Phase 26. `@astrojs/sitemap` + `robots.txt`, canonical/OG from `Astro.site`, Organization + FAQPage JSON-LD, `/pricing` `<h1>`, one `<main>` per page, `/thank-you` `noindex`.
+- [ ] **Add `public/og-default.png`** — a real **1200×630** social-share card (logo + short tagline). `MarketingLayout` already references it; until it exists `og:image` 404s. A wrongly-sized 850×195 file was dropped in — replace it at the correct ratio.
 
 ### Must-haves (content / legal)
 
@@ -489,9 +492,21 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. Phase narratives (13–25)
+## 10. Phase narratives (13–26)
 
 Brief context for each post-build phase. Newer phases on top. **Phase 20 is not listed — an orange-accent test was prototyped and reverted before commit.**
+
+### Phase 26 — SEO foundation
+
+- **`site` + sitemap**: `site: 'https://travelity.app'` added to `astro.config.mjs`; `@astrojs/sitemap` emits `sitemap-index.xml` + `sitemap-0.xml` at build. A `filter` drops `/thank-you` and `/404` (10 routes ship).
+- **`public/robots.txt`** added — allows all, points crawlers at the sitemap.
+- **Canonical/OG**: `MarketingLayout`'s `siteUrl` now derives from `Astro.site` (the config `site`), not a hardcoded literal. New optional `noindex?: boolean` prop emits `<meta name="robots" content="noindex, follow">`; `/thank-you` passes it.
+- **Structured data**: new `shared/structured-data/StructuredData.astro` renders a JSON-LD `<script>`. `MarketingLayout` injects an `Organization` schema site-wide; `/faq` adds a `FAQPage` schema.
+- **`/faq` refactor**: the 12 Q&As moved from inline `<FaqItem>` markup to a typed `faqGroups` array — one source now feeds both the accordion and the FAQPage schema, so they can't drift.
+- **`/pricing` `<h1>`**: the page had none (it reused the home `PricingSection`, whose top heading is an `<h2>`). Added a compact intro section carrying the page `<h1>`; `PricingSection` now gets `hideHeader` so the title isn't rendered twice.
+- **Nested `<main>` fixed**: every page wrapped its content in a `<main>` while `MarketingLayout` already emits `<main id="main">` — an invalid duplicate. Pages now use a `<div>`; one `<main>` per document.
+- **Favicon**: `public/favicon.svg` re-squared — `viewBox` `0 0 125 99` → `0 -13 125 125` so the mark isn't letterboxed in the icon slot.
+- **Pending**: `public/og-default.png` still needs a real 1200×630 card — see §9.
 
 ### Phase 25 — Contact form goes native; React removed
 

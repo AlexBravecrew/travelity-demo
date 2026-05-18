@@ -10,10 +10,11 @@ export const prerender = true;
 <MarketingLayout
     title="Thanks for reaching out · Travelity"
     description="We received your demo request and will be in touch within one business day."
+    noindex
 >
     <Nav />
 
-    <main class="min-h-[60vh] flex items-center bg-paper">
+    <div class="min-h-[60vh] flex items-center bg-paper">
         <div class="container mx-auto px-6 py-10 md:py-14 text-center">
             <div class="max-w-[520px] mx-auto">
                 <h1
@@ -33,7 +34,7 @@ export const prerender = true;
                 </Button>
             </div>
         </div>
-    </main>
+    </div>
 
     <Footer />
 </MarketingLayout>

@@ -2,8 +2,12 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import netlify from '@astrojs/netlify';
 import partytown from '@astrojs/partytown';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
+    // Canonical production origin. Drives canonical/OG URLs (read via
+    // `Astro.site` in MarketingLayout) and is required by @astrojs/sitemap.
+    site: 'https://travelity.app',
     server: {
         // Matches the port `npx serve dist` uses by default, so a single
         // `localhost:3000` whitelist entry in CookieYes covers both
@@ -24,6 +28,12 @@ export default defineConfig({
             config: {
                 forward: ['dataLayer.push', 'gtag'],
             },
+        }),
+        // Generates sitemap-index.xml + sitemap-0.xml at build time.
+        // `/thank-you` (post-conversion) and `/404` are not search targets.
+        sitemap({
+            filter: (page) =>
+                !page.includes('/thank-you') && !page.includes('/404'),
         }),
     ],
     adapter: netlify(),

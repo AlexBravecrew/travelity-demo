@@ -5,10 +5,110 @@ import { Footer } from '@/components/chrome/footer';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { SectionHeader } from '@/components/ui/section-header';
 import { FaqAccordion, FaqItem } from '@/components/shared/faq-accordion';
+import { StructuredData } from '@/components/shared/structured-data';
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
 import { Paths } from '@/lib/utils/paths';
 
 export const prerender = true;
+
+// FAQ content — single source of truth for both the rendered accordions
+// and the FAQPage structured data below. Keep answers plain text.
+interface FaqEntry {
+    q: string;
+    a: string;
+}
+interface FaqGroup {
+    eyebrow: string;
+    headline: string;
+    sectionClass: string;
+    items: FaqEntry[];
+}
+
+const faqGroups: FaqGroup[] = [
+    {
+        eyebrow: 'Getting started',
+        headline: 'First questions.',
+        sectionClass: 'py-10 md:py-14',
+        items: [
+            {
+                q: 'How long does setup take?',
+                a: 'For most companies, getting from zero to taking real bookings is 2–5 days. The exact timeframe depends on the number of products, sales channels, and integrations involved.',
+            },
+            {
+                q: 'Can I get support during the setup process?',
+                a: 'Yes. Our team assists with onboarding, account setup, and platform configuration to help you start using Travelity smoothly and efficiently.',
+            },
+            {
+                q: 'I already use another system. Can I transfer my data?',
+                a: 'Yes. Travelity supports migration of bookings, customer data, products, and other operational information from existing systems or spreadsheets.',
+            },
+            {
+                q: 'Do I need technical knowledge to use Travelity?',
+                a: 'No. Travelity is designed to be simple and user-friendly for travel businesses of all sizes.',
+            },
+            {
+                q: 'Do I get support after onboarding?',
+                a: 'Yes. Travelity provides ongoing support, onboarding guidance, training materials, and assistance whenever your team needs help using the platform.',
+            },
+        ],
+    },
+    {
+        eyebrow: 'Pricing & plans',
+        headline: 'Money questions.',
+        sectionClass: 'bg-surface-alt py-10 md:py-14',
+        items: [
+            {
+                q: 'Is there a free plan?',
+                a: 'Yes. Travelity offers a free plan for solo guides, drivers, and travel professionals with a smaller volume of operations.',
+            },
+            {
+                q: 'Can I change my plan later?',
+                a: 'Yes. You can upgrade, downgrade, or change your plan anytime.',
+            },
+            {
+                q: 'Is Travelity a month-to-month contract?',
+                a: 'Yes. Travelity offers flexible subscriptions with no long-term commitment required. You can cancel your plan anytime.',
+            },
+        ],
+    },
+    {
+        eyebrow: 'Bookings & channels',
+        headline: 'How it works.',
+        sectionClass: 'py-10 md:py-14',
+        items: [
+            {
+                q: 'Which OTAs does Travelity integrate with?',
+                a: 'Travelity currently integrates with GetYourGuide and Viator, with integrations for Klook, Ctrip, TUI Musement, Expedia, Airbnb Experiences, Tiqets, Google Things to Do, and Headout in progress.',
+            },
+            {
+                q: 'What does the Channel Manager do?',
+                a: 'It synchronizes availability, pricing, and bookings across connected sales channels automatically.',
+            },
+            {
+                q: 'Can I accept direct bookings from my website?',
+                a: 'Yes. The Booking Widget allows customers to book directly through your website.',
+            },
+            {
+                q: 'Can I connect payment gateways?',
+                a: 'Yes. Travelity supports integration with widely used online payment gateways.',
+            },
+        ],
+    },
+];
+
+// FAQPage structured data — built from the same array so it can't drift
+// from what's rendered. Eligible for Google's FAQ rich result.
+const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqGroups
+        .flatMap((group) => group.items)
+        .map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
+};
 ---
 
 <MarketingLayout
@@ -17,7 +117,9 @@ export const prerender = true;
 >
     <Nav />
 
-    <main class="bg-paper">
+    <div class="bg-paper">
+        <StructuredData schema={faqSchema} />
+
         <!-- Hero strip -->
         <section
             class="border-b border-line py-10 md:py-14 text-center"
@@ -50,135 +152,37 @@ export const prerender = true;
             </div>
         </section>
 
-        <!-- Getting started -->
-        <section class="py-10 md:py-14">
-            <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="Getting started"
-                    eyebrowWithRule
-                    align="center"
-                    data-reveal
-                >
-                    <Fragment slot="headline">First questions.</Fragment>
-                </SectionHeader>
+        {
+            faqGroups.map((group) => (
+                <section class={group.sectionClass}>
+                    <div class="container mx-auto px-6">
+                        <SectionHeader
+                            eyebrow={group.eyebrow}
+                            eyebrowWithRule
+                            align="center"
+                            data-reveal
+                        >
+                            <Fragment slot="headline">
+                                {group.headline}
+                            </Fragment>
+                        </SectionHeader>
 
-                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
-                    <FaqItem question="How long does setup take?">
-                        For most companies, getting from zero to taking real
-                        bookings is 2–5 days. The exact timeframe depends on the
-                        number of products, sales channels, and integrations
-                        involved.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Can I get support during the setup process?"
-                    >
-                        Yes. Our team assists with onboarding, account setup,
-                        and platform configuration to help you start using
-                        Travelity smoothly and efficiently.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="I already use another system. Can I transfer my data?"
-                    >
-                        Yes. Travelity supports migration of bookings, customer
-                        data, products, and other operational information from
-                        existing systems or spreadsheets.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Do I need technical knowledge to use Travelity?"
-                    >
-                        No. Travelity is designed to be simple and user-friendly
-                        for travel businesses of all sizes.
-                    </FaqItem>
-
-                    <FaqItem question="Do I get support after onboarding?">
-                        Yes. Travelity provides ongoing support, onboarding
-                        guidance, training materials, and assistance whenever
-                        your team needs help using the platform.
-                    </FaqItem>
-                </FaqAccordion>
-            </div>
-        </section>
-
-        <!-- Pricing & plans -->
-        <section class="bg-surface-alt py-10 md:py-14">
-            <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="Pricing & plans"
-                    eyebrowWithRule
-                    align="center"
-                    data-reveal
-                >
-                    <Fragment slot="headline">Money questions.</Fragment>
-                </SectionHeader>
-
-                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
-                    <FaqItem question="Is there a free plan?">
-                        Yes. Travelity offers a free plan for solo guides,
-                        drivers, and travel professionals with a smaller volume
-                        of operations.
-                    </FaqItem>
-
-                    <FaqItem question="Can I change my plan later?">
-                        Yes. You can upgrade, downgrade, or change your plan
-                        anytime.
-                    </FaqItem>
-
-                    <FaqItem question="Is Travelity a month-to-month contract?">
-                        Yes. Travelity offers flexible subscriptions with no
-                        long-term commitment required. You can cancel your plan
-                        anytime.
-                    </FaqItem>
-                </FaqAccordion>
-            </div>
-        </section>
-
-        <!-- Bookings & channels -->
-        <section class="py-10 md:py-14">
-            <div class="container mx-auto px-6">
-                <SectionHeader
-                    eyebrow="Bookings & channels"
-                    eyebrowWithRule
-                    align="center"
-                    data-reveal
-                >
-                    <Fragment slot="headline">How it works.</Fragment>
-                </SectionHeader>
-
-                <FaqAccordion class="mt-2" data-reveal data-reveal-delay="120">
-                    <FaqItem
-                        question="Which OTAs does Travelity integrate with?"
-                    >
-                        Travelity currently integrates with GetYourGuide and
-                        Viator, with integrations for Klook, Ctrip, TUI
-                        Musement, Expedia, Airbnb Experiences, Tiqets, Google
-                        Things to Do, and Headout in progress.
-                    </FaqItem>
-
-                    <FaqItem question="What does the Channel Manager do?">
-                        It synchronizes availability, pricing, and bookings
-                        across connected sales channels automatically.
-                    </FaqItem>
-
-                    <FaqItem
-                        question="Can I accept direct bookings from my website?"
-                    >
-                        Yes. The Booking Widget allows customers to book
-                        directly through your website.
-                    </FaqItem>
-
-                    <FaqItem question="Can I connect payment gateways?">
-                        Yes. Travelity supports integration with widely used
-                        online payment gateways.
-                    </FaqItem>
-                </FaqAccordion>
-            </div>
-        </section>
+                        <FaqAccordion
+                            class="mt-2"
+                            data-reveal
+                            data-reveal-delay="120"
+                        >
+                            {group.items.map((item) => (
+                                <FaqItem question={item.q}>{item.a}</FaqItem>
+                            ))}
+                        </FaqAccordion>
+                    </div>
+                </section>
+            ))
+        }
 
         <ClosingCTASection />
-    </main>
+    </div>
 
     <Footer />
 </MarketingLayout>

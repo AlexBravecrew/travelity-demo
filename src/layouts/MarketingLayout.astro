@@ -1,12 +1,15 @@
 ---
 import { Analytics } from '@/components/chrome/analytics';
 import { Motion } from '@/components/chrome/motion';
+import { StructuredData } from '@/components/shared/structured-data';
 
 interface Props {
     title: string;
     description?: string;
     canonical?: string;
     ogImage?: string;
+    /** When true, emit a `noindex` robots meta — e.g. /thank-you. */
+    noindex?: boolean;
 }
 
 const {
@@ -14,11 +17,30 @@ const {
     description = 'Tour Management Software Built for Travel Businesses.',
     canonical,
     ogImage = '/og-default.png',
+    noindex = false,
 } = Astro.props;
 
-const siteUrl = 'https://travelity.app';
+// Origin comes from `site` in astro.config.mjs (exposed as `Astro.site`).
+// The literal is a defensive fallback only.
+const siteUrl = (Astro.site ?? new URL('https://travelity.app')).origin;
 const fullCanonical =
     canonical ?? `${siteUrl}${Astro.url.pathname.replace(/\/$/, '')}`;
+
+// Site-wide Organization schema — identical on every page.
+const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Travelity',
+    url: siteUrl,
+    logo: `${siteUrl}/favicon.svg`,
+    description:
+        'Tour management software for travel businesses — bookings, channels, payments, and operations in one platform.',
+    sameAs: [
+        'https://www.youtube.com/@Travelity-app',
+        'https://www.instagram.com/travelity.app',
+        'https://www.linkedin.com/company/travelity.app/',
+    ],
+};
 ---
 
 <!doctype html>
@@ -31,6 +53,7 @@ const fullCanonical =
         <title>{title}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={fullCanonical} />
+        {noindex && <meta name="robots" content="noindex, follow" />}
 
         <!-- Open Graph -->
         <meta property="og:title" content={title} />
@@ -46,6 +69,9 @@ const fullCanonical =
         <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+        <!-- Site-wide Organization structured data -->
+        <StructuredData schema={organizationSchema} />
 
         <!-- Fonts: Fontshare (Author, General Sans, Satoshi) + Google (JetBrains Mono) -->
         <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
