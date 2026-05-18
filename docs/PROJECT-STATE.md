@@ -466,7 +466,7 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 - [x] **Resolve Start-Free-Trial destination** — Phase 19. All four Start Free Trial CTAs now point at `Paths.START_TRIAL = https://admin.travelity.app` (external, opens in new tab).
 - [x] **Wire Google Ads conversion on Calendly bookings** — Phase 23. `CalendlyWidget.astro` fires `gtag('event', 'conversion', …)` with `value`/`currency`, gated redirect via `event_callback` + 1s timeout fallback.
 - [x] **SEO foundation** — Phase 26. `@astrojs/sitemap` + `robots.txt`, canonical/OG from `Astro.site`, Organization + FAQPage JSON-LD, `/pricing` `<h1>`, one `<main>` per page, `/thank-you` `noindex`.
-- [ ] **Add `public/og-default.png`** — a real **1200×630** social-share card (logo + short tagline). `MarketingLayout` already references it; until it exists `og:image` 404s. A wrongly-sized 850×195 file was dropped in — replace it at the correct ratio.
+- [x] **Add `public/og-default.png`** — Phase 26. 1200×630 social-share card: the Travelity wordmark on a branded white background (soft teal glow + blue→teal accent bar). Built by rasterizing a composed SVG with `sharp`.
 
 ### Must-haves (content / legal)
 
