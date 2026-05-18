@@ -17,7 +17,7 @@ const { title, links } = Astro.props;
 
 <div>
     <h5
-        class="font-mono text-[11px] font-semibold uppercase tracking-[0.10em] text-[hsl(0_0%_60%)] mb-4"
+        class="font-mono text-[11px] font-semibold uppercase tracking-[0.10em] text-footer-fg-faint mb-4"
     >
         {title}
     </h5>
@@ -27,7 +27,7 @@ const { title, links } = Astro.props;
                 <li>
                     <a
                         href={link.href}
-                        class="font-body text-[14px] text-[hsl(0_0%_80%)] no-underline transition-colors duration-150 hover:text-white"
+                        class="font-body text-[14px] text-footer-fg-muted no-underline transition-colors duration-150 hover:text-white"
                         {...externalAttrs(link.external ?? false)}
                     >
                         {link.label}

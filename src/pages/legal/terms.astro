@@ -3,13 +3,17 @@ import {
     LegalPageLayout,
     type TocItem,
 } from '@/components/shared/legal-page-layout';
+import { Paths } from '@/lib/utils/paths';
 
 export const prerender = true;
 
 const tocItems: TocItem[] = [
     { id: 'introduction', label: '1. Introduction' },
     { id: 'defined-terms', label: '2. Defined terms & interpretation' },
-    { id: 'rights-and-obligations', label: '3. Customer rights and obligations' },
+    {
+        id: 'rights-and-obligations',
+        label: '3. Customer rights and obligations',
+    },
     { id: 'intellectual-property', label: '4. Intellectual property rights' },
     { id: 'payment-terms', label: '5. Payment terms' },
     { id: 'termination', label: '6. Termination or suspension' },
@@ -42,29 +46,29 @@ const tocItems: TocItem[] = [
     <h2 id="defined-terms">2. Defined terms & interpretation</h2>
     <ul>
         <li>
-            <strong>&ldquo;Company,&rdquo; &ldquo;We,&rdquo;
-            &ldquo;Us,&rdquo;</strong> refers to BraveCrew Inc. operating
-            Travelity.
+            <strong
+                >&ldquo;Company,&rdquo; &ldquo;We,&rdquo; &ldquo;Us,&rdquo;</strong
+            > refers to BraveCrew Inc. operating Travelity.
         </li>
         <li>
-            <strong>&ldquo;Customer,&rdquo; &ldquo;You&rdquo;</strong> refers
-            to any company, tour operator, or guide using Travelity.
+            <strong>&ldquo;Customer,&rdquo; &ldquo;You&rdquo;</strong> refers to any
+            company, tour operator, or guide using Travelity.
         </li>
         <li>
-            <strong>&ldquo;Platform&rdquo;</strong> refers to the Travelity
-            software and related services.
+            <strong>&ldquo;Platform&rdquo;</strong> refers to the Travelity software
+            and related services.
         </li>
         <li>
-            <strong>&ldquo;Subscription Plan&rdquo;</strong> refers to the paid
-            service tier selected by the Customer.
+            <strong>&ldquo;Subscription Plan&rdquo;</strong> refers to the paid service
+            tier selected by the Customer.
         </li>
         <li>
-            <strong>&ldquo;Trial Period&rdquo;</strong> refers to any free or
-            limited access period offered by Travelity.
+            <strong>&ldquo;Trial Period&rdquo;</strong> refers to any free or limited
+            access period offered by Travelity.
         </li>
         <li>
-            <strong>&ldquo;Agreement&rdquo;</strong> refers to this document and
-            any updates made to it.
+            <strong>&ldquo;Agreement&rdquo;</strong> refers to this document and any
+            updates made to it.
         </li>
         <li>Singular terms include plural meanings where applicable.</li>
     </ul>
@@ -89,8 +93,8 @@ const tocItems: TocItem[] = [
             termination terms outlined in this agreement.
         </li>
         <li>
-            You have the right to request information regarding how your data
-            is handled in accordance with our <a href="/legal/privacy"
+            You have the right to request information regarding how your data is
+            handled in accordance with our <a href={Paths.LEGAL_PRIVACY}
                 >Privacy Policy</a
             >.
         </li>
@@ -153,9 +157,8 @@ const tocItems: TocItem[] = [
     <h2 id="payment-terms">5. Payment terms</h2>
     <ul>
         <li>
-            Travelity offers a <strong>free version</strong> with limited
-            features and <strong>subscription plans</strong> on a monthly or
-            annual basis.
+            Travelity offers a <strong>free version</strong> with limited features
+            and <strong>subscription plans</strong> on a monthly or annual basis.
         </li>
         <li>
             Payments are due in advance, invoiced for the selected period, and
@@ -182,9 +185,7 @@ const tocItems: TocItem[] = [
         <li>You engage in fraudulent, illegal, or harmful activities.</li>
         <li>Your use of the platform causes harm to Travelity or its users.</li>
     </ul>
-    <p>
-        Termination does not relieve you of outstanding payment obligations.
-    </p>
+    <p>Termination does not relieve you of outstanding payment obligations.</p>
 
     <h2 id="confidentiality">7. Confidentiality</h2>
     <ul>
@@ -196,8 +197,8 @@ const tocItems: TocItem[] = [
             Confidentiality obligations survive termination of this agreement.
         </li>
         <li>
-            You agree not to disclose, share, or misuse confidential
-            information received from Travelity.
+            You agree not to disclose, share, or misuse confidential information
+            received from Travelity.
         </li>
     </ul>
 
@@ -206,7 +207,7 @@ const tocItems: TocItem[] = [
         <li>Travelity complies with applicable data protection laws.</li>
         <li>
             We collect, process, and store data as described in our <a
-                href="/legal/privacy">Privacy Policy</a
+                href={Paths.LEGAL_PRIVACY}>Privacy Policy</a
             >.
         </li>
         <li>

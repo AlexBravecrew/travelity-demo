@@ -110,9 +110,8 @@ const plans: Plan[] = [
                     data-reveal
                 >
                     <Fragment slot="headline">
-                        Flexible Plans for Travel Businesses of <em
-                            >Every Size.</em
-                        >
+                        Flexible Plans for Travel Businesses of{' '}
+                        <em>Every Size.</em>
                     </Fragment>
                     <p
                         slot="dek"
@@ -194,7 +193,9 @@ const plans: Plan[] = [
        `.pricing-plan:nth-child(2)`) accommodates the data-reveal wrapper
        div around each PricingPlan — the .pricing-plan is no longer a
        direct child of .pricing-cards. */
-    .pricing-cards:not(:has(.pricing-plan:hover)) > *:nth-child(2) .pricing-plan,
+    .pricing-cards:not(:has(.pricing-plan:hover))
+        > *:nth-child(2)
+        .pricing-plan,
     .pricing-cards .pricing-plan:hover {
         --card-gradient-angle: 0deg;
         isolation: isolate;

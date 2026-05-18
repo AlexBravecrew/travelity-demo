@@ -279,7 +279,9 @@ function initFeaturesScrollSpy() {
 
     const linkByHash = new Map<string, HTMLAnchorElement>();
     document
-        .querySelectorAll<HTMLAnchorElement>('[data-subrow-section] a[href*="#"]')
+        .querySelectorAll<HTMLAnchorElement>(
+            '[data-subrow-section] a[href*="#"]',
+        )
         .forEach((link) => {
             const hash = link.getAttribute('href')?.split('#')[1];
             if (hash) linkByHash.set(hash, link);

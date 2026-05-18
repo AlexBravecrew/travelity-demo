@@ -77,8 +77,8 @@ const steps: Step[] = [
                 slot="dek"
                 class="text-[18px] text-ink-muted leading-[1.55] max-w-[56ch] mx-auto"
             >
-                From initial setup and training to everyday assistance, our
-                team supports you throughout the entire onboarding process and
+                From initial setup and training to everyday assistance, our team
+                supports you throughout the entire onboarding process and
                 beyond.
             </p>
         </SectionHeader>
@@ -116,11 +116,11 @@ const steps: Step[] = [
        (60–65%) so the strokes stay readable on a tinted background. */
     .golive-steps :global(.golive-step:nth-child(1) .golive-step-icon) {
         background: hsl(var(--travelity-sunset) / 0.16);
-        color: hsl(14 65% 48%);
+        color: hsl(var(--travelity-sunset-ink));
     }
     .golive-steps :global(.golive-step:nth-child(4) .golive-step-icon) {
         background: hsl(var(--travelity-amber) / 0.2);
-        color: hsl(32 70% 42%);
+        color: hsl(var(--travelity-amber-ink));
     }
 
     /* ----------------------------------------------------------------
@@ -144,8 +144,7 @@ const steps: Step[] = [
             transform: rotate(360deg);
         }
     }
-    .golive-steps
-        :global(.golive-step:nth-child(1) .golive-step-icon svg) {
+    .golive-steps :global(.golive-step:nth-child(1) .golive-step-icon svg) {
         animation: golive-gear-rotate 7s var(--ease-default) infinite;
         transform-origin: 50% 50%;
     }
@@ -170,8 +169,7 @@ const steps: Step[] = [
             transform: rotate(0deg);
         }
     }
-    .golive-steps
-        :global(.golive-step:nth-child(2) .golive-step-icon svg) {
+    .golive-steps :global(.golive-step:nth-child(2) .golive-step-icon svg) {
         animation: golive-cap-wiggle 4.8s var(--ease-default) infinite;
         transform-origin: 50% 85%;
     }
@@ -188,8 +186,7 @@ const steps: Step[] = [
             transform: rotateX(360deg);
         }
     }
-    .golive-steps
-        :global(.golive-step:nth-child(3) .golive-step-icon svg) {
+    .golive-steps :global(.golive-step:nth-child(3) .golive-step-icon svg) {
         animation: golive-headphones-flip 2.5s var(--ease-default) infinite;
         transform-origin: 50% 50%;
         backface-visibility: visible;
@@ -206,13 +203,10 @@ const steps: Step[] = [
         }
         50% {
             transform: scale(1.18);
-            filter: drop-shadow(
-                0 0 10px hsl(var(--travelity-amber) / 0.95)
-            );
+            filter: drop-shadow(0 0 10px hsl(var(--travelity-amber) / 0.95));
         }
     }
-    .golive-steps
-        :global(.golive-step:nth-child(4) .golive-step-icon svg) {
+    .golive-steps :global(.golive-step:nth-child(4) .golive-step-icon svg) {
         animation: golive-sparkles-shine 4s ease-in infinite;
         transform-origin: 50% 50%;
     }

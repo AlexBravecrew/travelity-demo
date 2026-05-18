@@ -43,11 +43,9 @@ export const Paths = {
      */
     THANK_YOU: '/thank-you',
 
-    // Legal (Phase 9)
+    // Legal
     LEGAL_PRIVACY: '/legal/privacy',
     LEGAL_TERMS: '/legal/terms',
-    LEGAL_DPA: '/legal/dpa',
-    LEGAL_COOKIES: '/legal/cookies',
 } as const;
 
 export type PathKey = keyof typeof Paths;

@@ -21,8 +21,7 @@ const reducedMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
 ).matches;
 
-const targets =
-    document.querySelectorAll<HTMLElement>('[data-reveal]');
+const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
 
 if (reducedMotion) {
     targets.forEach((el) => el.classList.add('is-revealed'));
