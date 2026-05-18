@@ -87,6 +87,12 @@ const adsConversionTarget = `${
             window.location.href = '/thank-you';
         };
 
+        // Surface the booking in Intercom so support/sales see it
+        // in-thread. No-op if Intercom hasn't booted (consent not given).
+        if (typeof window.Intercom === 'function') {
+            window.Intercom('trackEvent', 'demo_booked');
+        }
+
         if (typeof window.gtag === 'function') {
             window.gtag('event', 'conversion', {
                 send_to: adsConversionTarget,

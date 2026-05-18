@@ -1,5 +1,6 @@
 ---
 import { Analytics } from '@/components/chrome/analytics';
+import { Intercom } from '@/components/chrome/intercom';
 import { Motion } from '@/components/chrome/motion';
 import { StructuredData } from '@/components/shared/structured-data';
 
@@ -106,6 +107,10 @@ const organizationSchema = {
              by Consent Mode v2. Renders nothing in `astro dev`. See
              component for the 4-step load sequence. -->
         <Analytics />
+
+        <!-- Intercom live chat — consent-gated, anonymous visitor.
+             Renders nothing in `astro dev`. -->
+        <Intercom />
 
         <!-- Site-wide scroll-reveal — mounts the IntersectionObserver
              that drives every `[data-reveal]` element. -->

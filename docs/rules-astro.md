@@ -1,6 +1,6 @@
 # Travelity Marketing Website — Project Rules
 
-> Read this before writing any code. **Authoritative through Phase 26.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
+> Read this before writing any code. **Authoritative through Phase 27.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
 
 ---
 
@@ -29,6 +29,7 @@ There is no fifth layer. Don't invent one.
 | Forms       | Native Astro markup + a bundled client script. Contact form POSTs directly to `api.travelity.app/api/v1/public/contact` (Phase 24); no Astro Actions, no React (Phase 25). |
 | Icons       | `@lucide/astro` only, consumed via the `@/icons` barrel. (`lucide-react` removed in Phase 25.) |
 | Analytics   | GA4 + Google Ads via `gtag.js` running inside a Web Worker via `@astrojs/partytown` (Phase 23). CookieYes is the certified CMP for IAB TCF + banner UI; Consent Mode v2 gates everything default-denied. See PROJECT-STATE.md §4.11. |
+| Live chat   | Intercom messenger, ported from v1 (Phase 27). Anonymous visitor, consent-gated inline `<script>` — boots on CookieYes `functional` consent. See PROJECT-STATE.md §4.12. |
 | Node        | 22+                                                                                                               |
 
 **What is NOT used.** **React** (and React Hook Form, zod — all removed Phase 25 when the lone island went native). TanStack Query. React Router. Axios. Redux/Zustand/Jotai. CSS-in-JS. Astro Content Collections (the legal/marketing content lives directly in `.astro` pages — Phase 9 chose this over a CC abstraction). shadcn/ui (Phase 0 considered, dropped — primitives we needed were small enough to hand-write). **`react-calendly`** (post-Phase-18 — its `<InlineWidget>` couldn't pass `resize: true`; the team-selection dropdown clipped; we switched to Calendly's official simple inline embed pattern with widget.js auto-discovery, matching v1's working setup).
@@ -49,6 +50,7 @@ src/
 │   ├── chrome/                # site-wide chrome
 │   │   ├── nav/               # Nav + NavLink + NavSubRow + MobileMenuTrigger + MobileMenu
 │   │   ├── analytics/         # Phase 23 — GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2
+│   │   ├── intercom/          # Phase 27 — consent-gated Intercom live chat
 │   │   └── footer/            # 3-col [2fr_2fr_3fr]: brand+socials / Get-in-touch (plain-text contact, non-clickable) / nested Company+Resources
 │   ├── home/                  # home-page sections only
 │   │   ├── hero/              # Hero only (post-Phase-18 — HeroVisual / BookingFlowCard / AudienceChips deleted)

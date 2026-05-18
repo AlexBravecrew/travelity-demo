@@ -1,0 +1,85 @@
+---
+/**
+ * Intercom live chat.
+ *
+ * Ports v1's marketing-site Intercom: booted as an anonymous visitor —
+ * no identity, no `user_hash` (nothing logs in on the marketing site).
+ *
+ * Two deliberate changes from v1:
+ *   - Workspace ID is env-driven, not hardcoded.
+ *   - CONSENT-GATED. v1 loaded Intercom unconditionally, dropping
+ *     cookies before consent (a GDPR exposure). Here the widget script
+ *     is injected only after CookieYes reports consent for the
+ *     `functional` category — either already stored from a prior visit
+ *     or granted live via the `cookieyes_consent_update` event.
+ *
+ * Dev guard: renders nothing in `astro dev` (mirrors Analytics.astro)
+ * so local browsing never opens conversations in the live workspace.
+ *
+ * Env vars (build-time inlined):
+ *   PUBLIC_INTERCOM_APP_ID   (fallback: xmobvz3r — the v1 workspace)
+ *   PUBLIC_INTERCOM_REGION   (fallback: us; also accepts eu, ap)
+ *
+ * NOTE: gating assumes the CookieYes account exposes a `functional`
+ * consent category. If the bubble never appears, check that category
+ * exists / is named `functional` in the CookieYes dashboard.
+ */
+
+const isDev = import.meta.env.DEV;
+
+const APP_ID = import.meta.env.PUBLIC_INTERCOM_APP_ID || 'xmobvz3r';
+const REGION = import.meta.env.PUBLIC_INTERCOM_REGION || 'us';
+
+const API_BASES: Record<string, string> = {
+    us: 'https://api-iam.intercom.io',
+    eu: 'https://api-iam.eu.intercom.io',
+    ap: 'https://api-iam.au.intercom.io',
+};
+const API_BASE = API_BASES[REGION] || API_BASES.us;
+---
+
+{
+    !isDev && (
+        <script
+            is:inline
+            set:html={`
+                (function () {
+                  var APP_ID = ${JSON.stringify(APP_ID)};
+                  window.intercomSettings = {
+                    api_base: ${JSON.stringify(API_BASE)},
+                    app_id: APP_ID
+                  };
+
+                  var booted = false;
+                  function boot() {
+                    if (booted) return;
+                    booted = true;
+                    var w = window, d = document;
+                    var i = function () { i.c(arguments); };
+                    i.q = [];
+                    i.c = function (args) { i.q.push(args); };
+                    w.Intercom = i;
+                    var s = d.createElement('script');
+                    s.type = 'text/javascript';
+                    s.async = true;
+                    s.src = 'https://widget.intercom.io/widget/' + APP_ID;
+                    var x = d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                  }
+
+                  // Consent gate — boot only on CookieYes 'functional' consent.
+                  // Path 1: consent already stored from a previous visit
+                  // (CookieYes records it in the cookieyes-consent cookie).
+                  if (document.cookie.indexOf('functional:yes') !== -1) {
+                    boot();
+                  }
+                  // Path 2: consent granted (or changed) live this session.
+                  window.addEventListener('cookieyes_consent_update', function (e) {
+                    var accepted = (e.detail && e.detail.accepted) || [];
+                    if (accepted.indexOf('functional') !== -1) boot();
+                  });
+                })();
+            `}
+        />
+    )
+}

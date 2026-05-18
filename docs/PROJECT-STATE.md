@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 26 — SEO foundation: `@astrojs/sitemap` + `robots.txt`, canonical/OG derived from `Astro.site`, Organization + FAQPage JSON-LD, a real `/pricing` `<h1>`, and one `<main>` per page. Earlier in this batch: Phase 25 React removal, Phase 24 contact-form API wiring.
+> **Last updated:** Phase 27 — Intercom live chat ported from v1: consent-gated (CookieYes `functional` category), anonymous-visitor, env-driven. Earlier in this batch: Phase 26 SEO foundation, Phase 25 React removal.
 
 ---
 
@@ -23,6 +23,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Type system    | TypeScript 5.x strict                                                                                                         |
 | Islands        | **None.** React was removed entirely in Phase 25 (the lone `ContactForm` island went native). No `.tsx`, no `client:*` directives anywhere. The site is fully static prerendered HTML + small bundled `<script>`s. |
 | Analytics      | GA4 + Google Ads via `gtag.js`, loaded inside a Web Worker via `@astrojs/partytown` (Phase 23). CookieYes is the consent management platform (certified CMP, IAB TCF); Consent Mode v2 default-denied wired into the bridge. |
+| Live chat      | Intercom messenger (workspace `xmobvz3r`), ported from v1 (Phase 27). Anonymous visitor, loaded via a consent-gated inline `<script>` — boots only on CookieYes `functional` consent. |
 | Server runtime | `@astrojs/node` adapter (mode: standalone). Swap-friendly to Vercel/Netlify/Cloudflare.                                       |
 | Forms          | Native Astro + vanilla JS. The contact form (`src/components/contact/`) posts directly to `api.travelity.app/api/v1/public/contact` (Phase 24); validation is a small client script (Phase 25). No server-side Action in this repo. |
 | Icons          | `@lucide/astro` only — Astro components, consumed through the `@/icons` barrel. (`lucide-react` removed in Phase 25 with React.) |
@@ -83,6 +84,7 @@ src/
 │   │   │   ├── nav-active.ts        # getActiveSection(pathname, links) (Phase 14)
 │   │   │   └── nav.client.ts        # Hover-swap, scroll handlers, mobile drawer + backdrop/close wiring
 │   │   ├── analytics/               # GA4 + Google Ads via Partytown + Consent Mode v2 (Phase 23)
+│   │   ├── intercom/                # Consent-gated Intercom live chat (Phase 27)
 │   │   └── footer/                  # 3-col grid [2fr_2fr_3fr]: brand+socials / Get-in-touch (plain-text email + phone, non-clickable) / nested Company+Resources. Dark ink.
 │   │
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
@@ -304,6 +306,18 @@ Partytown integration is configured in `astro.config.mjs` with `forward: ['dataL
 
 ---
 
+### 4.12 Intercom live chat (Phase 27)
+
+`src/components/chrome/intercom/Intercom.astro` ports v1's marketing-site Intercom. Rendered once in `MarketingLayout`'s `<head>`, beside `<Analytics />`.
+
+- **Anonymous visitor only.** No `user_id`, no `user_hash` / identity verification — nothing logs in on the marketing site. (v1's _auth app_ used identity + a `company` mapping; none of that applies here.)
+- **Consent-gated.** v1 loaded Intercom unconditionally — cookies before consent, a GDPR exposure. Here the `widget.intercom.io` script is injected only after CookieYes grants the `functional` category — read from the stored `cookieyes-consent` cookie (returning visitor) or live via the `cookieyes_consent_update` event. If CookieYes files Intercom under a different category slug, change the check in `Intercom.astro`.
+- **Env-driven**: `PUBLIC_INTERCOM_APP_ID` (fallback `xmobvz3r` — the v1 workspace), `PUBLIC_INTERCOM_REGION` (`us`/`eu`/`ap`, fallback `us`). The app ID is a public identifier, not a secret — the messenger ships it to the client either way.
+- **Dev guard**: returns `null` when `import.meta.env.DEV` — no widget during `astro dev`, mirroring `Analytics.astro`.
+- **Event**: `CalendlyWidget.astro` fires `Intercom('trackEvent', 'demo_booked')` on a confirmed booking (no-op if Intercom hasn't booted).
+
+---
+
 ## 5. Visual language
 
 ### 5.1 Palette — cool blue + teal only
@@ -462,6 +476,7 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
 - [ ] **Add prod + preview domains to CookieYes whitelist** (Phase 23). Production `travelity.app` is already configured. For Netlify deploy previews or staging, add the relevant domain pattern in CookieYes dashboard → Organizations & Sites; otherwise the banner refuses to render. `localhost:3000` was added for local prod-preview testing.
+- [ ] **Verify the CookieYes `functional` category** (Phase 27). The Intercom chat widget boots only on `functional` consent. In the CookieYes dashboard confirm: a category with slug `functional` exists, it's an opt-in toggle (not "always active"), and Intercom's cookies (`intercom-id-*` / `intercom-session-*`) are filed under it. If Intercom sits under a different slug, update the gate in `Intercom.astro`.
 - [ ] **Update privacy legal copy** to name GA4, Google Ads, and CookieYes by name (Phase 23 deferred this — see §6.2). GDPR specificity requires naming the data processors. (The standalone Cookies Policy page was retired post-Phase-24.)
 - [x] **Resolve Start-Free-Trial destination** — Phase 19. All four Start Free Trial CTAs now point at `Paths.START_TRIAL = https://admin.travelity.app` (external, opens in new tab).
 - [x] **Wire Google Ads conversion on Calendly bookings** — Phase 23. `CalendlyWidget.astro` fires `gtag('event', 'conversion', …)` with `value`/`currency`, gated redirect via `event_callback` + 1s timeout fallback.
@@ -492,9 +507,18 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. Phase narratives (13–26)
+## 10. Phase narratives (13–27)
 
 Brief context for each post-build phase. Newer phases on top. **Phase 20 is not listed — an orange-accent test was prototyped and reverted before commit.**
+
+### Phase 27 — Intercom live chat
+
+- **Ported v1's marketing-site Intercom** as `src/components/chrome/intercom/Intercom.astro` (+ `index.ts`), rendered in `MarketingLayout`'s `<head>` beside `<Analytics />`. Anonymous visitor — no identity, no `user_hash` (matches v1's marketing site; the v1 auth-app identity / `company` mapping is irrelevant here).
+- **Consent-gated** — the fix for v1's main gap. v1 loaded Intercom unconditionally, dropping cookies before consent. v2 injects the `widget.intercom.io` script only after CookieYes grants the `functional` category (stored cookie, or the live `cookieyes_consent_update` event).
+- **Env-driven**: `PUBLIC_INTERCOM_APP_ID` (fallback `xmobvz3r`), `PUBLIC_INTERCOM_REGION` (fallback `us`). v1 hardcoded the workspace ID.
+- **Dev guard**: renders nothing in `astro dev`, mirroring `Analytics.astro`.
+- **`trackEvent('demo_booked')`** added to `CalendlyWidget.astro`'s `event_scheduled` handler so a booking surfaces in Intercom.
+- **No React**: the v1 porting audit assumed a React island (`client:idle`); v2 has no React (Phase 25), so it's a plain Astro `<script>` mirroring `Analytics.astro`. The audit's view-transition / CSP / identity-verification items don't apply. See §4.12.
 
 ### Phase 26 — SEO foundation
 
