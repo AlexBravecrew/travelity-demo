@@ -6,17 +6,18 @@ import { Eyebrow } from '@/components/ui/eyebrow';
 import { OutcomeCard } from '@/components/solutions';
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
 
+import increaseSalesImg from '@/assets/solutions/increase-sales.jpg';
+import preventOverbookingsImg from '@/assets/solutions/prevent-overbookings.jpg';
+import manageAllBookingsImg from '@/assets/solutions/manage-all-bookings.jpg';
+
 export const prerender = true;
 
 /**
  * Solutions page — 3 outcome cards in a 3-up grid (2-up on tablet, 1 on
- * mobile). Each card: screenshot panel on top, eyebrow + italic-em title +
+ * mobile). Each card: 5:3 image panel on top, eyebrow + italic-em title +
  * 3-4 sentence body below. The cards carry the canonical Increase / Prevent
  * / Manage outcomes, anchored `#increase-sales` / `#prevent-overbookings` /
  * `#manage-all-bookings`.
- *
- * TODO: replace `/solutions/placeholder.svg` with per-card real
- *       product screenshots at `/public/solutions/<slug>.jpg`.
  */
 ---
 
@@ -69,7 +70,7 @@ export const prerender = true;
                     <OutcomeCard
                         id="increase-sales"
                         eyebrow="Growth"
-                        imageSrc="/solutions/placeholder.svg"
+                        image={increaseSalesImg}
                         imageAlt="Multiple booking channels feeding a single inventory"
                         data-reveal
                     >
@@ -90,7 +91,7 @@ export const prerender = true;
                     <OutcomeCard
                         id="prevent-overbookings"
                         eyebrow="Control"
-                        imageSrc="/solutions/placeholder.svg"
+                        image={preventOverbookingsImg}
                         imageAlt="A seat locked across three booking channels at once"
                         data-reveal
                         data-reveal-delay="60"
@@ -113,7 +114,7 @@ export const prerender = true;
                     <OutcomeCard
                         id="manage-all-bookings"
                         eyebrow="Organization"
-                        imageSrc="/solutions/placeholder.svg"
+                        image={manageAllBookingsImg}
                         imageAlt="Unified booking queue with cards from multiple sources"
                         data-reveal
                         data-reveal-delay="120"
