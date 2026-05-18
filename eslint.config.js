@@ -2,14 +2,13 @@ import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import astroPlugin from 'eslint-plugin-astro';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 import globals from 'globals';
 
 export default [
     js.configs.recommended,
     ...astroPlugin.configs['flat/recommended'],
     {
-        files: ['**/*.ts', '**/*.tsx'],
+        files: ['**/*.ts'],
         languageOptions: {
             parser: tsParser,
             parserOptions: {
@@ -22,7 +21,6 @@ export default [
         },
         plugins: {
             '@typescript-eslint': tsPlugin,
-            'jsx-a11y': jsxA11y,
         },
         rules: {
             ...tsPlugin.configs.recommended.rules,
@@ -38,6 +36,10 @@ export default [
         },
     },
     {
-        ignores: ['dist/', '.astro/', 'node_modules/'],
+        // Build output is never linted. `dist/` is the static build;
+        // `.netlify/` is the adapter's SSR-function bundle. The `**/`
+        // prefix catches nested generated dirs too — Astro emits a
+        // `.astro/` cache under `src/assets/` as well as the repo root.
+        ignores: ['dist/', '.netlify/', '**/.astro/', '**/node_modules/'],
     },
 ];

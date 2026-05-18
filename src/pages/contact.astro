@@ -6,7 +6,7 @@ import { Eyebrow } from '@/components/ui/eyebrow';
 import { SectionHeader } from '@/components/ui/section-header';
 import { Paths } from '@/lib/utils/paths';
 
-import ContactForm from '@/components/forms/contact/ContactForm';
+import { ContactForm } from '@/components/contact';
 
 import { MailIcon, HelpCircleIcon, CalendarIcon } from '@/icons';
 
@@ -159,7 +159,7 @@ const routes: ContactRoute[] = [
                     data-reveal
                     data-reveal-delay="120"
                 >
-                    <ContactForm client:load />
+                    <ContactForm />
                 </div>
             </div>
         </section>

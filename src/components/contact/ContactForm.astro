@@ -1,0 +1,149 @@
+---
+import { Paths } from '@/lib/utils/paths';
+import ContactSuccess from './ContactSuccess.astro';
+
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
+// Fail the build loudly rather than shipping a form with an inert CAPTCHA.
+if (!TURNSTILE_SITE_KEY) {
+    throw new Error('PUBLIC_TURNSTILE_SITE_KEY env var is required');
+}
+
+const inputClass = [
+    'w-full rounded-lg border bg-paper px-4 py-3',
+    'font-body text-[15px] text-ink placeholder:text-ink-muted',
+    'transition-colors duration-150',
+    'focus:outline-none focus:ring-2 focus:ring-[hsl(var(--travelity-teal)/0.4)] focus:border-travelity-teal',
+    'border-line hover:border-ink-soft',
+    'aria-[invalid=true]:border-[hsl(var(--destructive)/0.6)] aria-[invalid=true]:hover:border-[hsl(var(--destructive)/0.6)]',
+].join(' ');
+
+const labelClass =
+    'block font-mono text-[10.5px] font-semibold uppercase tracking-[0.10em] text-ink-muted mb-1.5';
+const errorClass =
+    'mt-1.5 font-body text-[12.5px] text-[hsl(var(--destructive))] leading-[1.4]';
+---
+
+<form
+    id="ct-form"
+    novalidate
+    class="rounded-xl border border-line bg-paper p-7 md:p-9 flex flex-col gap-5"
+>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+            <label for="ct-name" class={labelClass}>Your name</label>
+            <input
+                id="ct-name"
+                name="name"
+                type="text"
+                required
+                minlength="2"
+                maxlength="100"
+                autocomplete="name"
+                placeholder="Avetis Mkrtchyan"
+                aria-describedby="ct-name-error"
+                class={inputClass}
+            />
+            <p id="ct-name-error" class={errorClass} hidden></p>
+        </div>
+
+        <div>
+            <label for="ct-email" class={labelClass}>Email</label>
+            <input
+                id="ct-email"
+                name="email"
+                type="email"
+                required
+                maxlength="254"
+                autocomplete="email"
+                placeholder="you@yourbusiness.com"
+                aria-describedby="ct-email-error"
+                class={inputClass}
+            />
+            <p id="ct-email-error" class={errorClass} hidden></p>
+        </div>
+    </div>
+
+    <div>
+        <label for="ct-message" class={labelClass}>Message</label>
+        <textarea
+            id="ct-message"
+            name="message"
+            rows="6"
+            required
+            minlength="10"
+            maxlength="2000"
+            placeholder="Tell us what's going on, what you're trying to do, what you've tried so far…"
+            aria-describedby="ct-message-error"
+            class={`${inputClass} resize-y min-h-35`}></textarea>
+        <p id="ct-message-error" class={errorClass} hidden></p>
+    </div>
+
+    {
+        /* Honeypot — bots fill every field; humans never see this one.
+        Must stay empty; backend rejects (generic 400) when populated. */
+    }
+    <input
+        type="text"
+        name="website"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+        style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"
+    />
+
+    {
+        /* Cloudflare Turnstile — widget.js auto-discovers `.cf-turnstile` and
+        renders the challenge. The data-*-callback attrs name global handlers
+        defined in contact.client.ts; they gate the submit button. */
+    }
+    <div
+        class="cf-turnstile"
+        data-sitekey={TURNSTILE_SITE_KEY}
+        data-callback="onTurnstileSuccess"
+        data-expired-callback="onTurnstileExpired"
+        data-error-callback="onTurnstileError"
+    >
+    </div>
+
+    <div
+        id="ct-alert"
+        role="alert"
+        hidden
+        class="rounded-lg border border-[hsl(var(--destructive)/0.4)] bg-[hsl(var(--destructive)/0.06)] px-4 py-3 font-body text-[13.5px] text-[hsl(var(--destructive))]"
+    >
+    </div>
+
+    {
+        /* Starts disabled — contact.client.ts enables it once Turnstile passes. */
+    }
+    <button
+        id="ct-submit"
+        type="submit"
+        disabled
+        class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-travelity-teal text-white font-display text-[15px] font-semibold tracking-[-0.01em] transition-colors hover:bg-travelity-teal-hover disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[hsl(var(--travelity-teal)/0.4)] focus:ring-offset-2"
+    >
+        Send message
+    </button>
+
+    <p class="font-mono text-[11px] text-ink-soft text-center mt-1">
+        We'll never share your details. By submitting, you agree to our <a
+            href={Paths.LEGAL_PRIVACY}
+            class="underline hover:text-ink">privacy policy</a
+        >.
+    </p>
+</form>
+
+<div id="ct-success" tabindex="-1" hidden>
+    <ContactSuccess />
+</div>
+
+<script
+    is:inline
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
+
+<script>
+    import './contact.client.ts';
+</script>

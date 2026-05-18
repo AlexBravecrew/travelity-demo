@@ -65,3 +65,5 @@ export { Search as SearchIcon } from '@lucide/astro';
 // Phase 11 — Contact page
 export { Mail as MailIcon } from '@lucide/astro';
 export { Phone as PhoneIcon } from '@lucide/astro';
+// CheckCircle2 was deprecated in lucide; CircleCheck is the canonical successor.
+export { CircleCheck as CheckCircleIcon } from '@lucide/astro';

@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 23 — analytics integration (GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2). Earlier in this batch: Phase 21 pricing hover-swap and Phase 22 Solutions cluster retirement.
+> **Last updated:** Phase 25 — contact form ported from a React island to native Astro + vanilla JS; React / React Hook Form / zod removed entirely. The site now ships **zero React islands**. Earlier in this batch: Phase 24 contact-form API wiring, Phase 23 analytics.
 
 ---
 
@@ -21,18 +21,18 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Framework      | Astro 6 (file-based routing, static-by-default with hybrid mode for Actions)                                                  |
 | Styling        | Tailwind v4 (CSS-first via `@theme` in `src/styles/global.css`)                                                               |
 | Type system    | TypeScript 5.x strict                                                                                                         |
-| Islands        | React 19 (only when state genuinely needed — currently 1: `ContactForm`. `CalendlyWidget` migrated to `.astro` in post-Phase-18 cleanup) |
+| Islands        | **None.** React was removed entirely in Phase 25 (the lone `ContactForm` island went native). No `.tsx`, no `client:*` directives anywhere. The site is fully static prerendered HTML + small bundled `<script>`s. |
 | Analytics      | GA4 + Google Ads via `gtag.js`, loaded inside a Web Worker via `@astrojs/partytown` (Phase 23). CookieYes is the consent management platform (certified CMP, IAB TCF); Consent Mode v2 default-denied wired into the bridge. |
 | Server runtime | `@astrojs/node` adapter (mode: standalone). Swap-friendly to Vercel/Netlify/Cloudflare.                                       |
-| Forms          | React Hook Form + zod (shared schemas with server-side Astro Actions)                                                         |
-| Icons          | `@lucide/astro` (Astro components) and `lucide-react` (React islands). Both reference the same icon set; the bindings differ. |
+| Forms          | Native Astro + vanilla JS. The contact form (`src/components/contact/`) posts directly to `api.travelity.app/api/v1/public/contact` (Phase 24); validation is a small client script (Phase 25). No server-side Action in this repo. |
+| Icons          | `@lucide/astro` only — Astro components, consumed through the `@/icons` barrel. (`lucide-react` removed in Phase 25 with React.) |
 | Node           | 22+                                                                                                                           |
 
-**No SPA libraries.** No TanStack Query, React Router, Axios, Redux/Zustand/Jotai. **No CSS-in-JS.** **No `tailwind.config.js`** (Tailwind v4 is config-less; tokens live in `@theme`).
+**No SPA libraries.** No TanStack Query, React Router, Axios, Redux/Zustand/Jotai. **No React** (removed Phase 25). **No CSS-in-JS.** **No `tailwind.config.js`** (Tailwind v4 is config-less; tokens live in `@theme`).
 
 ---
 
-## 2. Site shape — 14 prerendered pages + branded 404 + 1 server endpoint
+## 2. Site shape — 12 prerendered pages + branded 404
 
 | Path           | Phase   | Notes                                                                                       |
 | -------------- | ------- | ------------------------------------------------------------------------------------------- |
@@ -44,19 +44,18 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | `/thank-you`                | 7       | Static post-booking destination                                                             |
 | `/legal/privacy`            | 9       | AI-drafted GDPR-aware privacy policy                                                        |
 | `/legal/terms`              | 9       | AI-drafted Terms of Service                                                                 |
-| `/legal/dpa`                | 9       | AI-drafted Data Processing Agreement                                                        |
-| `/legal/cookies`            | 9       | AI-drafted Cookies Policy                                                                   |
 | `/our-story`                | 10      | Founder narrative — 3 editorial sections (Origin / Team / Mission) with alternating bg, eyebrow + display h2 with italic-em per section |
 | `/faq`                      | 10      | 12 Q&As across 3 categories (Getting started / Pricing & plans / Bookings & channels). Security & data category retired. |
-| `/contact`                  | 11      | React form island, 4 fields, posts to `contact` Astro Action                                |
+| `/contact`                  | 11,24,25 | Native Astro form, 3 user fields (name/email/message) + Turnstile + honeypot, posts directly to `api.travelity.app/api/v1/public/contact`. No React, no Astro Action. |
 | `/404` (catch-all)          | —       | Branded "Page not found" served by `src/pages/404.astro`. Astro routes any unmatched path here automatically. Eyebrow + italic-em headline + 2 CTAs (Home / Contact). |
-| Server: `/_actions/*`       | 7, 11   | Astro Action endpoints for the contact form                                                 |
 
 **Retired in Phase 18:** `/audiences/tour-operators`, `/audiences/transfer-providers`, `/audiences/accommodation-hosts`, `/audiences/independent-guides`. The four audience pages and their dedicated shared components (`pain-grid`, `solution-map`, `feature-pillars`, `workflow`, `plan-rec`) were deleted. Audience routing lives now only in the home Hero dek (italic teal phrase listing the four types).
 
 **Retired in Phase 22:** `/solutions/booking-engine`, `/solutions/widget`, `/solutions/integrations`, `/solutions/proposals`, `/solutions/reporting`, `/solutions/security`. The six-page Solutions cluster collapsed into a single outcome-oriented `/solutions` page. `ProductHero`, `CrossSell`, `SocialProof` shared components were deleted with the cluster (no remaining consumers).
 
-**Intentionally 404:** `/help`, `/help-center`, `/guides`, `/privacy`, `/terms`, `/dpa`, `/cookies`, the four `/audiences/*` paths, and the six `/solutions/<sub>` paths. All resolve to the branded `404.astro` page with a 404 status. Set up real redirects before going live if external campaigns indexed any of those.
+**Retired post-Phase-24:** `/legal/dpa` and `/legal/cookies`. The Data Processing Agreement and Cookies Policy pages were removed in a code-quality cleanup; only `/legal/privacy` and `/legal/terms` remain. Their `LEGAL_DPA` / `LEGAL_COOKIES` path constants and the unused `/legal/subprocessors` link inside the old DPA were deleted with them.
+
+**Intentionally 404:** `/help`, `/help-center`, `/guides`, `/privacy`, `/terms`, `/dpa`, `/cookies`, `/legal/dpa`, `/legal/cookies`, the four `/audiences/*` paths, and the six `/solutions/<sub>` paths. All resolve to the branded `404.astro` page with a 404 status. Set up real redirects before going live if external campaigns indexed any of those.
 
 ---
 
@@ -100,7 +99,7 @@ src/
 │   │   ├── coverage-list/           # /book-demo "what we'll cover" (Phase 7)
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
-│   │   └── legal-page-layout/       # Shared chrome for 4 legal pages (Phase 9)
+│   │   └── legal-page-layout/       # Shared chrome for 2 legal pages (Phase 9)
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -116,14 +115,17 @@ src/
 │   ├── solutions/                   # /solutions page-specific
 │   │   └── outcome-card/            # Screenshot-panel-top peer tile (image + eyebrow + italic-em title + body); 3-up grid on /solutions
 │   │
-│   └── forms/                       # React form islands
-│       └── contact/                 # 4-field contact form (the only React island left)
+│   └── contact/                     # /contact page-specific (Phase 25 — native, ex-React)
+│       ├── ContactForm.astro        # form markup + Turnstile loader + <script> import
+│       ├── ContactSuccess.astro     # success card (revealed by JS on 204)
+│       ├── contact.client.ts        # validation + fetch submit handler
+│       └── index.ts                 # barrel
 │
 ├── pages/
 │   ├── index.astro                  # /
 │   ├── solutions.astro              # 6 OutcomeCards in a 3-up grid; replaces the retired Phase-22 six-page cluster
 │   ├── features.astro               # Phase 19 — 9 anchored CapabilitySections + placeholder screenshots
-│   ├── legal/                       # 4 Legal pages
+│   ├── legal/                       # 2 Legal pages (privacy + terms)
 │   ├── _internal/                   # Underscore-prefixed: showcase (not built)
 │   ├── book-demo/index.astro
 │   ├── contact.astro
@@ -135,10 +137,8 @@ src/
 │   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
 │   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
 │
-├── actions/
-│   └── index.ts                     # contact Astro Action (bookDemo removed Phase 16 — Calendly handles)
-│
 ├── assets/                          # Photos / large raster assets — imported via `astro:assets` + <Image />
+│   # NOTE Phase 24: src/actions/ retired with the contact action — form now POSTs directly to api.travelity.app.
 │   └── reviews/                     # review-01..05 (.jpg/.png) — customer photos for the home Reviews section
 │
 ├── icons/
@@ -161,7 +161,7 @@ src/
 
 ## 4. Conventions — locked across all phases
 
-Following these is not optional. Violations should be flagged in code review.
+Following this is not optional. Violations should be flagged in code review.
 
 ### 4.1 Token rule
 
@@ -170,23 +170,12 @@ Following these is not optional. Violations should be flagged in code review.
 - **Exemption:** decorative SVGs (`MountainScene`, `ParallaxScene`, the booking-flow card's pulse) may use bespoke `hsl()` literals because their colors are landscape/effect-specific and don't reuse elsewhere.
 - **Exemption:** AI-drafted legal pages' DRAFT banner uses raw amber `hsl()` because warning colors aren't part of the brand palette.
 
-### 4.2 Color-name purity
-
-The codebase contains **zero** references to warm-direction tokens. All v2.5 reference HTML uses warm names (coral/cream/sand/gold/line-warm) which are **translated** during transcription:
-
-| v2.5 alias          | Astro component    |
-| ------------------- | ------------------ |
-| `--travelity-cream` | `--paper`          |
-| `--travelity-coral` | `--travelity-teal` |
-| `--travelity-sand`  | `--surface-alt`    |
-| `--line-warm`       | `--line`           |
-
-Verify with: `grep -rE "(coral|cream|sand|gold|line-warm)" src/components/ src/pages/` → 0 matches.
+### 4.2 Class name rule
+- All components have a `class` prop that is merged via `cn()`.
 
 ### 4.3 Icon barrel rule
 
-- **`.astro` files** import all icons from `@/icons` (the barrel). Never directly from `@lucide/astro`.
-- **`.tsx` files (React islands)** import from `lucide-react` directly. The icon-barrel rule does not apply.
+- **Every component** imports icons from `@/icons` (the barrel). Never directly from `@lucide/astro`. (Pre-Phase-25 `.tsx` React islands imported `lucide-react` directly — that path is gone with React.)
 - All icon exports in the barrel end with the suffix `Icon` (e.g. `LockIcon`, not `Lock`).
 - The barrel also handles upstream renames (e.g. lucide deprecated `XCircle` → `CircleX`; the barrel exports `CircleX as XCircleIcon` so consumers' imports stay stable).
 
@@ -246,7 +235,7 @@ Naming convention: namespaced prefixes (`LEGAL_*`) for grouped routes; flat name
 ### 4.7 Folder/file naming
 
 - Folders: `kebab-case` (`pricing-section/`, `book-demo/`)
-- Components: `PascalCase.astro` / `PascalCase.tsx` (`PricingPlan.astro`, `ContactForm.tsx`)
+- Components: `PascalCase.astro` (`PricingPlan.astro`, `ContactForm.astro`)
 - Helpers: `kebab-case.ts` (`nav.client.ts`, `book-demo-schema.ts`)
 - Each component folder has an `index.ts` barrel re-exporting its public surface
 - Test/preview pages live under `src/pages/_internal/` (Astro skips underscore-prefixed paths from the build)
@@ -276,21 +265,17 @@ To add a new token:
 
 …then use it as `bg-travelity-teal-hover` etc.
 
-### 4.9 Astro Actions
+### 4.9 Astro Actions — retired (Phase 24)
 
-Defined in `src/actions/index.ts`. Only `contact` remains (the `bookDemo` action was removed in Phase 16 when /book-demo switched to Calendly):
+No Astro Actions in the repo. The `contact` Action was removed in Phase 24 when the contact form was rewired to POST directly from the browser to `api.travelity.app/api/v1/public/contact`. The `src/actions/` folder is gone; `astro:actions` no longer imported anywhere.
 
-```ts
-export const server = {
-    contact: defineAction({ accept: 'json', input: contactSchema, handler: ... }),
-};
-```
+Calendly bookings also don't go through any backend in this repo: the widget's `event_scheduled` listener fires a `gtag('event', 'conversion', …)` call (Phase 23 — Google Ads conversion `AW-…/o6zNCP7t0fYaEOO1yZhA`, with `value: 0, currency: 'EUR'`) gated on `event_callback` + 1s timeout, then redirects to `/thank-you`.
 
-Current handler logs to console + simulates 600ms latency. **Real email service wiring is a pre-launch task.** Calendly bookings no longer go through any backend (CRM sync was removed in the post-Phase-18 cleanup); the widget's `event_scheduled` listener fires a `gtag('event', 'conversion', …)` call (Phase 23 — Google Ads conversion `AW-…/o6zNCP7t0fYaEOO1yZhA`, with `value: 0, currency: 'EUR'`) gated on `event_callback` + 1s timeout, then redirects to `/thank-you`.
+The marketing site is now fully prerendered + static; the Netlify adapter could in theory drop to `static` mode (currently `@astrojs/netlify` stays because Astro 6's hybrid default doesn't hurt).
 
-### 4.10 Hydration directives
+### 4.10 Hydration directives — none (Phase 25)
 
-`ContactForm` uses `client:load` (immediate hydration; the form is the contact page's primary CTA). It is the **only** React island in the site after `CalendlyWidget` was migrated to `.astro` in the post-Phase-18 cleanup. No island uses `client:idle`, `client:visible`, or `client:media` yet — if a future island can defer, document the choice.
+No `client:*` directives anywhere. There are no React islands; `ContactForm` — the last one — went native in Phase 25. Client-side behavior ships as Astro-bundled `<script>` tags (`nav.client.ts`, `contact.client.ts`, the analytics/Calendly inline scripts), not as hydrated framework components. If a future feature genuinely needs component state, weigh a small `<script>` against re-adding a framework — prefer the script unless the interaction is complex enough to justify the runtime.
 
 ### 4.11 Analytics (Phase 23)
 
@@ -379,17 +364,30 @@ The duality is intentional but unresolved. **Open: consolidation review** if a f
 
 ## 6. Forms — one wired
 
-### 6.1 Pattern (ContactForm only)
+### 6.1 Pattern (ContactForm — native, Phase 25)
 
-`ContactForm` is the lone React form island after Phase 16. Pattern:
+The contact form is plain Astro markup plus one client script. Files in `src/components/contact/`:
 
-- React Hook Form + zod, mode `onTouched`
-- Schema in `contact-schema.ts` shared between the React island (client validation) and the Astro Action (server validation)
-- 4-state machine: `idle | submitting | submitted | error`
-- Submit button shows `Sending…` during the request
-- Success swaps the form in-place for a success card (no redirect)
-- Error renders an alert above the submit button
-- Field errors render with red borders, `aria-invalid`, `aria-describedby`
+- **`ContactForm.astro`** — the `<form novalidate>` with 3 user fields (`name`, `email`, `message`), the off-screen honeypot `<input name="website">`, the `<div class="cf-turnstile">` widget, an error-alert `<div>`, and a hidden `<div id="ct-success">` wrapping `ContactSuccess`. Also carries the Turnstile loader `<script>` and a `<script>` that imports `contact.client.ts`.
+- **`ContactSuccess.astro`** — the success card; rendered hidden, revealed by JS on a `204`. Has a `[data-success-email]` span the script fills.
+- **`contact.client.ts`** — validation + submit. Bundled by Astro (Vite inlines `import.meta.env.PUBLIC_*`).
+
+Behavior:
+
+- **Validation** is client-side UX only — the backend is authoritative. Per-field check on `blur`, on `submit`, and on `input` after a field has first errored (mirrors the old React `onTouched`). Constraints: name 2–100, email valid + max 254, message 10–2000. Values are `.trim()`-ed before checking. Errors toggle `aria-invalid="true"` on the input (which drives the red border via an `aria-[invalid=true]:` Tailwind variant) and fill a per-field `<p id="ct-*-error">`.
+- **Turnstile gating** (Phase 25.1): the submit button ships `disabled`. The `.cf-turnstile` widget carries `data-callback` / `data-expired-callback` / `data-error-callback` naming global handlers in `contact.client.ts` — `onTurnstileSuccess` captures the token and enables the button; expiry/error clear the token and re-disable it. A submit with no token short-circuits to "Please complete the verification below."
+- **Submit** builds `{ name, email, message, turnstileToken, website }` and does a direct `fetch` POST to `${PUBLIC_API_URL}/api/v1/public/contact`. `turnstileToken` comes from the Turnstile callback; `website` (honeypot) is read from `FormData` at submit time.
+- **Status handling**: `204` → hide the form, reveal + focus the success card, inject the email; `429` → "Too many requests. Please try again in a moment."; everything else → "Could not send. Please try again." (backend collapses honeypot / CAPTCHA / field-validation failures into one generic 400 — UI must not differentiate). No retry-on-429.
+- On any non-success the widget is reset (`window.turnstile.reset()`, tokens single-use) and the button stays **disabled** until the fresh challenge passes. Submit button shows `Sending…` during the request.
+
+### 6.1.1 Turnstile loader
+
+The Cloudflare Turnstile widget script (`https://challenges.cloudflare.com/turnstile/v0/api.js`, `async defer`) is body-injected inside `ContactForm.astro` itself (Phase 25 — co-located with the component it serves; Calendly precedent for body-injected third-party scripts). It auto-discovers `<div class="cf-turnstile" data-sitekey={…}>` and renders the challenge; the token reaches the page via the `data-callback` handler.
+
+### 6.1.2 Env vars
+
+- `PUBLIC_TURNSTILE_SITE_KEY` — Cloudflare Turnstile site key (public/safe). **Required** — `ContactForm.astro` throws at build time if unset (Phase 25.1), so a misconfigured deploy fails loudly instead of shipping an inert CAPTCHA. Local builds need a `.env`; Cloudflare's dummy "always passes" key `1x00000000000000000000AA` works for dev.
+- `PUBLIC_API_URL` — Travelity API base URL. Falls back to `https://api.travelity.app` in `contact.client.ts` if unset. Override to `http://localhost:3000` for local backend dev. Backend ops must add the calling origin to `ALLOWED_ORIGINS` for CORS; otherwise the browser blocks the request before it reaches the handler.
 
 ### 6.2 Calendly — native v1 inline embed (Phase 16, simplified post-18)
 
@@ -399,9 +397,11 @@ A small inline `<script>` listens for `message` events with `origin === 'https:/
 
 `PUBLIC_CALENDLY_URL` env var still overrides the default `calendly.com/travelity-sales/30min?text_color=…&primary_color=…` URL. The Google Ads conversion target is built from `PUBLIC_GOOGLE_ADS_ID` + `PUBLIC_GOOGLE_ADS_CONVERSION_LABEL` at build time via Astro's `define:vars`.
 
-### 6.3 Real email service — pending
+### 6.3 Email delivery — handled by travelity-api (Phase 24)
 
-`contact` action handler currently `console.log`s and returns `{ ok: true }`. Real implementation routes by subject to `sales@/support@/partnerships@/hello@travelity.app`. No structural changes to the action; only the handler body.
+Email delivery is now the backend's job. `POST /api/v1/public/contact` on `api.travelity.app` validates input, runs Cloudflare Turnstile server-side, and emails the support team. The frontend has no knowledge of routing rules.
+
+**By-subject routing dropped.** The earlier plan was to route `Sales/Support/Partnership/Other` to `sales@/support@/partnerships@/hello@travelity.app`. The Phase 24 backend takes only `name/email/message/turnstileToken/website` and emails one address. If by-subject routing comes back, it needs a backend field + frontend subject UI; both are gone today.
 
 ---
 
@@ -453,22 +453,23 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ### Must-haves (engineering)
 
-- [ ] **Wire real email service** to the `contact` Astro Action. Resend / SendGrid / Postmark or CRM/ticketing. Subject routing (Sales→sales@, Support→support@, Partnership→partnerships@, Other→hello@).
-- [ ] **301 redirects** from old URLs: `/help` and `/help-center` → `/faq` (or `/contact`), `/guides` → `/` (retired in the bulk-cleanup commit), `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` → `/legal/dpa`, `/cookies` → `/legal/cookies`, the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
+- [ ] **Set `PUBLIC_TURNSTILE_SITE_KEY`** in Netlify env (and `.env` for any build) — pulled from Cloudflare dashboard → Turnstile → Site. **The build throws if it's unset** (Phase 25.1), so this is non-optional.
+- [ ] **Confirm `PUBLIC_API_URL`** points at the right backend (`https://api.travelity.app` for prod — the code default). Override per environment as needed.
+- [ ] **Backend `ALLOWED_ORIGINS`** must include `https://www.travelity.app` (and apex `https://travelity.app` if served) — otherwise the browser blocks the POST with a CORS error before it ever reaches the handler. Coordinate with backend ops.
+- [x] **Wire real email service** — Phase 24. The contact form posts directly to `api.travelity.app/api/v1/public/contact`; backend handles email + CAPTCHA verification. (Subject-based routing dropped — see §6.3.)
+- [ ] **301 redirects** from old URLs: `/help` and `/help-center` → `/faq` (or `/contact`), `/guides` → `/` (retired in the bulk-cleanup commit), `/privacy` → `/legal/privacy`, `/terms` → `/legal/terms`, `/dpa` · `/cookies` · `/legal/dpa` · `/legal/cookies` → `/legal/privacy` (DPA + Cookies pages retired post-Phase-24), the four retired `/audiences/*` paths (Phase 18 — probably redirect to `/` or `/features`), and the six retired `/solutions/<sub>` paths (Phase 22 — redirect to `/solutions`). Only needed if external campaigns indexed those paths.
 - [ ] **Replace `[Address TBD]`** in `/contact` email strip with BraveCrew Inc.'s registered address.
 - [ ] **Confirm role-based emails exist:** `sales@`, `support@`, `partnerships@`, `hello@`, `privacy@`, `dpo@`, `security@`, `legal@travelity.app`.
 - [ ] **Add prod + preview domains to CookieYes whitelist** (Phase 23). Production `travelity.app` is already configured. For Netlify deploy previews or staging, add the relevant domain pattern in CookieYes dashboard → Organizations & Sites; otherwise the banner refuses to render. `localhost:3000` was added for local prod-preview testing.
-- [ ] **Update privacy/cookies legal copy** to name GA4, Google Ads, and CookieYes by name (Phase 23 deferred this — see §6.2). GDPR specificity requires naming the data processors.
+- [ ] **Update privacy legal copy** to name GA4, Google Ads, and CookieYes by name (Phase 23 deferred this — see §6.2). GDPR specificity requires naming the data processors. (The standalone Cookies Policy page was retired post-Phase-24.)
 - [x] **Resolve Start-Free-Trial destination** — Phase 19. All four Start Free Trial CTAs now point at `Paths.START_TRIAL = https://admin.travelity.app` (external, opens in new tab).
 - [x] **Wire Google Ads conversion on Calendly bookings** — Phase 23. `CalendlyWidget.astro` fires `gtag('event', 'conversion', …)` with `value`/`currency`, gated redirect via `event_callback` + 1s timeout fallback.
 
 ### Must-haves (content / legal)
 
-- [ ] **Lawyer review of all 4 `/legal/*` pages.** AI-drafted boilerplate. Specific TBDs inline:
+- [ ] **Lawyer review of both `/legal/*` pages.** AI-drafted boilerplate. Specific TBDs inline:
     - Privacy: DPO contact, EU representative, retention specifics
     - Terms: governing-law jurisdiction (twice in "Governing law" section)
-    - DPA: subprocessor list URL (`/legal/subprocessors` doesn't exist yet)
-    - Cookies: analytics provider name, cookie preferences UI
 - [ ] **PO review of `/our-story` narrative.** Real copy is in; verify specifics about team, founding, customers, hiring/funding are accurate before launch.
 - [ ] **PO review of FAQ entries** on `/faq` (12 Q&As across 3 categories) — particularly OTA integration list, plan availability claims, support promises.
 - [ ] **Replace `Plan feature one`** placeholder copy in `PricingPlan.astro`. Same for the 13-row placeholder in `/pricing`'s ComparisonTable.
@@ -483,15 +484,43 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 ### Nice-to-haves
 
 - [ ] **Lighthouse audit + tuning.** LCP, CLS, font loading. Probably already healthy.
-- [ ] **Analytics integration.** Cookies policy mentions "[analytics provider TBD]". Plausible / Fathom / GA4 — pick one and wire it.
-- [ ] **Subprocessors page** at `/legal/subprocessors` referenced by DPA. Reuses LegalPageLayout, lists service providers.
+- [ ] **Analytics integration.** Plausible / Fathom / GA4 — pick one and wire it.
 - [ ] **Mobile menu polish** (Phase 2 carry-forward): animation timing, accordion item density, scrim, iOS scroll-position preservation.
 
 ---
 
-## 10. Phase narratives (13–23)
+## 10. Phase narratives (13–25)
 
 Brief context for each post-build phase. Newer phases on top. **Phase 20 is not listed — an orange-accent test was prototyped and reverted before commit.**
+
+### Phase 25 — Contact form goes native; React removed
+
+- **`ContactForm` ported from a React island to native Astro.** New folder `src/components/contact/` (`ContactForm.astro`, `ContactSuccess.astro`, `contact.client.ts`, `index.ts`), replacing `src/components/forms/contact/` which was deleted along with the `forms/` folder.
+- **Why**: after Phase 24 removed the Astro Action, the React Hook Form + zod stack existed solely for client-side validation of one 3-field form — its original justification (a zod schema shared between client and server) was gone. React was the only island in an otherwise fully static site.
+- **Validation** is now a small `contact.client.ts` script: per-field checks on `blur` / `submit` / post-error `input`, same messages and constraints as the old zod schema. Error state drives the red border via an `aria-[invalid=true]:` Tailwind variant rather than React class toggling.
+- **Dependencies removed (9)**: `react`, `react-dom`, `@astrojs/react`, `@types/react`, `@types/react-dom`, `react-hook-form`, `@hookform/resolvers`, `lucide-react`, `zod`. Plus `eslint-plugin-jsx-a11y`. `npm install` pruned 61 packages from the tree.
+- **Config cleanup**: `react()` integration dropped from `astro.config.mjs`; `jsx` / `jsxImportSource` removed from `tsconfig.json`; `eslint.config.js` lost the `jsx-a11y` plugin and its TS block narrowed `**/*.tsx` → `**/*.ts`.
+- **Icon barrel**: added `CircleCheck as CheckCircleIcon` (lucide's successor to the deprecated `CheckCircle2`) — `ContactSuccess.astro` now pulls icons from `@/icons` instead of `lucide-react`.
+- **Turnstile loader** moved from `contact.astro` into `ContactForm.astro` (co-located with the component it serves).
+- **Result**: zero React islands, zero `client:*` directives. The site is fully static prerendered HTML + bundled `<script>`s.
+
+**Phase 25.1 — follow-up after reference-spec review:**
+
+- **API base URL env var renamed** `PUBLIC_TRAVELITY_API_BASE_URL` → `PUBLIC_API_URL` (matches the team reference spec). `contact.client.ts` now falls back to `https://api.travelity.app` when unset.
+- **Turnstile gating**: the submit button ships `disabled` and is enabled only by the `onTurnstileSuccess` callback. The widget wires `data-callback` / `data-expired-callback` / `data-error-callback`; the token is captured from the callback (not read from a hidden `FormData` input). A tokenless submit short-circuits with a "complete the verification" message. On non-success the widget resets and the button stays disabled until the new challenge passes.
+- **`PUBLIC_TURNSTILE_SITE_KEY` now required**: `ContactForm.astro` throws at build time if it's unset, so a misconfigured deploy fails loudly. A gitignored `.env` carries the key for local builds (Cloudflare's dummy "always passes" key `1x00000000000000000000AA` for dev).
+
+### Phase 24 — Contact form → live `travelity-api`, Astro Action retired
+
+- **Form rewired to fetch `https://api.travelity.app/api/v1/public/contact` directly** from the React island. Replaces the prior `actions.contact(values)` call. Backend validates input, runs Cloudflare Turnstile server-side, and emails the support team.
+- **`src/actions/index.ts` deleted**; `src/actions/` folder gone. No `astro:actions` imports remain in the codebase. Astro Actions integration in `astro.config.mjs` was zero-config (built into Astro 6), so no config edit needed.
+- **`subject` field dropped** from the form, schema, success card, and barrel exports. The backend endpoint accepts only `name/email/message/turnstileToken/website` (`forbidNonWhitelisted: false`); subject would have been silently dropped on the wire. PROJECT-STATE.md §6.3's earlier subject-routing intent is **gone** — if it comes back, both the backend and the form need work.
+- **Cloudflare Turnstile** integrated client-side. Widget div `<div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}>` renders inside the React island. Loader script (`https://challenges.cloudflare.com/turnstile/v0/api.js`, async + defer) lives in `src/pages/contact.astro` body, mirroring the Calendly precedent — no layout `<head>` slot needed.
+- **Honeypot field** `name="website"` added as an off-screen `<input>` (`position: absolute; left: -9999px; tabindex=-1; aria-hidden; autocomplete=off`). Backend rejects (generic 400) if it's populated.
+- **Status handling**: `204` → success card (in-place swap, no redirect); `429` → "Too many requests. Please try again in a moment."; everything else → "Could not send. Please try again." Honeypot vs CAPTCHA vs field-validation failures all return the same generic 400 by backend design — the UI does not differentiate. `window.turnstile.reset()` runs on every non-success branch (tokens are single-use). No retry-on-429.
+- **Zod schema tightened**: `email.max(254)`, `message.max(2000)` to match backend; `name`/`message` mins kept at 2/10 for UX (tighter than backend's 1/1).
+- **Env vars added** (`.env.example`): `PUBLIC_TURNSTILE_SITE_KEY` + the API base URL (named `PUBLIC_TRAVELITY_API_BASE_URL` in Phase 24, renamed `PUBLIC_API_URL` in Phase 25.1).
+- **Pre-launch dependency** added: backend ops must include `https://www.travelity.app` (and apex if served) in `ALLOWED_ORIGINS` — otherwise the browser blocks the POST with a CORS error before it reaches the handler.
 
 ### Phase 23 — Analytics integration (GA4 + Google Ads via Partytown + CookieYes + Consent Mode v2)
 
@@ -593,9 +622,8 @@ Logo system reworked. Phase 13 also bundled a Phase 12 audit ride-along (see com
 
 The remaining engineering pass:
 
-1. Verify clean code passes: lint, format, type-check, build, no dead code, no unused exports, no orphaned imports, no `console.log` outside Astro Actions.
-2. Wire real email/CRM destinations (see §9).
-3. Anything else (real content, real photos) is content/operations work — see §9.
+1. Verify clean code passes: lint, format, type-check, build, no dead code, no unused exports, no orphaned imports, no `console.log` left from removed Action handlers.
+2. Anything else (real content, real photos, backend CORS allowlist, Turnstile site key per environment) is content/operations work — see §9.
 
 ---
 

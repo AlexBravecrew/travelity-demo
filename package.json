@@ -18,21 +18,12 @@
     "dependencies": {
         "@astrojs/netlify": "^7.0.8",
         "@astrojs/partytown": "^2.1.7",
-        "@astrojs/react": "^5.0.4",
-        "@hookform/resolvers": "^5.2.2",
         "@lucide/astro": "^1.14.0",
         "@tailwindcss/vite": "^4.2.4",
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
         "astro": "^6.3.0",
         "clsx": "^2.1.1",
-        "lucide-react": "^1.14.0",
-        "react": "^19.2.6",
-        "react-dom": "^19.2.6",
-        "react-hook-form": "^7.75.0",
         "tailwind-merge": "^3.5.0",
-        "tailwindcss": "^4.2.4",
-        "zod": "^4.4.3"
+        "tailwindcss": "^4.2.4"
     },
     "devDependencies": {
         "@astrojs/check": "^0.9.9",
@@ -41,7 +32,6 @@
         "@typescript-eslint/parser": "^8.59.2",
         "eslint": "^9.39.4",
         "eslint-plugin-astro": "^1.7.0",
-        "eslint-plugin-jsx-a11y": "^6.10.2",
         "globals": "^17.6.0",
         "prettier": "^3.8.3",
         "prettier-plugin-astro": "^0.14.1",

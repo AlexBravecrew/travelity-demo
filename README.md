@@ -48,5 +48,5 @@ The full design package lives in the project knowledge:
 - **Icons:** import from `@/icons`, all named with `Icon` suffix (`ArrowRightIcon`, `LockIcon`)
 - **Paths:** import from `@/lib/utils/paths`, never hardcode URL strings
 - **Tokens:** consume via `hsl(var(--travelity-blue))` or Tailwind utility (`text-travelity-blue`); never hardcode hex
-- **Components:** Astro by default. React islands only when state is genuinely needed (forms, theme toggle, etc.)
+- **Components:** Astro only. No React — client-side behavior ships as bundled `<script>`s (e.g. `nav.client.ts`, `contact.client.ts`).
 - **No warm-direction tokens.** No `--travelity-coral`, no `--travelity-cream`. Those were rolled back.
