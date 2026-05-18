@@ -1,0 +1,89 @@
+---
+/**
+ * Site-wide image-preview modal. Rendered once per page via MarketingLayout.
+ * Any `<LightboxImage>` registers a trigger; triggers sharing a `group`
+ * navigate together. Behavior lives in `lightbox.client.ts`.
+ *
+ * Built on a native <dialog> — `showModal()` gives the top layer, Esc-to-
+ * close, and focus trapping for free.
+ */
+import { XIcon, ChevronLeftIcon, ChevronRightIcon } from '@/icons';
+
+const navButtonClass =
+    'absolute top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper text-ink shadow-md transition-colors hover:bg-surface-alt';
+---
+
+<dialog
+    data-lightbox
+    aria-label="Image preview"
+    class="lightbox m-0 h-[100dvh] w-screen max-h-none max-w-none border-0 bg-transparent p-0"
+>
+    <div
+        class="relative flex h-full w-full items-center justify-center p-4 md:p-10"
+    >
+        <button
+            type="button"
+            data-lightbox-close
+            aria-label="Close preview"
+            class="absolute top-4 right-4 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-paper text-ink shadow-md transition-colors hover:bg-surface-alt"
+        >
+            <XIcon class="h-5 w-5" stroke-width="2" aria-hidden="true" />
+        </button>
+
+        <button
+            type="button"
+            data-lightbox-prev
+            aria-label="Previous image"
+            class={`${navButtonClass} left-4`}
+        >
+            <ChevronLeftIcon
+                class="h-6 w-6"
+                stroke-width="2"
+                aria-hidden="true"
+            />
+        </button>
+
+        <button
+            type="button"
+            data-lightbox-next
+            aria-label="Next image"
+            class={`${navButtonClass} right-4`}
+        >
+            <ChevronRightIcon
+                class="h-6 w-6"
+                stroke-width="2"
+                aria-hidden="true"
+            />
+        </button>
+
+        <figure
+            data-lightbox-content
+            class="m-0 flex max-h-full max-w-full flex-col items-center gap-3"
+        >
+            <img
+                data-lightbox-img
+                src=""
+                alt=""
+                class="max-h-[82vh] max-w-[92vw] rounded-lg object-contain shadow-2xl"
+            />
+            <figcaption
+                data-lightbox-counter
+                aria-live="polite"
+                class="font-mono text-xs uppercase tracking-[0.1em] text-paper"
+            >
+            </figcaption>
+        </figure>
+    </div>
+</dialog>
+
+<style>
+    /* Dark scrim behind the (transparent) dialog. Clicks on the empty
+       transparent area close the modal — wired in lightbox.client.ts. */
+    .lightbox::backdrop {
+        background: hsl(220 40% 8% / 0.88);
+    }
+</style>
+
+<script>
+    import './lightbox.client.ts';
+</script>

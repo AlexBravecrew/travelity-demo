@@ -1,0 +1,63 @@
+---
+/**
+ * A click-to-zoom image. Renders the inline thumbnail via `astro:assets`
+ * <Image /> wrapped in a button trigger; the <Lightbox /> overlay (in
+ * MarketingLayout) reads the `data-lightbox-*` attributes.
+ *
+ * Triggers sharing a `group` form one gallery — navigation in the modal
+ * cycles within the group. A single-image group hides the nav controls.
+ */
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { cn } from '@/lib/utils/cn';
+
+interface Props {
+    /** Imported image asset. */
+    src: ImageMetadata;
+    /** Accessible description — used as the thumbnail alt, modal alt, and trigger label. */
+    alt: string;
+    /** Gallery id — triggers sharing a group navigate together in the modal. */
+    group: string;
+    /** Responsive widths for the inline thumbnail. */
+    widths?: number[];
+    /** `sizes` attribute for the inline thumbnail. */
+    sizes?: string;
+    /** Extra classes merged onto the inline <Image />. */
+    class?: string;
+}
+
+const {
+    src,
+    alt,
+    group,
+    widths = [600, 900, 1200],
+    sizes = '(min-width: 1024px) 600px, 92vw',
+    class: className,
+} = Astro.props;
+
+// Full-size variant for the modal — capped at the source's intrinsic width
+// so a smaller screenshot is never upscaled.
+const full = await getImage({ src, width: Math.min(src.width, 2400) });
+---
+
+<button
+    type="button"
+    class="group block w-full cursor-zoom-in border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--travelity-teal)/0.5)] focus-visible:ring-offset-2"
+    data-lightbox-group={group}
+    data-lightbox-src={full.src}
+    data-lightbox-alt={alt}
+    aria-label={`Open larger preview: ${alt}`}
+>
+    <Image
+        src={src}
+        alt={alt}
+        widths={widths}
+        sizes={sizes}
+        loading="lazy"
+        decoding="async"
+        class={cn(
+            'block w-full rounded-xl border border-line transition-colors duration-200 group-hover:border-travelity-teal',
+            className,
+        )}
+    />
+</button>

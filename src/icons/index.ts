@@ -12,6 +12,8 @@
 // Chrome — nav, mobile drawer, shared affordances
 export { ArrowRight as ArrowRightIcon } from '@lucide/astro';
 export { ChevronDown as ChevronDownIcon } from '@lucide/astro';
+export { ChevronLeft as ChevronLeftIcon } from '@lucide/astro';
+export { ChevronRight as ChevronRightIcon } from '@lucide/astro';
 export { Menu as MenuIcon } from '@lucide/astro';
 export { X as XIcon } from '@lucide/astro';
 export { Check as CheckIcon } from '@lucide/astro';

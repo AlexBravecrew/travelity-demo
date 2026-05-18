@@ -4,7 +4,18 @@ import { Nav } from '@/components/chrome/nav';
 import { Footer } from '@/components/chrome/footer';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { CapabilitySection } from '@/components/shared/capability-section';
+import { LightboxImage } from '@/components/shared/lightbox';
 import { ClosingCTASection } from '@/components/home/closing-cta-section';
+
+import channelManagerImg from '@/assets/features/channel-manager.png';
+import bookingWidgetImg from '@/assets/features/booking-widget.png';
+import realTimeAvailabilityImg from '@/assets/features/real-time-availability.png';
+import tripProposalBuilderImg from '@/assets/features/trip-proposal-builder.png';
+import paymentGatewaysImg from '@/assets/features/payment-gateways.png';
+import bookingManagementImg from '@/assets/features/booking-management.png';
+import dailyOperationsImg from '@/assets/features/daily-operations.png';
+import crmImg from '@/assets/features/crm.png';
+import teamCollaborationImg from '@/assets/features/team-collaboration.png';
 
 export const prerender = true;
 
@@ -19,10 +30,8 @@ export const prerender = true;
  *   - headlinePre:  regular-weight start of the h2 headline
  *   - headlineEm:   italic-teal-em phrase at the end of the headline
  *   - paragraphs:   2-3 body paragraphs rendered inside the lead slot
- *   - image:        screenshot path (shared placeholder until real assets land)
- *
- * TODO: replace `/features/placeholder.svg` with real per-section screenshots
- *       under `/public/features/<slug>.png` (or whatever filename you pick).
+ *   - image:        imported screenshot from `src/assets/features/<slug>.png`,
+ *                   served via `astro:assets` <Image />.
  */
 const features = [
     {
@@ -36,7 +45,7 @@ const features = [
             'Product availability, pricing, schedules, and booking data are synchronized automatically between connected channels, ensuring consistent inventory management and minimizing discrepancies caused by manual updates.',
             'By automating distribution and inventory synchronization, operators can reduce operational workload, prevent overbookings, maintain pricing consistency, and maximize sales across multiple sales channels.',
         ],
-        image: '/features/placeholder.svg',
+        image: channelManagerImg,
     },
     {
         title: 'Booking Widget',
@@ -48,7 +57,7 @@ const features = [
             'The widget is connected directly to your reservation system, ensuring that availability, pricing, and booking data remain continuously updated.',
             'The widget can be adapted to match your website design and integrated with widely used payment gateways, helping you create a smoother booking experience, increase direct sales, and reduce dependency on third-party platforms.',
         ],
-        image: '/features/placeholder.svg',
+        image: bookingWidgetImg,
     },
     {
         title: 'Real-Time Availability',
@@ -61,7 +70,7 @@ const features = [
             'Availability is updated automatically as new reservations, cancellations, or changes occur — including bookings received through OTAs, partners, resellers, and direct sales channels. This helps maintain accurate inventory distribution across all connected platforms and significantly reduces the risk of overbookings or missed sales opportunities.',
             'Advanced filtering tools allow operators and sales teams to quickly search availability based on travel dates, service type, group size, schedules, and other operational criteria, making it easier to manage capacity and make faster sales decisions.',
         ],
-        image: '/features/placeholder.svg',
+        image: realTimeAvailabilityImg,
     },
     {
         title: 'Trip Proposal Builder',
@@ -74,7 +83,7 @@ const features = [
             'Travelity Trip Proposal Builder allows operators to create visually engaging and interactive travel offers in just a few clicks, with itineraries, pricing, images, inclusions, schedules, and booking details presented in a professional format.',
             'Proposals can be shared with travelers through a dedicated link where customers can review the trip, explore the itinerary, and confirm their booking directly online. Once confirmed, reservations are automatically processed inside the platform without additional manual work.',
         ],
-        image: '/features/placeholder.svg',
+        image: tripProposalBuilderImg,
     },
     {
         title: 'Payment Gateway Integrations',
@@ -86,7 +95,7 @@ const features = [
             'Customers can complete their reservations and payments through a smooth and secure booking experience, while payment information is automatically reflected inside the system together with booking data.',
             'By integrating online payment solutions into the sales process, operators can simplify payment collection, improve customer convenience, maintain better financial control, and reduce manual payment handling.',
         ],
-        image: '/features/placeholder.svg',
+        image: paymentGatewaysImg,
     },
     {
         title: 'Booking Management',
@@ -99,7 +108,7 @@ const features = [
             'The system allows teams to track booking statuses, customer information, payment records, schedules, add-ons, operational notes, and other important reservation details through a structured and easy-to-use interface.',
             'By centralizing booking operations inside a single platform, operators can reduce manual errors, eliminate the need for spreadsheets or disconnected tools, improve internal coordination, and manage daily reservations more efficiently.',
         ],
-        image: '/features/placeholder.svg',
+        image: bookingManagementImg,
     },
     {
         title: 'Daily Operations',
@@ -111,7 +120,7 @@ const features = [
             'This feature allows you to stay organized and manage day-to-day services more efficiently. Daily Operations provides travel companies with a live overview of all scheduled tours, transfers, check-ins, and services for the day in a single workspace.',
             'You can view schedules, manage passenger lists, divide travelers into groups, and assign guides, drivers, vehicles, and other resources directly within the system.',
         ],
-        image: '/features/placeholder.svg',
+        image: dailyOperationsImg,
     },
     {
         title: 'CRM',
@@ -124,7 +133,7 @@ const features = [
             'Teams can quickly search customer records, review past and upcoming reservations, and keep important travel documents and communication details attached to each profile.',
             'Having all customer information structured inside one system helps improve service quality, simplify communication, support repeat sales, and maintain better long-term relationships with travelers and partners.',
         ],
-        image: '/features/placeholder.svg',
+        image: crmImg,
     },
     {
         title: 'Team Collaboration',
@@ -136,7 +145,7 @@ const features = [
             'Different team members can be granted access to specific sections and actions based on their responsibilities, helping companies control who can view, edit, manage, or approve different parts of the system.',
             'With structured team access and shared workflows, companies can improve internal coordination, protect sensitive information, reduce operational mistakes, and manage growing teams more efficiently.',
         ],
-        image: '/features/placeholder.svg',
+        image: teamCollaborationImg,
     },
 ];
 ---
@@ -205,12 +214,10 @@ const features = [
                         ))}
                     </Fragment>
                     <Fragment slot="visual">
-                        <img
+                        <LightboxImage
                             src={f.image}
                             alt={`${f.title} screenshot`}
-                            class="block w-full aspect-video rounded-xl bg-surface-alt border border-line object-cover"
-                            loading="lazy"
-                            decoding="async"
+                            group={f.slug}
                         />
                     </Fragment>
                 </CapabilitySection>

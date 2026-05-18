@@ -1,6 +1,6 @@
 # Travelity Marketing Website — Project Rules
 
-> Read this before writing any code. **Authoritative through Phase 27.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
+> Read this before writing any code. **Authoritative through Phase 28.** PROJECT-STATE.md (in `docs/`) is the companion: it describes _what_ was built, this file describes the _rules_ for building.
 
 ---
 
@@ -66,7 +66,8 @@ src/
 │   │   ├── comparison-table/  # Phase 23 — excluded cells now red X
 │   │   ├── faq-accordion/
 │   │   ├── legal-page-layout/
-│   │   └── structured-data/   # Phase 26 — JSON-LD <script> emitter
+│   │   ├── structured-data/   # Phase 26 — JSON-LD <script> emitter
+│   │   └── lightbox/          # Phase 28 — site-wide image-preview modal (Lightbox + LightboxImage)
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -86,7 +87,7 @@ src/
 ├── pages/                     # file-based routes
 │   ├── _internal/             # underscore prefix → excluded from build
 │   ├── features.astro         # Phase 19 — 9 anchored CapabilitySections
-│   ├── solutions.astro        # 6 OutcomeCards in a 3-up grid; replaces retired Phase-22 six-page cluster
+│   ├── solutions.astro        # 3 OutcomeCards in a 3-up grid; replaces retired Phase-22 six-page cluster
 │   └── legal/
 │   # NOTE Phase 18: audiences/ subfolder deleted (4 pages retired).
 │   # NOTE Phase 22: solutions/ subfolder deleted (6 pages retired); solutions.astro added.
@@ -492,6 +493,8 @@ These patterns shaped multiple phases. Don't deviate without a decision:
 5. **Calendly is not a form.** `/book-demo` uses Calendly's **simple inline embed** pattern (`<div class="calendly-inline-widget" data-url="…" style="height:700px">` + `widget.js` async script), not our contact-form pattern. The booking is confirmed inside Calendly's iframe; our code only listens for `calendly.event_scheduled` `postMessage` (origin-checked) and redirects to `/thank-you`. **No `react-calendly`** — it was tried and dropped post-Phase-18; see §1 "What is NOT used" for the reasoning. The fixed 700px height with internal iframe scroll is deliberate — keeps Calendly's internal dropdowns on-screen.
 
 6. **Clickable cards link the whole interior.** When a `Card` needs to navigate, wrap its body in `<a class="block no-underline p-7 h-full">` *inside* the Card (Card keeps its `.feature-card` class so any positional CSS keeps working). Pattern set by `home/features-section/FeatureCard.astro` in Phase 19.
+
+7. **Image previews go through `<LightboxImage>`.** For any zoomable/previewable image, use `shared/lightbox/`'s `<LightboxImage src alt group />` — don't hand-roll a modal. The `<Lightbox />` overlay is already in `MarketingLayout` (site-wide). Triggers sharing a `group` value form one gallery (prev/next navigation); a single-image group hides the controls. Adding more images to an existing group needs no modal changes (Phase 28).
 
 ---
 

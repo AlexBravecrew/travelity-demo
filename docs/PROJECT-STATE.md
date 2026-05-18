@@ -2,7 +2,7 @@
 
 > **Read this at the start of any session before writing or reviewing code.** This document captures the current state of the project, the conventions established across 11 build phases, and what remains. It supersedes earlier handoff docs (`HANDOFF-PROMPT.md` was for the _initial_ build; this is for _ongoing_ work).
 >
-> **Last updated:** Phase 27 — Intercom live chat ported from v1: consent-gated (CookieYes `functional` category), anonymous-visitor, env-driven. Earlier in this batch: Phase 26 SEO foundation, Phase 25 React removal.
+> **Last updated:** Phase 28 — site-wide image-preview lightbox (`shared/lightbox/`, gallery-capable) wired into `/features`; `/solutions` trimmed from 6 outcome cards to 3. Earlier in this batch: Phase 27 Intercom, Phase 26 SEO foundation.
 
 ---
 
@@ -38,7 +38,7 @@ Astro 6 marketing site for **Travelity**, a multi-tenant SaaS booking platform s
 | Path           | Phase   | Notes                                                                                       |
 | -------------- | ------- | ------------------------------------------------------------------------------------------- |
 | `/`            | 3a-3d   | Home: Hero (video) → Channels → Features (6 of 9 cards, clickable) → Reviews (5 polaroid cards, hover-swap on desktop, scroll-snap carousel on mobile/tablet) → Pricing (hover-swap active card) → GoLive → ClosingCTA |
-| `/solutions`   | 22      | Compact top title + 6 `OutcomeCard`s in a 3-up grid (wraps to 2 / 1 columns) + ClosingCTA. Replaces the Phase-5 six-page cluster. Cards 1-3 carry the canonical Increase / Prevent / Manage outcomes (anchored `#increase-sales` / `#prevent-overbookings` / `#manage-all-bookings`); cards 4-6 are anchor-less duplicates of 1-3 pending real copy. |
+| `/solutions`   | 22, 28  | Compact top title + 3 `OutcomeCard`s in a 3-up grid (2-up tablet, 1 mobile) + ClosingCTA. Replaces the Phase-5 six-page cluster. The cards carry the canonical Increase / Prevent / Manage outcomes, anchored `#increase-sales` / `#prevent-overbookings` / `#manage-all-bookings`. (Phase 28 dropped the 3 placeholder duplicate cards: 6 → 3.) |
 | `/features`    | 19      | Compact top title + 9 CapabilitySections (alternating flip) + ClosingCTA. Anchor IDs match home card slugs. Placeholder copy + shared placeholder.svg per section. |
 | `/pricing`     | 8, 21   | Full `<PricingSection />` (header + 3 plan cards, identical to home — hover-swap active card from Phase 21) → ComparisonTable (4 groups, 13 rows) → ClosingCTASection |
 | `/book-demo`   | 7,16,18 | Single two-column section: left = headline + lead + 4 CoverageItems; right = Calendly inline widget (native v1 embed, 700px fixed height). Post-Phase-18 cleanup. Conversion fires Google Ads conversion event on `event_scheduled` (Phase 23). |
@@ -102,7 +102,8 @@ src/
 │   │   ├── comparison-table/        # Pricing feature comparison (Phase 8); excluded cells now red X (Phase 23)
 │   │   ├── faq-accordion/           # Native <details>-based FAQ (Phase 8)
 │   │   ├── legal-page-layout/       # Shared chrome for 2 legal pages (Phase 9)
-│   │   └── structured-data/         # JSON-LD <script> emitter (Phase 26)
+│   │   ├── structured-data/         # JSON-LD <script> emitter (Phase 26)
+│   │   └── lightbox/                # Site-wide image-preview modal (Phase 28) — Lightbox + LightboxImage + lightbox.client.ts
 │   │   # NOTE Phase 18: pain-grid, solution-map, feature-pillars, workflow,
 │   │   # plan-rec deleted with the audience cluster.
 │   │   # NOTE Phase 22: product-hero, cross-sell, social-proof deleted with
@@ -126,7 +127,7 @@ src/
 │
 ├── pages/
 │   ├── index.astro                  # /
-│   ├── solutions.astro              # 6 OutcomeCards in a 3-up grid; replaces the retired Phase-22 six-page cluster
+│   ├── solutions.astro              # 3 OutcomeCards in a 3-up grid; replaces the retired Phase-22 six-page cluster
 │   ├── features.astro               # Phase 19 — 9 anchored CapabilitySections + placeholder screenshots
 │   ├── legal/                       # 2 Legal pages (privacy + terms)
 │   ├── _internal/                   # Underscore-prefixed: showcase (not built)
@@ -507,9 +508,19 @@ What's left before the site can ship publicly. Engineering tasks are quick; cont
 
 ---
 
-## 10. Phase narratives (13–27)
+## 10. Phase narratives (13–28)
 
 Brief context for each post-build phase. Newer phases on top. **Phase 20 is not listed — an orange-accent test was prototyped and reverted before commit.**
+
+### Phase 28 — Image-preview lightbox + `/solutions` trim
+
+- **Site-wide lightbox** — new `src/components/shared/lightbox/`: `Lightbox.astro` (the overlay), `LightboxImage.astro` (a click-to-zoom image), `lightbox.client.ts` (behavior), `index.ts`. `MarketingLayout` renders `<Lightbox />` once, so any page can use `<LightboxImage>` with no extra wiring.
+- **Native `<dialog>`** — `showModal()` gives the top layer, Esc-to-close, and focus trapping for free. Dark `::backdrop` scrim; backdrop-click closes; the `close` event is the single cleanup point (restores scroll). No open/close animation → no `prefers-reduced-motion` code needed.
+- **Gallery model** — `<LightboxImage>` triggers sharing a `group` value form one gallery; the modal's prev/next + ←/→ keys + counter cycle within the group. A single-image group hides the nav controls. Designed so adding more images to a section later (same `group`) lights up navigation with zero modal changes.
+- **`LightboxImage`** wraps an `astro:assets` `<Image>` in a zoom-cursor `<button>`; `getImage()` generates a full-size modal variant capped at the source's intrinsic width (no upscaling).
+- **`/features`** — all 9 sections now use `<LightboxImage group={slug}>` (one image per section today → single-image groups).
+- **Icon barrel** — added `ChevronLeftIcon` / `ChevronRightIcon` for the modal nav.
+- **`/solutions` trimmed 6 → 3** — the 3 anchor-less placeholder cards that mirrored cards 1-3 were removed. The page now shows only the canonical Increase / Prevent / Manage outcome cards.
 
 ### Phase 27 — Intercom live chat
 

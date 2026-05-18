@@ -3,6 +3,7 @@ import { Analytics } from '@/components/chrome/analytics';
 import { Intercom } from '@/components/chrome/intercom';
 import { Motion } from '@/components/chrome/motion';
 import { StructuredData } from '@/components/shared/structured-data';
+import { Lightbox } from '@/components/shared/lightbox';
 
 interface Props {
     title: string;
@@ -121,6 +122,10 @@ const organizationSchema = {
         <main id="main" tabindex="-1">
             <slot />
         </main>
+
+        <!-- Site-wide image-preview modal. Inert until a <LightboxImage>
+             trigger on the page opens it. -->
+        <Lightbox />
     </body>
 </html>
 

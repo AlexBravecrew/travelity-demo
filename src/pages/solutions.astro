@@ -9,13 +9,12 @@ import { ClosingCTASection } from '@/components/home/closing-cta-section';
 export const prerender = true;
 
 /**
- * Solutions page — 6 outcome cards in a 3-up grid (wraps to 2 / 1
- * columns on narrower viewports). Each card: screenshot panel on top,
- * eyebrow + italic-em title + 3-4 sentence body below. Cards 4-6
- * temporarily mirror cards 1-3's copy while real content for them
- * lands.
+ * Solutions page — 3 outcome cards in a 3-up grid (2-up on tablet, 1 on
+ * mobile). Each card: screenshot panel on top, eyebrow + italic-em title +
+ * 3-4 sentence body below. The cards carry the canonical Increase / Prevent
+ * / Manage outcomes, anchored `#increase-sales` / `#prevent-overbookings` /
+ * `#manage-all-bookings`.
  *
- * TODO: replace cards 4-6 placeholder copy with real outcome content.
  * TODO: replace `/solutions/placeholder.svg` with per-card real
  *       product screenshots at `/public/solutions/<slug>.jpg`.
  */
@@ -61,7 +60,7 @@ export const prerender = true;
             </div>
         </section>
 
-        <!-- 6-card outcome grid: 3 cols (lg) / 2 cols (md) / 1 col (mobile) -->
+        <!-- 3-card outcome grid: 3 cols (lg) / 2 cols (md) / 1 col (mobile) -->
         <section class="py-12 md:py-16">
             <div class="container mx-auto px-6">
                 <div
@@ -118,71 +117,6 @@ export const prerender = true;
                         imageAlt="Unified booking queue with cards from multiple sources"
                         data-reveal
                         data-reveal-delay="120"
-                    >
-                        <Fragment slot="title">
-                            <em>Manage</em> All Bookings in One Place
-                        </Fragment>
-                        <Fragment slot="body">
-                            Bring together reservations from OTAs, direct
-                            bookings, partners, resellers, and offline sales
-                            into one centralized system. Manage customer
-                            details, payments, schedules, operational notes, and
-                            booking statuses from a single workspace, helping
-                            your team stay organized, improve coordination, and
-                            eliminate the need for spreadsheets or multiple
-                            disconnected tools.
-                        </Fragment>
-                    </OutcomeCard>
-
-                    <OutcomeCard
-                        eyebrow="Growth"
-                        imageSrc="/solutions/placeholder.svg"
-                        imageAlt="Multiple booking channels feeding a single inventory"
-                        data-reveal
-                        data-reveal-delay="180"
-                    >
-                        <Fragment slot="title">
-                            <em>Increase</em> Your Sales
-                        </Fragment>
-                        <Fragment slot="body">
-                            Expand your business across multiple sales channels
-                            by connecting your products to leading OTAs and
-                            accepting direct bookings through your own website.
-                            With interactive trip proposals, customizable
-                            booking tools, and centralized sales management, you
-                            can create a smoother customer journey, improve
-                            conversion rates, and generate more bookings.
-                        </Fragment>
-                    </OutcomeCard>
-
-                    <OutcomeCard
-                        eyebrow="Control"
-                        imageSrc="/solutions/placeholder.svg"
-                        imageAlt="A seat locked across three booking channels at once"
-                        data-reveal
-                        data-reveal-delay="240"
-                    >
-                        <Fragment slot="title">
-                            <em>Prevent</em> Overbookings and Revenue Loss
-                        </Fragment>
-                        <Fragment slot="body">
-                            Maintain accurate availability across all connected
-                            channels with real-time synchronization and
-                            automated inventory management. As bookings,
-                            cancellations, or updates occur, availability is
-                            updated automatically, helping reduce manual
-                            mistakes, avoid double bookings, prevent missed
-                            sales opportunities, and maintain better control
-                            over your inventory distribution.
-                        </Fragment>
-                    </OutcomeCard>
-
-                    <OutcomeCard
-                        eyebrow="Organization"
-                        imageSrc="/solutions/placeholder.svg"
-                        imageAlt="Unified booking queue with cards from multiple sources"
-                        data-reveal
-                        data-reveal-delay="300"
                     >
                         <Fragment slot="title">
                             <em>Manage</em> All Bookings in One Place
