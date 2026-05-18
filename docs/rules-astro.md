@@ -55,7 +55,7 @@ src/
 │   ├── home/                  # home-page sections only
 │   │   ├── hero/              # Hero only (post-Phase-18 — HeroVisual / BookingFlowCard / AudienceChips deleted)
 │   │   ├── channels-section/
-│   │   ├── features-section/  # FeatureCard requires href; renders slice(0, 6) of 9 (Phase 19)
+│   │   ├── features-section/  # FeatureCard requires href; 6 home cards — full 9 on /features
 │   │   ├── parallax-break/
 │   │   ├── pricing-section/   # Phase 21 hover-swap active card (CSS-only via :has()); excluded-feature icon = red X (Phase 23)
 │   │   ├── golive-section/

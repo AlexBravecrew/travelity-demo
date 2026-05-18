@@ -21,13 +21,10 @@ export { Check as CheckIcon } from '@lucide/astro';
 // Home — feature cards
 export { Clock as ClockIcon } from '@lucide/astro';
 export { Calendar as CalendarIcon } from '@lucide/astro';
-export { ClipboardList as ClipboardListIcon } from '@lucide/astro';
 export { FileCheck as FileCheckIcon } from '@lucide/astro';
-export { Users as UsersIcon } from '@lucide/astro';
 export { CreditCard as CreditCardIcon } from '@lucide/astro';
 export { Share2 as Share2Icon } from '@lucide/astro';
 export { LayoutGrid as LayoutGridIcon } from '@lucide/astro';
-export { MessageSquare as MessageSquareIcon } from '@lucide/astro';
 
 // Home — GoLive section
 export { Settings as SettingsIcon } from '@lucide/astro';

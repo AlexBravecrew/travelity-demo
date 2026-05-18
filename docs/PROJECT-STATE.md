@@ -90,7 +90,7 @@ src/
 │   ├── home/                        # Home-page sections (Phase 3a-3d)
 │   │   ├── hero/                    # Hero only — HeroVisual/BookingFlowCard/AudienceChips deleted Phase 18 (video on right now)
 │   │   ├── channels-section/        # Orbit diagram: hub + 5 nodes + flowing dashed pulses (Phase 15)
-│   │   ├── features-section/        # FeatureCard requires href; renders first 6 of 9 entries (Phase 19)
+│   │   ├── features-section/        # FeatureCard requires href; 6 home cards — full 9 on /features (Phase 19)
 │   │   ├── reviews-section/         # 5 polaroid customer review cards on a dark teal-blue band; desktop hover-swap, <lg scroll-snap carousel with infinite-loop clones + dot pagination (replaced retired ParallaxBreak)
 │   │   ├── pricing-section/         # Header + 3 plan cards (Phase 21 hover-swap active card; reused as-is on /pricing — hideHeader prop exists but is unused)
 │   │   ├── golive-section/          # 4-col onboarding

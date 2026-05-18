@@ -9,9 +9,6 @@ import {
     FileCheckIcon,
     CreditCardIcon,
     CalendarIcon,
-    ClipboardListIcon,
-    UsersIcon,
-    MessageSquareIcon,
 } from '@/icons';
 import { Paths } from '@/lib/utils/paths';
 import FeatureCard from './FeatureCard.astro';
@@ -73,24 +70,6 @@ const features = [
         slug: 'booking-management',
         icon: CalendarIcon,
     },
-    {
-        title: 'Daily Operations',
-        description: 'Placeholder — real copy TBD.',
-        slug: 'daily-operations',
-        icon: ClipboardListIcon,
-    },
-    {
-        title: 'CRM',
-        description: 'Placeholder — real copy TBD.',
-        slug: 'crm',
-        icon: UsersIcon,
-    },
-    {
-        title: 'Team Collaboration',
-        description: 'Placeholder — real copy TBD.',
-        slug: 'team-collaboration',
-        icon: MessageSquareIcon,
-    },
 ];
 ---
 
@@ -132,11 +111,9 @@ const features = [
             class="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[18px] mt-12 relative z-[1]"
         >
             {
-                /* Home shows the first 6 of 9 features; the rest live on
-                /features. Slug definitions for all 9 stay in the array
-                above so anchor targets remain visible alongside this
-                consumer. */
-                features.slice(0, 6).map((f, idx) => {
+                /* The home grid surfaces these 6 feature cards; the full
+                set of 9 capabilities (with detail copy) lives on /features. */
+                features.map((f, idx) => {
                     const Icon = f.icon;
                     return (
                         <FeatureCard
