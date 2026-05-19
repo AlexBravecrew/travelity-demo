@@ -44,7 +44,7 @@ const {
     name,
     byline,
     tilt = '0deg',
-    yOffset = '0',
+    yOffset = '0px',
     class: className,
     ...rest
 } = Astro.props;
@@ -68,11 +68,11 @@ const {
          size on landscape phones and other single-card-wide carousel
          viewports; mx-auto centers it inside the article's flex slot. -->
     <div
-        class="review-card-frame relative overflow-hidden rounded-2xl border border-line bg-paper p-2 max-w-[360px] mx-auto"
+        class="review-card-frame relative overflow-hidden rounded-2xl border border-line bg-paper p-2 max-w-90 mx-auto"
         style="box-shadow: 0 18px 40px -16px hsl(var(--travelity-blue-deep) / 0.35), 0 6px 16px -8px hsl(var(--ink) / 0.15); transition: transform 600ms var(--ease-default), box-shadow 600ms var(--ease-default);"
     >
         <div
-            class="relative overflow-hidden rounded-xl bg-surface-alt aspect-[4/5]"
+            class="relative overflow-hidden rounded-xl bg-surface-alt aspect-4/5"
         >
             <Image
                 src={imageSrc}

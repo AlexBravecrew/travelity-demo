@@ -21,8 +21,9 @@
  */
 
 const ACTIVE_TRANSFORM =
-    'translateY(calc(var(--y, 0) - 6px)) rotate(0deg) scale(1.04)';
-const RESTING_TRANSFORM = 'translateY(var(--y, 0)) rotate(var(--tilt, 0deg))';
+    'translateY(calc(var(--y, 0px) - 6px)) rotate(0deg) scale(1.04)';
+const RESTING_TRANSFORM =
+    'translateY(var(--y, 0px)) rotate(var(--tilt, 0deg))';
 const STRAIGHT_TRANSFORM = 'translateY(0) rotate(0deg) scale(1)';
 const ACTIVE_SHADOW =
     '0 26px 56px -18px hsl(220 60% 4% / 0.4), 0 10px 24px -10px hsl(220 60% 4% / 0.2)';

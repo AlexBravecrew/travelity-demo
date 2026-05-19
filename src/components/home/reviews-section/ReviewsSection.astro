@@ -152,12 +152,12 @@ const yOffsets = ['10px', '-14px', '12px', '-8px', '8px'];
 </section>
 
 <style>
-    /* Pre-JS resting fallback — straight, no transform. reviews.client.ts
-       writes inline styles for the actual visual state once it knows
-       which mode (mobile vs desktop) applies. */
+    /* Pre-JS resting state — each card sits at its own --y / --tilt (set
+       by ReviewCard from props), so cards render tilted/offset before
+       hydration. reviews.client.ts then overrides this with inline styles
+       once it knows which mode (mobile vs desktop) applies. */
     .review-grid :global(.review-card .review-card-frame) {
-        transform: translateY(var(--y, 0)) rotate(var(--tilt, 0deg));
-        will-change: transform;
+        transform: translateY(var(--y, 0px)) rotate(var(--tilt, 0deg));
     }
 
     /* Below lg, cards live in a horizontal scroll-snap carousel and only
